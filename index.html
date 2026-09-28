@@ -231,13 +231,12 @@
         alert('تمت إضافة موعد الزيارة بنجاح');
       };
 
-      // التحديث هنا: إضافة تحديد تاريخ وموعد الورشة عند التحويل
       const convertToJob = (visit) => {
         const price = prompt('أدخل المبلغ المتفق عليه (بالدينار):');
-        if (price === null) return; // إلغاء
+        if (price === null) return;
         
         const workDate = prompt('أدخل تاريخ بدء الورشة (مثال: 2026-10-05 أو اليوم):', visit.date || '');
-        const workTime = prompt('أدخل توقت/ساعة الورشة (مثال: 8:00 صباحاً):', '8:00 صباحاً');
+        const workTime = prompt('أدخل توقيت الورشة (مثال: 8:00 صباحاً):', '8:00 صباحاً');
 
         setJobs([...jobs, { 
           ...visit, 
@@ -439,7 +438,6 @@
                           <span className="text-lg font-black text-emerald-600">{j.price} د.أ</span>
                         </div>
                         
-                        <!-- عرض موعد الورشة المحدد -->
                         <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
                           <div className="flex justify-between items-center text-amber-900 font-bold">
                             <span>📅 موعد التنفيذ / الورشة:</span>

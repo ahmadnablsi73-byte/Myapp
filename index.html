@@ -36,9 +36,7 @@
         try {
           const saved = localStorage.getItem('sys_users_v3');
           return saved ? JSON.parse(saved) : DEFAULT_USERS;
-        } catch (e) {
-          return DEFAULT_USERS;
-        }
+        } catch (e) { return DEFAULT_USERS; }
       });
       const [currentUser, setCurrentUser] = useState(null);
       const [authMode, setAuthMode] = useState('login');
@@ -57,24 +55,22 @@
         try { return JSON.parse(localStorage.getItem('sys_ledger')) || []; } catch(e) { return []; }
       });
 
-      const [visitForm, setVisitForm] = useState({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
+      // الحالات الخاصة بالنماذج والتعديل
+      const [visitForm, setVisitForm] = useState({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' });
+      const [editingVisit, setEditingVisit] = useState(null); // المعاينة الجاري تعديلها
+
+      const [convertingVisit, setConvertingVisit] = useState(null); // المعاينة الجاري تحويلها
+      const [convertModalForm, setConvertModalForm] = useState({ price: '', workDate: '', workTime: '08:00 صباحاً', workNotes: '' });
+
+      const [editingJob, setEditingJob] = useState(null); // الورشة الجاري تعديلها
+
       const [ledgerForm, setLedgerForm] = useState({ type: 'له', amount: '', description: '', date: '' });
+      const [expandedDates, setExpandedDates] = useState({}); // للتحكم بفتح وإغلاق أيام الأجيندة
 
-      useEffect(() => {
-        localStorage.setItem('sys_users_v3', JSON.stringify(users));
-      }, [users]);
-
-      useEffect(() => {
-        localStorage.setItem('sys_visits', JSON.stringify(visits));
-      }, [visits]);
-
-      useEffect(() => {
-        localStorage.setItem('sys_jobs', JSON.stringify(jobs));
-      }, [jobs]);
-
-      useEffect(() => {
-        localStorage.setItem('sys_ledger', JSON.stringify(ledger));
-      }, [ledger]);
+      useEffect(() => { localStorage.setItem('sys_users_v3', JSON.stringify(users)); }, [users]);
+      useEffect(() => { localStorage.setItem('sys_visits', JSON.stringify(visits)); }, [visits]);
+      useEffect(() => { localStorage.setItem('sys_jobs', JSON.stringify(jobs)); }, [jobs]);
+      useEffect(() => { localStorage.setItem('sys_ledger', JSON.stringify(ledger)); }, [ledger]);
 
       const handleLogin = (e) => {
         e.preventDefault();
@@ -91,22 +87,11 @@
 
       const handleRegister = (e) => {
         e.preventDefault();
-        if (!regForm.name || !regForm.username || !regForm.password) {
-          return alert('يرجى تعبئة جميع الحقول المطلوبة');
-        }
-        if (users.some(u => u.username.toLowerCase() === regForm.username.trim().toLowerCase())) {
-          return alert('اسم المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر');
-        }
-        const newUser = {
-          id: 'usr_' + Date.now(),
-          name: regForm.name,
-          username: regForm.username.trim(),
-          password: regForm.password,
-          role: 'user',
-          allowedServices: ['نظافة عامة']
-        };
+        if (!regForm.name || !regForm.username || !regForm.password) return alert('يرجى تعبئة جميع الحقول المطلوبة');
+        if (users.some(u => u.username.toLowerCase() === regForm.username.trim().toLowerCase())) return alert('اسم المستخدم مستخدم بالفعل!');
+        const newUser = { id: 'usr_' + Date.now(), name: regForm.name, username: regForm.username.trim(), password: regForm.password, role: 'user', allowedServices: ['نظافة عامة'] };
         setUsers([...users, newUser]);
-        alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
+        alert('تم إنشاء الحساب بنجاح!');
         setRegForm({ name: '', username: '', password: '' });
         setAuthMode('login');
       };
@@ -116,18 +101,127 @@
           if (u.id === userId) {
             const currentServices = u.allowedServices || [];
             const hasService = currentServices.includes(serviceName);
-            const updated = hasService
-              ? currentServices.filter(s => s !== serviceName)
-              : [...currentServices, serviceName];
+            const updated = hasService ? currentServices.filter(s => s !== serviceName) : [...currentServices, serviceName];
             return { ...u, allowedServices: updated };
           }
           return u;
         }));
       };
 
+      // إضافة/تعديل زيارة المعاينة
+      const handleSaveVisit = (e) => {
+        e.preventDefault();
+        if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف على الأقل');
+
+        if (editingVisit) {
+          setVisits(visits.map(v => v.id === editingVisit.id ? { ...v, ...visitForm } : v));
+          setEditingVisit(null);
+          alert('تم تحديث بيانات معاينة الزبون بنجاح');
+        } else {
+          setVisits([...visits, { ...visitForm, id: Date.now(), service: currentService }]);
+          alert('تمت إضافة موعد المعاينة بنجاح');
+        }
+        setVisitForm({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' });
+      };
+
+      const handleStartEditVisit = (v) => {
+        setEditingVisit(v);
+        setVisitForm({ name: v.name, phone: v.phone, location: v.location || '', mapUrl: v.mapUrl || '', date: v.date || '', timeStr: v.timeStr || '', notes: v.notes || '' });
+      };
+
+      // تحويل المعاينة إلى عمل معتمد
+      const openConvertModal = (v) => {
+        setConvertingVisit(v);
+        setConvertModalForm({
+          price: '',
+          workDate: v.date || new Date().toISOString().split('T')[0],
+          workTime: '08:00 صباحاً',
+          workNotes: v.notes || ''
+        });
+      };
+
+      const handleConfirmConvert = (e) => {
+        e.preventDefault();
+        if (!convertModalForm.price || !convertModalForm.workDate) return alert('يرجى أدخال السعر وتاريخ الورشة');
+
+        const newJob = {
+          ...convertingVisit,
+          id: Date.now(),
+          price: parseFloat(convertModalForm.price) || 0,
+          workDate: convertModalForm.workDate,
+          workTime: convertModalForm.workTime,
+          workNotes: convertModalForm.workNotes,
+          quoteFile: null,
+          invoiceFile: null
+        };
+
+        setJobs([...jobs, newJob]);
+        setVisits(visits.filter(v => v.id !== convertingVisit.id));
+        setConvertingVisit(null);
+        setActiveTab('jobs');
+        alert('تم اعتماد الزبون وتحويله لجدول الورش بنجاح!');
+      };
+
+      // تعديل بيانات العمل المعتمد / الورشة
+      const handleSaveJobEdit = (e) => {
+        e.preventDefault();
+        setJobs(jobs.map(j => j.id === editingJob.id ? editingJob : j));
+        setEditingJob(null);
+        alert('تم تعديل بيانات الزبون المعتمد بنجاح');
+      };
+
+      const handleFileUpload = (jobId, fileType, event) => {
+        const file = event.target.files[0];
+        if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف بصيغة PDF فقط!");
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setJobs(jobs.map(j => j.id === jobId ? { ...j, [fileType]: { name: file.name, url: e.target.result } } : j));
+          alert('تم رفع الملف بنجاح!');
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const handleAddLedger = (e) => {
+        e.preventDefault();
+        if (!ledgerForm.amount || !ledgerForm.description) return alert('يرجى تعبئة الحقول المطلوبة');
+        setLedger([...ledger, {
+          ...ledgerForm,
+          id: Date.now(),
+          amount: parseFloat(ledgerForm.amount),
+          service: currentService,
+          date: ledgerForm.date || new Date().toISOString().split('T')[0]
+        }]);
+        setLedgerForm({ type: 'له', amount: '', description: '', date: '' });
+      };
+
       const filteredVisits = visits.filter(v => v.service === currentService);
       const filteredJobs = jobs.filter(j => j.service === currentService);
       const filteredLedger = ledger.filter(l => l.service === currentService);
+
+      // تجميع الورش بحسب التاريخ واليوم للأجيندة
+      const jobsByDate = filteredJobs.reduce((acc, job) => {
+        const d = job.workDate || 'غير محدد';
+        if (!acc[d]) acc[d] = [];
+        acc[d].push(job);
+        return acc;
+      }, {});
+
+      // الحصول على اسم اليوم باللغة العربية
+      const getDayName = (dateStr) => {
+        if (!dateStr || dateStr === 'غير محدد') return '';
+        try {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString('ar-EG', { weekday: 'long' });
+        } catch(e) { return ''; }
+      };
+
+      const toggleDateAccordion = (dateStr) => {
+        setExpandedDates(prev => ({ ...prev, [dateStr]: !prev[dateStr] }));
+      };
+
+      const totalIn = filteredLedger.filter(l => l.type === 'له').reduce((acc, curr) => acc + curr.amount, 0);
+      const totalOut = filteredLedger.filter(l => l.type === 'منه').reduce((acc, curr) => acc + curr.amount, 0);
+      const userAllowedServices = currentUser ? (currentUser.role === 'admin' ? ALL_SERVICES : (currentUser.allowedServices || [])) : [];
 
       if (!currentUser) {
         return (
@@ -223,62 +317,6 @@
         );
       }
 
-      const handleAddVisit = (e) => {
-        e.preventDefault();
-        if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف على الأقل');
-        setVisits([...visits, { ...visitForm, id: Date.now(), service: currentService }]);
-        setVisitForm({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
-        alert('تمت إضافة موعد الزيارة بنجاح');
-      };
-
-      const convertToJob = (visit) => {
-        const price = prompt('أدخل المبلغ المتفق عليه (بالدينار):');
-        if (price === null) return;
-        
-        const workDate = prompt('أدخل تاريخ بدء الورشة (مثال: 2026-10-05 أو اليوم):', visit.date || '');
-        const workTime = prompt('أدخل توقيت الورشة (مثال: 8:00 صباحاً):', '8:00 صباحاً');
-
-        setJobs([...jobs, { 
-          ...visit, 
-          price: parseFloat(price) || 0, 
-          workDate: workDate || 'غير محدد',
-          workTime: workTime || 'غير محدد',
-          quoteFile: null, 
-          invoiceFile: null 
-        }]);
-        
-        setVisits(visits.filter(v => v.id !== visit.id));
-        setActiveTab('jobs');
-      };
-
-      const handleFileUpload = (jobId, fileType, event) => {
-        const file = event.target.files[0];
-        if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف بصيغة PDF فقط!");
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setJobs(jobs.map(j => j.id === jobId ? { ...j, [fileType]: { name: file.name, url: e.target.result } } : j));
-          alert('تم رفع الملف بنجاح!');
-        };
-        reader.readAsDataURL(file);
-      };
-
-      const handleAddLedger = (e) => {
-        e.preventDefault();
-        if (!ledgerForm.amount || !ledgerForm.description) return alert('يرجى تعبئة الحقول المطلوبة');
-        setLedger([...ledger, {
-          ...ledgerForm,
-          id: Date.now(),
-          amount: parseFloat(ledgerForm.amount),
-          service: currentService,
-          date: ledgerForm.date || new Date().toISOString().split('T')[0]
-        }]);
-        setLedgerForm({ type: 'له', amount: '', description: '', date: '' });
-      };
-
-      const totalIn = filteredLedger.filter(l => l.type === 'له').reduce((acc, curr) => acc + curr.amount, 0);
-      const totalOut = filteredLedger.filter(l => l.type === 'منه').reduce((acc, curr) => acc + curr.amount, 0);
-      const userAllowedServices = currentUser.role === 'admin' ? ALL_SERVICES : (currentUser.allowedServices || []);
-
       return (
         <div className="min-h-screen flex flex-col">
           <header className="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
@@ -316,8 +354,8 @@
           <nav className="bg-white border-b border-slate-200 sticky top-[68px] z-40 shadow-sm">
             <div className="max-w-6xl mx-auto flex overflow-x-auto text-sm font-bold text-slate-600 no-scrollbar">
               {[
-                { id: 'visits', label: 'مواعيد الزيارات' },
-                { id: 'jobs', label: 'العمليات والتنفيذ (PDF)' },
+                { id: 'visits', label: 'مواعيد الزيارات والمعاينة' },
+                { id: 'jobs', label: '📅 أجيندة العمليات والورش المعتمدة' },
                 { id: 'accounting', label: 'المحاسبة' },
                 ...(currentUser.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات' }] : [])
               ].map(tab => (
@@ -383,22 +421,39 @@
             {activeTab === 'visits' && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit">
-                  <h2 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">حجز موعد زيارة ({currentService})</h2>
-                  <form onSubmit={handleAddVisit} className="space-y-3">
+                  <div className="flex justify-between items-center border-b pb-2 mb-4">
+                    <h2 className="font-bold text-lg text-slate-800">
+                      {editingVisit ? 'تعديل موعد معاينة' : `حجز موعد معاينة (${currentService})`}
+                    </h2>
+                    {editingVisit && (
+                      <button
+                        type="button"
+                        onClick={() => { setEditingVisit(null); setVisitForm({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' }); }}
+                        className="text-xs text-red-500 hover:underline font-bold"
+                      >
+                        إلغاء التعديل
+                      </button>
+                    )}
+                  </div>
+                  <form onSubmit={handleSaveVisit} className="space-y-3">
                     <input type="text" value={visitForm.name} onChange={e => setVisitForm({...visitForm, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="اسم الزبون" />
                     <input type="text" value={visitForm.phone} onChange={e => setVisitForm({...visitForm, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="رقم الهاتف" />
-                    <input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="العنوان" />
+                    <input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="العنوان النصي (مثال: عمان - الخلدا)" />
+                    <input type="url" value={visitForm.mapUrl} onChange={e => setVisitForm({...visitForm, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="رابط موقع جوجل ماب (Location URL)" />
                     <input type="date" value={visitForm.date} onChange={e => setVisitForm({...visitForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
                     <input type="text" value={visitForm.timeStr} onChange={e => setVisitForm({...visitForm, timeStr: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="الموعد (مثال: 2 ظهراً)" />
-                    <textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="2" placeholder="ملاحظات"></textarea>
-                    <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-sm">تسجيل الزيارة</button>
+                    <textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="2" placeholder="ملاحظات المعاينة"></textarea>
+                    
+                    <button type="submit" className={`w-full py-3 font-bold rounded-xl shadow-sm transition-all ${editingVisit ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-amber-500 hover:bg-amber-600 text-slate-900'}`}>
+                      {editingVisit ? 'حفظ التعديلات' : 'تسجيل طلب المعاينة'}
+                    </button>
                   </form>
                 </div>
 
                 <div className="md:col-span-2 space-y-4">
-                  <h2 className="font-bold text-lg text-slate-800">طلبات المعاينة - [{currentService}] ({filteredVisits.length})</h2>
+                  <h2 className="font-bold text-lg text-slate-800">طلبات المعاينة الحالية - [{currentService}] ({filteredVisits.length})</h2>
                   {filteredVisits.length === 0 ? (
-                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد مواعيد مسجلة حالياً لهذه الخدمة.</div>
+                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد مواعيد معاينة مسجلة حالياً لهذه الخدمة.</div>
                   ) : (
                     filteredVisits.map(v => (
                       <div key={v.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
@@ -408,11 +463,21 @@
                             <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">{v.date} | {v.timeStr}</span>
                           </div>
                           <p className="text-sm text-slate-600"><strong>الهاتف:</strong> {v.phone} | <strong>العنوان:</strong> {v.location}</p>
-                          {v.notes && <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2">{v.notes}</p>}
+                          
+                          {v.mapUrl && (
+                            <div className="mt-2">
+                              <a href={v.mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 font-bold hover:underline bg-blue-50 px-2.5 py-1 rounded-lg">
+                                📍 فتح الموقع على خريطة Google
+                              </a>
+                            </div>
+                          )}
+
+                          {v.notes && <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2"><strong>ملاحظات المعاينة:</strong> {v.notes}</p>}
                         </div>
                         <div className="flex gap-2 border-t pt-3">
-                          <button type="button" onClick={() => convertToJob(v)} className="flex-1 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-700">✓ تحويل إلى عمل معتمد</button>
-                          <button type="button" onClick={() => setVisits(visits.filter(item => item.id !== v.id))} className="py-2 px-3 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-200">حذف</button>
+                          <button type="button" onClick={() => openConvertModal(v)} className="flex-1 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-700">✓ تحويل لعمل معتمد</button>
+                          <button type="button" onClick={() => handleStartEditVisit(v)} className="py-2 px-4 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200">تعديل ✏️</button>
+                          <button type="button" onClick={() => setVisits(visits.filter(item => item.id !== v.id))} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">حذف</button>
                         </div>
                       </div>
                     ))
@@ -421,57 +486,208 @@
               </div>
             )}
 
-            {activeTab === 'jobs' && (
-              <div className="space-y-4">
-                <h2 className="font-bold text-lg text-slate-800">العمليات والورش المعتمدة - [{currentService}] ({filteredJobs.length})</h2>
-                {filteredJobs.length === 0 ? (
-                  <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد عمليات معتمدة حالياً لهذه الخدمة.</div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredJobs.map(j => (
-                      <div key={j.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <div className="flex justify-between items-start border-b pb-3">
-                          <div>
-                            <h3 className="font-bold text-slate-900 text-lg">{j.name}</h3>
-                            <p className="text-xs text-slate-500">{j.phone} - {j.location}</p>
-                          </div>
-                          <span className="text-lg font-black text-emerald-600">{j.price} د.أ</span>
-                        </div>
-                        
-                        <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
-                          <div className="flex justify-between items-center text-amber-900 font-bold">
-                            <span>📅 موعد التنفيذ / الورشة:</span>
-                            <span className="bg-amber-200 px-2 py-0.5 rounded text-slate-900">{j.workDate}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-amber-800">
-                            <span>⏰ الوقت المتفق عليه:</span>
-                            <span className="font-bold">{j.workTime}</span>
-                          </div>
-                        </div>
+            {/* نافذة Pop-up تحويل الزبون لعمل معتمد */}
+            {convertingVisit && (
+              <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+                  <div className="flex justify-between items-center border-b pb-3">
+                    <h3 className="font-bold text-lg text-slate-900">اعتماد الزبون: {convertingVisit.name}</h3>
+                    <button type="button" onClick={() => setConvertingVisit(null)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+                  </div>
+                  <form onSubmit={handleConfirmConvert} className="space-y-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">المبلغ المتفق عليه (بالدينار)*</label>
+                      <input type="number" step="any" value={convertModalForm.price} onChange={e => setConvertModalForm({...convertModalForm, price: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: 150" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">تاريخ بدء الورشة*</label>
+                      <input type="date" value={convertModalForm.workDate} onChange={e => setConvertModalForm({...convertModalForm, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">توقيت الورشة</label>
+                      <input type="text" value={convertModalForm.workTime} onChange={e => setConvertModalForm({...convertModalForm, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: 8:00 صباحاً" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">ملاحظات الورشة والاتفاق</label>
+                      <textarea value={convertModalForm.workNotes} onChange={e => setConvertModalForm({...convertModalForm, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="3" placeholder="أدخل أي ملاحظات خاصة بالتنفيذ والاتفاق"></textarea>
+                    </div>
 
-                        <div className="space-y-2 border-t pt-2">
-                          <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
-                            <span>عرض السعر: {j.quoteFile ? j.quoteFile.name : 'لا يوجد'}</span>
-                            <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold">
-                              رفع PDF
-                              <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} />
-                            </label>
+                    <div className="flex gap-2 border-t pt-3">
+                      <button type="submit" className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md text-sm">تأكيد الاعتماد والتحويل</button>
+                      <button type="button" onClick={() => setConvertingVisit(null)} className="py-3 px-4 bg-slate-100 text-slate-600 font-bold rounded-xl text-sm">إلغاء</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* الأجيندة والعمليات المعتمدة */}
+            {activeTab === 'jobs' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                  <div>
+                    <h2 className="font-black text-xl text-slate-800">📅 أجيندة الورش والعمليات المعتمدة</h2>
+                    <p className="text-xs text-slate-500 mt-1">القسم الحالي: <span className="font-bold text-amber-600">{currentService}</span> | إجمالي المواعيد المعتمدة: {filteredJobs.length}</p>
+                  </div>
+                </div>
+
+                {Object.keys(jobsByDate).length === 0 ? (
+                  <div className="bg-white p-12 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد ورش أو عمليات معتمدة حالياً لهذه الخدمة.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {Object.keys(jobsByDate).sort().map(dateStr => {
+                      const dayName = getDayName(dateStr);
+                      const dayJobs = jobsByDate[dateStr];
+                      const isExpanded = expandedDates[dateStr] !== false; // القائمة مفتوحة افتراضياً
+
+                      return (
+                        <div key={dateStr} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                          {/* شريط اليوم والأجيندة */}
+                          <div
+                            onClick={() => toggleDateAccordion(dateStr)}
+                            className="bg-slate-900 text-white p-4 flex justify-between items-center cursor-pointer hover:bg-slate-800 transition-all select-none"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="bg-amber-500 text-slate-900 font-black px-3 py-1 rounded-xl text-sm">
+                                {dayName ? `${dayName} - ${dateStr}` : dateStr}
+                              </span>
+                              <span className="text-xs text-slate-300">مواعيد العمليات المجدولة</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold px-3 py-1 rounded-full">
+                                {dayJobs.length} {dayJobs.length === 1 ? 'ورشة عمل' : 'ورش عمل'}
+                              </span>
+                              <span className="text-slate-400 text-sm">{isExpanded ? '▲' : '▼'}</span>
+                            </div>
                           </div>
-                          <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
-                            <span>الفاتورة: {j.invoiceFile ? j.invoiceFile.name : 'لا يوجد'}</span>
-                            <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold">
-                              رفع PDF
-                              <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} />
-                            </label>
-                          </div>
+
+                          {/* قائمة الورش بهذا اليوم */}
+                          {isExpanded && (
+                            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50">
+                              {dayJobs.map(j => (
+                                <div key={j.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 relative">
+                                  {/* تفاصيل الزبون المعتمد والسعر */}
+                                  <div className="flex justify-between items-start border-b pb-3">
+                                    <div>
+                                      <h3 className="font-bold text-slate-900 text-lg">{j.name}</h3>
+                                      <p className="text-xs text-slate-500 mt-0.5">📞 {j.phone} | 📍 {j.location}</p>
+                                    </div>
+                                    <div className="text-left bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+                                      <span className="text-[10px] text-emerald-600 block font-bold">المبلغ المتفق عليه</span>
+                                      <span className="text-lg font-black text-emerald-700">{j.price} د.أ</span>
+                                    </div>
+                                  </div>
+
+                                  {/* تفاصيل الوقت واللوكيشن والملاحظات */}
+                                  <div className="space-y-1.5 text-xs text-slate-700">
+                                    <div className="flex justify-between items-center bg-amber-50 border border-amber-100 p-2 rounded-xl">
+                                      <span>⏰ وقت الورشة: <strong className="text-slate-900">{j.workTime}</strong></span>
+                                      {j.mapUrl && (
+                                        <a href={j.mapUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline bg-white px-2 py-0.5 rounded border border-blue-200">
+                                          📍 الخريطة
+                                        </a>
+                                      )}
+                                    </div>
+
+                                    {j.workNotes && (
+                                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                        <strong className="text-slate-800 block mb-0.5">📝 ملاحظات الورشة:</strong>
+                                        <p className="text-slate-600">{j.workNotes}</p>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* رفع واستعراض الملفات PDF */}
+                                  <div className="space-y-2 border-t pt-2">
+                                    <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
+                                      <span>عرض السعر: {j.quoteFile ? <a href={j.quoteFile.url} target="_blank" className="text-blue-600 underline font-bold">{j.quoteFile.name}</a> : 'لا يوجد'}</span>
+                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">
+                                        رفع PDF
+                                        <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} />
+                                      </label>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
+                                      <span>الفاتورة: {j.invoiceFile ? <a href={j.invoiceFile.url} target="_blank" className="text-blue-600 underline font-bold">{j.invoiceFile.name}</a> : 'لا يوجد'}</span>
+                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">
+                                        رفع PDF
+                                        <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} />
+                                      </label>
+                                    </div>
+                                  </div>
+
+                                  {/* أزرار التحكم والتحرير */}
+                                  <div className="flex gap-2 border-t pt-3">
+                                    <button type="button" onClick={() => setEditingJob({...j})} className="flex-1 py-2 bg-blue-50 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 border border-blue-200">
+                                      تعديل بيانات الورشة ✏️
+                                    </button>
+                                    <button type="button" onClick={() => setJobs(jobs.filter(item => item.id !== j.id))} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">
+                                      حذف
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
             )}
 
+            {/* نافذة Pop-up تعديل بيانات الزبون المعتمد */}
+            {editingJob && (
+              <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                  <div className="flex justify-between items-center border-b pb-3">
+                    <h3 className="font-bold text-lg text-slate-900">تعديل بيانات الزبون المعتمد والورشة</h3>
+                    <button type="button" onClick={() => setEditingJob(null)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+                  </div>
+                  <form onSubmit={handleSaveJobEdit} className="space-y-3">
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">اسم الزبون</label>
+                      <input type="text" value={editingJob.name} onChange={e => setEditingJob({...editingJob, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">رقم الهاتف</label>
+                      <input type="text" value={editingJob.phone} onChange={e => setEditingJob({...editingJob, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">العنوان النصي</label>
+                      <input type="text" value={editingJob.location || ''} onChange={e => setEditingJob({...editingJob, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">رابط اللوكيشن (Google Maps URL)</label>
+                      <input type="url" value={editingJob.mapUrl || ''} onChange={e => setEditingJob({...editingJob, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">المبلغ المتفق عليه (بالدينار)</label>
+                      <input type="number" step="any" value={editingJob.price} onChange={e => setEditingJob({...editingJob, price: parseFloat(e.target.value) || 0})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">تاريخ الورشة</label>
+                      <input type="date" value={editingJob.workDate || ''} onChange={e => setEditingJob({...editingJob, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">وقت الورشة</label>
+                      <input type="text" value={editingJob.workTime || ''} onChange={e => setEditingJob({...editingJob, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-600 block mb-1">ملاحظات الورشة</label>
+                      <textarea value={editingJob.workNotes || ''} onChange={e => setEditingJob({...editingJob, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="3"></textarea>
+                    </div>
+
+                    <div className="flex gap-2 border-t pt-3">
+                      <button type="submit" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md text-sm">حفظ التعديلات</button>
+                      <button type="button" onClick={() => setEditingJob(null)} className="py-3 px-4 bg-slate-100 text-slate-600 font-bold rounded-xl text-sm">إلغاء</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* قسم المحاسبة */}
             {activeTab === 'accounting' && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit space-y-3">

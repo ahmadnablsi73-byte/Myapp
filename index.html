@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام إدارة الخدمات والصلاحيات</title>
+  <title>مؤسسة الخدمات المتقدمة</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- React 18 & ReactDOM CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel Standalone for JSX compilation -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <!-- Cairo Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -22,7 +20,10 @@
 <body class="bg-slate-100 text-slate-800 antialiased">
   <div id="root"></div>
 
-  <script type="text/babel">
+  <!-- Babel Standalone CDN -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel" data-presets="react">
     const { useState, useEffect } = React;
 
     const ALL_SERVICES = ['نظافة عامة', 'جلي وتلميع بلاط', 'دراي كلين'];
@@ -163,7 +164,7 @@
                       value={loginForm.username}
                       onChange={e => setLoginForm({...loginForm, username: e.target.value})}
                       className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="admin"
+                      placeholder="أدخل اسم المستخدم"
                     />
                   </div>
                   <div>
@@ -179,8 +180,8 @@
                   <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-md">
                     دخول إلى النظام
                   </button>
-               </form>
-               ) : (
+                </form>
+              ) : (
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div>
                     <label className="text-xs font-bold text-slate-600 block mb-1">الاسم الكامل</label>
@@ -230,10 +231,23 @@
         alert('تمت إضافة موعد الزيارة بنجاح');
       };
 
+      // التحديث هنا: إضافة تحديد تاريخ وموعد الورشة عند التحويل
       const convertToJob = (visit) => {
-        const price = prompt('أدخل المبلغ المتفق عليه:');
-        if (!price) return;
-        setJobs([...jobs, { ...visit, price: parseFloat(price) || 0, jobDate: visit.date, quoteFile: null, invoiceFile: null }]);
+        const price = prompt('أدخل المبلغ المتفق عليه (بالدينار):');
+        if (price === null) return; // إلغاء
+        
+        const workDate = prompt('أدخل تاريخ بدء الورشة (مثال: 2026-10-05 أو اليوم):', visit.date || '');
+        const workTime = prompt('أدخل توقت/ساعة الورشة (مثال: 8:00 صباحاً):', '8:00 صباحاً');
+
+        setJobs([...jobs, { 
+          ...visit, 
+          price: parseFloat(price) || 0, 
+          workDate: workDate || 'غير محدد',
+          workTime: workTime || 'غير محدد',
+          quoteFile: null, 
+          invoiceFile: null 
+        }]);
+        
         setVisits(visits.filter(v => v.id !== visit.id));
         setActiveTab('jobs');
       };
@@ -304,7 +318,7 @@
             <div className="max-w-6xl mx-auto flex overflow-x-auto text-sm font-bold text-slate-600 no-scrollbar">
               {[
                 { id: 'visits', label: 'مواعيد الزيارات' },
-                { id: 'jobs', label: 'العمليات والملفات (PDF)' },
+                { id: 'jobs', label: 'العمليات والتنفيذ (PDF)' },
                 { id: 'accounting', label: 'المحاسبة' },
                 ...(currentUser.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات' }] : [])
               ].map(tab => (
@@ -410,7 +424,7 @@
 
             {activeTab === 'jobs' && (
               <div className="space-y-4">
-                <h2 className="font-bold text-lg text-slate-800">العمليات والملفات - [{currentService}] ({filteredJobs.length})</h2>
+                <h2 className="font-bold text-lg text-slate-800">العمليات والورش المعتمدة - [{currentService}] ({filteredJobs.length})</h2>
                 {filteredJobs.length === 0 ? (
                   <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد عمليات معتمدة حالياً لهذه الخدمة.</div>
                 ) : (
@@ -424,6 +438,19 @@
                           </div>
                           <span className="text-lg font-black text-emerald-600">{j.price} د.أ</span>
                         </div>
+                        
+                        <!-- عرض موعد الورشة المحدد -->
+                        <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
+                          <div className="flex justify-between items-center text-amber-900 font-bold">
+                            <span>📅 موعد التنفيذ / الورشة:</span>
+                            <span className="bg-amber-200 px-2 py-0.5 rounded text-slate-900">{j.workDate}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-amber-800">
+                            <span>⏰ الوقت المتفق عليه:</span>
+                            <span className="font-bold">{j.workTime}</span>
+                          </div>
+                        </div>
+
                         <div className="space-y-2 border-t pt-2">
                           <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
                             <span>عرض السعر: {j.quoteFile ? j.quoteFile.name : 'لا يوجد'}</span>
@@ -519,4 +546,3 @@
   </script>
 </body>
 </html>
-

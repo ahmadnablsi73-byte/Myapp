@@ -1,664 +1,525 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام إدارة الخدمات والصلاحيات</title>
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- React & ReactDOM -->
-<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<!-- Babel Compiler -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<!-- Google Fonts (Cairo) -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-body { font-family: 'Cairo', sans-serif; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إدارة الخدمات والصلاحيات</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React 18 & ReactDOM CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel Standalone for JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Cairo Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased">
-<div id="root"></div>
+  <div id="root"></div>
 
-<script type="text/babel">
-const { useState, useEffect } = React;
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-const ALL_SERVICES = ['نظافة عامة', 'جلي وتلميع بلاط', 'دراي كلين'];
+    const ALL_SERVICES = ['نظافة عامة', 'جلي وتلميع بلاط', 'دراي كلين'];
+    const DEFAULT_USERS = [
+      { id: 'admin_1', name: 'أحمد (المدير العام)', username: 'admin', password: '123', role: 'admin', allowedServices: ALL_SERVICES }
+    ];
 
-// الحساب الافتراضي للآدمن عند تشغيل النظام أول مرة
-const DEFAULT_USERS = [
-{ id: 'admin_1', name: 'أحمد (المدير العام)', username: 'admin', password: '123', role: 'admin', allowedServices: ALL_SERVICES }
- ];
+    function App() {
+      const [users, setUsers] = useState(() => {
+        try {
+          const saved = localStorage.getItem('sys_users_v3');
+          return saved ? JSON.parse(saved) : DEFAULT_USERS;
+        } catch (e) {
+          return DEFAULT_USERS;
+        }
+      });
+      const [currentUser, setCurrentUser] = useState(null);
+      const [authMode, setAuthMode] = useState('login');
+      const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+      const [regForm, setRegForm] = useState({ name: '', username: '', password: '' });
+      const [currentService, setCurrentService] = useState('');
+      const [activeTab, setActiveTab] = useState('visits');
 
-function App() {
-// --- الحالات العامة والتخزين ---
-const [users, setUsers] = useState(() => JSON.parse(localStorage.setItem('sys_users_v2')) || DEFAULT_USERS);
-const [currentUser, setCurrentUser] = useState(null);
-const [authMode, setAuthMode] = useState('login'); // login OR register
+      const [visits, setVisits] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('sys_visits')) || []; } catch(e) { return []; }
+      });
+      const [jobs, setJobs] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('sys_jobs')) || []; } catch(e) { return []; }
+      });
+      const [ledger, setLedger] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('sys_ledger')) || []; } catch(e) { return []; }
+      });
 
-// بيانات نماذج الدخول والتسجيل
-const [loginForm, setLoginForm] = useState({ username: '', password: '' });
-const [regForm, setRegForm] = useState({ name: '', username: '', password: '' });
+      const [visitForm, setVisitForm] = useState({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
+      const [ledgerForm, setLedgerForm] = useState({ type: 'له', amount: '', description: '', date: '' });
 
-// الخدمة والتبويب الحالي
-const [currentService, setCurrentService] = useState('');
-const [activeTab, setActiveTab] = useState('visits'); // visits, jobs, calendar, route, accounting, user_mgr
+      useEffect(() => {
+        localStorage.setItem('sys_users_v3', JSON.stringify(users));
+      }, [users]);
 
-// بيانات النظام المخزنة
-const [visits, setVisits] = useState(() => JSON.parse(localStorage.getItem('sys_visits')) || []);
-const [jobs, setJobs] = useState(() => JSON.parse(localStorage.getItem('sys_jobs')) || []);
-const [ledger, setLedger] = useState(() => JSON.parse(localStorage.getItem('sys_ledger')) || []);
+      useEffect(() => {
+        localStorage.setItem('sys_visits', JSON.stringify(visits));
+      }, [visits]);
 
-// نماذج الإدخال
-const [visitForm, setVisitForm] = useState({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
-const [ledgerForm, setLedgerForm] = useState({ type: 'له', amount: '', description: '', date: '' });
+      useEffect(() => {
+        localStorage.setItem('sys_jobs', JSON.stringify(jobs));
+      }, [jobs]);
 
-// حفظ التغييرات تلقائياً
-useEffect(() => { localStorage.setItem('sys_users_v2', JSON.stringify(users)); }, [users]);
-useEffect(() => { localStorage.setItem('sys_visits', JSON.stringify(visits)); }, [visits]);
-useEffect(() => { localStorage.setItem('sys_jobs', JSON.stringify(jobs)); }, [jobs]);
-useEffect(() => { localStorage.setItem('sys_ledger', JSON.stringify(ledger)); }, [ledger]);
+      useEffect(() => {
+        localStorage.setItem('sys_ledger', JSON.stringify(ledger));
+      }, [ledger]);
 
-// عند تسجيل الدخول: ضبط الخدمة المتاحة تلقائياً
-const handleLogin = (e) => {
-e.preventDefault();
-const found = users.find(u => u.username.toLowerCase() === loginForm.username.toLowerCase() && u.password === loginForm.password);
-if (found) {
-setCurrentUser(found);
-if (found.allowedServices && found.allowedServices.length > 0) {
-setCurrentService(found.allowedServices[0]);
-}
-setLoginForm({ username: '', password: '' });
-} else {
-alert('اسم المستخدم أو كلمة المرور غير صحيحة!');
-}
-};
+      const handleLogin = (e) => {
+        e.preventDefault();
+        const found = users.find(u => u.username.toLowerCase() === loginForm.username.trim().toLowerCase() && u.password === loginForm.password);
+        if (found) {
+          setCurrentUser(found);
+          const allowed = found.role === 'admin' ? ALL_SERVICES : (found.allowedServices || []);
+          if (allowed.length > 0) setCurrentService(allowed[0]);
+          setLoginForm({ username: '', password: '' });
+        } else {
+          alert('اسم المستخدم أو كلمة المرور غير صحيحة!');
+        }
+      };
 
-// إنشاء حساب جديد (حساب موظف عادي ينتظر تحديد الصلاحيات أو يتلقى صلاحية افتراضية)
-const handleRegister = (e) => {
-e.preventDefault();
-if (!regForm.name || !regForm.username || !regForm.password) return alert('يرجى تعبئة جميع الحقول');
-if (users.some(u => u.username.toLowerCase() === regForm.username.toLowerCase())) {
-return alert('اسم المستخدم مستخدم بالفعل، اختر اسماً آخر');
-}
+      const handleRegister = (e) => {
+        e.preventDefault();
+        if (!regForm.name || !regForm.username || !regForm.password) {
+          return alert('يرجى تعبئة جميع الحقول المطلوبة');
+        }
+        if (users.some(u => u.username.toLowerCase() === regForm.username.trim().toLowerCase())) {
+          return alert('اسم المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر');
+        }
+        const newUser = {
+          id: 'usr_' + Date.now(),
+          name: regForm.name,
+          username: regForm.username.trim(),
+          password: regForm.password,
+          role: 'user',
+          allowedServices: ['نظافة عامة']
+        };
+        setUsers([...users, newUser]);
+        alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
+        setRegForm({ name: '', username: '', password: '' });
+        setAuthMode('login');
+      };
 
-const newUser = {
-id: 'usr_' + Date.now(),
-name: regForm.name,
-username: regForm.username,
-password: regForm.password,
-role: 'user',
-allowedServices: ['نظافة عامة'] // صلاحية افتراضية لحين تعديلها من الآدمن
-};
+      const toggleUserService = (userId, serviceName) => {
+        setUsers(users.map(u => {
+          if (u.id === userId) {
+            const currentServices = u.allowedServices || [];
+            const hasService = currentServices.includes(serviceName);
+            const updated = hasService
+              ? currentServices.filter(s => s !== serviceName)
+              : [...currentServices, serviceName];
+            return { ...u, allowedServices: updated };
+          }
+          return u;
+        }));
+      };
 
-setUsers([...users, newUser]);
-alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
-setRegForm({ name: '', username: '', password: '' });
-setAuthMode('login');
-};
+      const filteredVisits = visits.filter(v => v.service === currentService);
+      const filteredJobs = jobs.filter(j => j.service === currentService);
+      const filteredLedger = ledger.filter(l => l.service === currentService);
 
-// تعديل صلاحيات الموظف بواسطة الآدمن
-const toggleUserService = (userId, serviceName) => {
-setUsers(users.map(u => {
-if (u.id === userId) {
-const hasService = u.allowedServices.includes(serviceName);
-const updated = hasService
-? u.allowedServices.filter(s => s !== serviceName)
-: [...u.allowedServices, serviceName];
-return { ...u, allowedServices: updated };
-}
-return u;
-}));
-};
+      if (!currentUser) {
+        return (
+          <div className="min-h-screen flex items-center justify-center p-4 bg-slate-900">
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+              <div className="text-center mb-6">
+                <h1 className="text-2xl font-black text-slate-800">مؤسسة الخدمات المتقدمة</h1>
+                <p className="text-xs text-slate-500 mt-1">نظام إدارة العمليات والصلاحيات</p>
+              </div>
 
-// فلترة البيانات بناءً على الخدمة المحددة حالياً
-const filteredVisits = visits.filter(v => v.service === currentService);
-const filteredJobs = jobs.filter(j => j.service === currentService);
-const filteredLedger = ledger.filter(l => l.service === currentService);
+              <div className="flex border-b mb-6 text-sm font-bold">
+                <button
+                  type="button"
+                  onClick={() => setAuthMode('login')}
+                  className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'login' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}
+                >
+                  تسجيل الدخول
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode('register')}
+                  className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'register' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}
+                >
+                  إنشاء حساب جديد
+                </button>
+              </div>
 
-// --- شاشة تسجيل الدخول / إنشاء الحساب ---
-if (!currentUser) {
-return (
-<div class="min-h-screen flex items-center justify-center p-4 bg-slate-900">
-<div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md">
-<div class="text-center mb-6">
-<h1 class="text-2xl font-black text-slate-800">مؤسسة الخدمات المتقدمة</h1>
-<p class="text-xs text-slate-500 mt-1">نظام إدارة العمليات والصلاحيات</p>
-</div>
+              {authMode === 'login' ? (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
+                    <input
+                      type="text"
+                      value={loginForm.username}
+                      onChange={e => setLoginForm({...loginForm, username: e.target.value})}
+                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
+                      placeholder="admin"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
+                    <input
+                      type="password"
+                      value={loginForm.password}
+                      onChange={e => setLoginForm({...loginForm, password: e.target.value})}
+                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-md">
+                    دخول إلى النظام
+                  </button>
+                  <div className="text-[11px] text-slate-400 text-center mt-3 bg-slate-50 p-2 rounded-lg">
+                    الحساب الافتراضي للمدير: <span className="font-bold text-slate-600">admin</span> / كلمة السر: <span className="font-bold text-slate-600">123</span>
+                  </div>
+                </form>
+              ) : (
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">الاسم الكامل</label>
+                    <input
+                      type="text"
+                      value={regForm.name}
+                      onChange={e => setRegForm({...regForm, name: e.target.value})}
+                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
+                      placeholder="علي / موظف"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
+                    <input
+                      type="text"
+                      value={regForm.username}
+                      onChange={e => setRegForm({...regForm, username: e.target.value})}
+                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
+                      placeholder="ali123"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
+                    <input
+                      type="password"
+                      value={regForm.password}
+                      onChange={e => setRegForm({...regForm, password: e.target.value})}
+                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <button type="submit" className="w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold text-white rounded-xl shadow-md">
+                    إنشاء الحساب الآن
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        );
+      }
 
-{/* تبويب الاختيار بين دخول أو حساب جديد */}
-<div class="flex border-b mb-6 text-sm font-bold">
-<button
-onClick={() => setAuthMode('login')}
-class={flex-1 pb-3 text-center transition border-b-2 ${authMode === 'login' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}} &gt; تسجيل الدخول &lt;/button&gt; &lt;button onClick={() =&gt; setAuthMode('register')} class={flex-1 pb-3 text-center transition border-b-2 ${authMode === 'register' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}}
->
-إنشاء حساب جديد
-</button>
-</div>
+      const handleAddVisit = (e) => {
+        e.preventDefault();
+        if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف على الأقل');
+        setVisits([...visits, { ...visitForm, id: Date.now(), service: currentService }]);
+        setVisitForm({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
+        alert('تمت إضافة موعد الزيارة بنجاح');
+      };
 
-{authMode === 'login' ? (
-<form onSubmit={handleLogin} class="space-y-4">
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
-<input
-type="text"
-value={loginForm.username}
-onChange={e => setLoginForm({...loginForm, username: e.target.value})}
-class="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-placeholder="أدخل اسم المستخدم (مثال: admin)"
-/>
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
-<input
-type="password"
-value={loginForm.password}
-onChange={e => setLoginForm({...loginForm, password: e.target.value})}
-class="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-placeholder="••••••••"
-/>
-</div>
-<button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl transition">
-دخول إلى النظام
-</button>
-<p class="text-[11px] text-slate-400 text-center mt-3">الحساب الافتراضي للآدمن: admin / كلمة السر: 123</p>
-</form>
-) : (
-<form onSubmit={handleRegister} class="space-y-4">
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">الاسم الكامل (أو اسم الموظف)</label>
-<input
-type="text"
-value={regForm.name}
-onChange={e => setRegForm({...regForm, name: e.target.value})}
-class="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-placeholder="مثال: حمزة / موظف التسويق"
-/>
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم (للدخول)</label>
-<input
-type="text"
-value={regForm.username}
-onChange={e => setRegForm({...regForm, username: e.target.value})}
-class="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-placeholder="مثال: hamzah123"
-/>
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
-<input
-type="password"
-value={regForm.password}
-onChange={e => setRegForm({...regForm, password: e.target.value})}
-class="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-placeholder="••••••••"
-/>
-</div>
-<button type="submit" class="w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold text-white rounded-xl transition">
-إنشاء الحساب الآن
-</button>
-</form>
-)}
-</div>
-</div>
-);
-}
+      const convertToJob = (visit) => {
+        const price = prompt('أدخل المبلغ المتفق عليه:');
+        if (!price) return;
+        setJobs([...jobs, { ...visit, price: parseFloat(price) || 0, jobDate: visit.date, quoteFile: null, invoiceFile: null }]);
+        setVisits(visits.filter(v => v.id !== visit.id));
+        setActiveTab('jobs');
+      };
 
-// إضافة موعد زيارة
-const handleAddVisit = (e) => {
-e.preventDefault();
-if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف على الأقل');
-const newVisit = { ...visitForm, id: Date.now(), service: currentService };
-setVisits([...visits, newVisit]);
-setVisitForm({ name: '', phone: '', location: '', date: '', timeStr: '', notes: '' });
-alert('تمت إضافة موعد الزيارة بنجاح');
-};
+      const handleFileUpload = (jobId, fileType, event) => {
+        const file = event.target.files[0];
+        if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف بصيغة PDF فقط!");
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setJobs(jobs.map(j => j.id === jobId ? { ...j, [fileType]: { name: file.name, url: e.target.result } } : j));
+          alert('تم رفع الملف بنجاح!');
+        };
+        reader.readAsDataURL(file);
+      };
 
-// تحويل زيارة إلى عمل معتمد
-const convertToJob = (visit) => {
-const price = prompt('أدخل المبلغ المتفق عليه (M):');
-if (!price) return;
-const newJob = { ...visit, price: parseFloat(price) || 0, jobDate: visit.date, quoteFile: null, invoiceFile: null };
-setJobs([...jobs, newJob]);
-setVisits(visits.filter(v => v.id !== visit.id));
-setActiveTab('jobs');
-};
+      const handleAddLedger = (e) => {
+        e.preventDefault();
+        if (!ledgerForm.amount || !ledgerForm.description) return alert('يرجى تعبئة الحقول المطلوبة');
+        setLedger([...ledger, {
+          ...ledgerForm,
+          id: Date.now(),
+          amount: parseFloat(ledgerForm.amount),
+          service: currentService,
+          date: ledgerForm.date || new Date().toISOString().split('T')[0]
+        }]);
+        setLedgerForm({ type: 'له', amount: '', description: '', date: '' });
+      };
 
-// رفع PDF
-const handleFileUpload = (jobId, fileType, event) => {
-const file = event.target.files[0];
-if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف بصيغة PDF فقط!");
+      const totalIn = filteredLedger.filter(l => l.type === 'له').reduce((acc, curr) => acc + curr.amount, 0);
+      const totalOut = filteredLedger.filter(l => l.type === 'منه').reduce((acc, curr) => acc + curr.amount, 0);
+      const userAllowedServices = currentUser.role === 'admin' ? ALL_SERVICES : (currentUser.allowedServices || []);
 
-const reader = new FileReader();
-reader.onload = (e) => {
-const fileData = { name: file.name, url: e.target.result };
-setJobs(jobs.map(j => j.id === jobId ? { ...j, [fileType]: fileData } : j));
-alert(تم رفع الملف بنجاح!);
-};
-reader.readAsDataURL(file);
-};
+      return (
+        <div className="min-h-screen flex flex-col">
+          <header className="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
+            <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+              <div>
+                <h1 className="text-xl font-black">مؤسسة الخدمات المتقدمة</h1>
+                <p className="text-xs text-slate-400">
+                  المستخدم: <span className="text-amber-400 font-bold">{currentUser.name}</span> ({currentUser.role === 'admin' ? 'المدير العام' : 'موظف'})
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-slate-800 p-1 rounded-xl flex gap-1">
+                  {userAllowedServices.map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setCurrentService(s)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${currentService === s ? 'bg-amber-500 text-slate-900 shadow' : 'text-slate-300 hover:text-white'}`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentUser(null)}
+                  className="bg-red-600/20 text-red-400 border border-red-600/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all"
+                >
+                  خروج
+                </button>
+              </div>
+            </div>
+          </header>
 
-// إدخال حركة مالية
-const handleAddLedger = (e) => {
-e.preventDefault();
-if (!ledgerForm.amount || !ledgerForm.description) return alert('يرجى تعبئة كافة الحقول المالية');
-const newEntry = {
-...ledgerForm,
-id: Date.now(),
-amount: parseFloat(ledgerForm.amount),
-service: currentService,
-date: ledgerForm.date || new Date().toISOString().split('T')[0]
-};
-setLedger([...ledger, newEntry]);
-setLedgerForm({ type: 'له', amount: '', description: '', date: '' });
-};
+          <nav className="bg-white border-b border-slate-200 sticky top-[68px] z-40 shadow-sm">
+            <div className="max-w-6xl mx-auto flex overflow-x-auto text-sm font-bold text-slate-600 no-scrollbar">
+              {[
+                { id: 'visits', label: 'مواعيد الزيارات' },
+                { id: 'jobs', label: 'العمليات والملفات (PDF)' },
+                { id: 'accounting', label: 'المحاسبة' },
+                ...(currentUser.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات' }] : [])
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-5 py-3 whitespace-nowrap border-b-2 transition-all ${activeTab === tab.id ? 'border-amber-500 text-amber-600 bg-amber-50/50' : 'border-transparent hover:text-slate-900'}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </nav>
 
-const totalIn = filteredLedger.filter(l => l.type === 'له').reduce((acc, curr) => acc + curr.amount, 0);
-const totalOut = filteredLedger.filter(l => l.type === 'منه').reduce((acc, curr) => acc + curr.amount, 0);
-const todayStr = new Date().toISOString().split('T')[0];
+          <main className="max-w-6xl mx-auto w-full p-4 flex-1">
+            {activeTab === 'user_mgr' && currentUser.role === 'admin' && (
+              <div className="space-y-6">
+                <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
+                  <h2 className="text-xl font-bold">إدارة الموظفين والصلاحيات</h2>
+                  <p className="text-xs text-slate-400 mt-1">حدد الأقسام والخدمات المتاحة لكل موظف مسجل في النظام</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {users.map(u => (
+                    <div key={u.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                      <div className="flex justify-between items-start border-b pb-3">
+                        <div>
+                          <h3 className="font-bold text-slate-900 text-lg">{u.name}</h3>
+                          <p className="text-xs text-slate-500">اسم المستخدم: {u.username}</p>
+                        </div>
+                        <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>
+                          {u.role === 'admin' ? 'المدير العام' : 'موظف'}
+                        </span>
+                      </div>
+                      {u.role !== 'admin' ? (
+                        <div>
+                          <label className="text-xs font-bold text-slate-600 block mb-2">الخدمات المتاحة للموظف:</label>
+                          <div className="flex flex-wrap gap-2">
+                            {ALL_SERVICES.map(s => {
+                              const isAllowed = u.allowedServices && u.allowedServices.includes(s);
+                              return (
+                                <button
+                                  key={s}
+                                  type="button"
+                                  onClick={() => toggleUserService(u.id, s)}
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${isAllowed ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-slate-50 text-slate-400 border-slate-200'}`}
+                                >
+                                  {isAllowed ? '✓ ' : '+ '} {s}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-amber-600 font-bold bg-amber-50 p-2 rounded-xl">المدير يملك كل الصلاحيات بشكل كامل.</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-// الخدمات المتاحة للمستخدم الحالي
-const userAllowedServices = currentUser.role === 'admin' ? ALL_SERVICES : (currentUser.allowedServices || []);
+            {activeTab === 'visits' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit">
+                  <h2 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">حجز موعد زيارة ({currentService})</h2>
+                  <form onSubmit={handleAddVisit} className="space-y-3">
+                    <input type="text" value={visitForm.name} onChange={e => setVisitForm({...visitForm, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="اسم الزبون" />
+                    <input type="text" value={visitForm.phone} onChange={e => setVisitForm({...visitForm, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="رقم الهاتف" />
+                    <input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="العنوان" />
+                    <input type="date" value={visitForm.date} onChange={e => setVisitForm({...visitForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                    <input type="text" value={visitForm.timeStr} onChange={e => setVisitForm({...visitForm, timeStr: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="الموعد (مثال: 2 ظهراً)" />
+                    <textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="2" placeholder="ملاحظات"></textarea>
+                    <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-sm">تسجيل الزيارة</button>
+                  </form>
+                </div>
 
-return (
-<div class="min-h-screen flex flex-col">
-{/* الشريط العلوي */}
-<header class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
-<div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
-<div>
-<h1 class="text-xl font-black">مؤسسة الخدمات المتقدمة</h1>
-<p class="text-xs text-slate-400">المستخدم: <span class="text-amber-400 font-bold">{currentUser.name}</span> ({currentUser.role === 'admin' ? 'المدير العام' : 'موظف'})</p>
-</div>
+                <div className="md:col-span-2 space-y-4">
+                  <h2 className="font-bold text-lg text-slate-800">طلبات المعاينة - [{currentService}] ({filteredVisits.length})</h2>
+                  {filteredVisits.length === 0 ? (
+                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد مواعيد مسجلة حالياً لهذه الخدمة.</div>
+                  ) : (
+                    filteredVisits.map(v => (
+                      <div key={v.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
+                        <div>
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="font-bold text-slate-900 text-lg">{v.name}</h3>
+                            <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">{v.date} | {v.timeStr}</span>
+                          </div>
+                          <p className="text-sm text-slate-600"><strong>الهاتف:</strong> {v.phone} | <strong>العنوان:</strong> {v.location}</p>
+                          {v.notes && <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2">{v.notes}</p>}
+                        </div>
+                        <div className="flex gap-2 border-t pt-3">
+                          <button type="button" onClick={() => convertToJob(v)} className="flex-1 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-700">✓ تحويل إلى عمل معتمد</button>
+                          <button type="button" onClick={() => setVisits(visits.filter(item => item.id !== v.id))} className="py-2 px-3 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-200">حذف</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
 
-{/* التنقل بين الخدمات المتاحة فقط للمستخدم */}
-<div class="flex items-center gap-2">
-<div class="bg-slate-800 p-1 rounded-xl flex gap-1">
-{userAllowedServices.map(s => (
-<button
-key={s}
-onClick={() => setCurrentService(s)}
-class={px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentService === s ? 'bg-amber-500 text-slate-900' : 'text-slate-300 hover:text-white'}`}
->
-{s}
-</button>
-))}
-{userAllowedServices.length === 0 && (
-<span class="text-xs text-red-400 p-1">لم يتم تعيين خدمات لك بعد</span>
-)}
-</div>
+            {activeTab === 'jobs' && (
+              <div className="space-y-4">
+                <h2 className="font-bold text-lg text-slate-800">العمليات والملفات - [{currentService}] ({filteredJobs.length})</h2>
+                {filteredJobs.length === 0 ? (
+                  <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد عمليات معتمدة حالياً لهذه الخدمة.</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {filteredJobs.map(j => (
+                      <div key={j.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <div className="flex justify-between items-start border-b pb-3">
+                          <div>
+                            <h3 className="font-bold text-slate-900 text-lg">{j.name}</h3>
+                            <p className="text-xs text-slate-500">{j.phone} - {j.location}</p>
+                          </div>
+                          <span className="text-lg font-black text-emerald-600">{j.price} د.أ</span>
+                        </div>
+                        <div className="space-y-2 border-t pt-2">
+                          <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
+                            <span>عرض السعر: {j.quoteFile ? j.quoteFile.name : 'لا يوجد'}</span>
+                            <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold">
+                              رفع PDF
+                              <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} />
+                            </label>
+                          </div>
+                          <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
+                            <span>الفاتورة: {j.invoiceFile ? j.invoiceFile.name : 'لا يوجد'}</span>
+                            <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold">
+                              رفع PDF
+                              <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
-<button
-onClick={() => setCurrentUser(null)}
-class="bg-red-600/20 text-red-400 border border-red-600/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition"
->
-خروج
-</button>
-</div>
-</div>
-</header>
+            {activeTab === 'accounting' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit space-y-3">
+                  <h2 className="font-bold text-lg border-b pb-2 text-slate-800">تسجيل حركة مالية</h2>
+                  <form onSubmit={handleAddLedger} className="space-y-3">
+                    <select value={ledgerForm.type} onChange={e => setLedgerForm({...ledgerForm, type: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none">
+                      <option value="له">له (مقبوضات)</option>
+                      <option value="منه">منه (مصاريف)</option>
+                    </select>
+                    <input type="number" value={ledgerForm.amount} onChange={e => setLedgerForm({...ledgerForm, amount: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="المبلغ" />
+                    <input type="text" value={ledgerForm.description} onChange={e => setLedgerForm({...ledgerForm, description: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="البيان / الوصف" />
+                    <input type="date" value={ledgerForm.date} onChange={e => setLedgerForm({...ledgerForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
+                    <button type="submit" className="w-full py-3 bg-slate-800 text-white font-bold rounded-xl shadow-sm">حفظ الحركة</button>
+                  </form>
+                </div>
 
-{/* تبويبات النظام */}
-<nav class="bg-white border-b border-slate-200 sticky top-[68px] z-40 shadow-sm">
-<div class="max-w-6xl mx-auto flex overflow-x-auto text-sm font-bold text-slate-600 no-scrollbar">
-{[
-{ id: 'visits', label: 'مواعيد الزيارات والربط' },
-{ id: 'jobs', label: 'تنسيق العمليات والأسعار (PDF)' },
-{ id: 'calendar', label: 'الرزنامة والجدول' },
-{ id: 'route', label: 'خط السير اليومي' },
-{ id: 'accounting', label: 'المحاسبة والمديونية' },
-...(currentUser.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات والموظفين' }] : [])
-].map(tab => (
-<button
-key={tab.id}
-onClick={() => setActiveTab(tab.id)}
-class={px-5 py-3 whitespace-nowrap border-b-2 transition${activeTab === tab.id ? 'border-amber-500 text-amber-600 bg-amber-50/50' : 'border-transparent hover:text-slate-900'}`}
->
-{tab.label}
-</button>
-))}
-</div>
-</nav>
+                <div className="md:col-span-2 space-y-4">
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div className="bg-emerald-50 p-3 rounded-2xl border border-emerald-100">
+                      <span className="text-xs text-emerald-600 block font-bold">له (إيرادات)</span>
+                      <span className="font-black text-lg text-emerald-700">{totalIn} د.أ</span>
+                    </div>
+                    <div className="bg-red-50 p-3 rounded-2xl border border-red-100">
+                      <span className="text-xs text-red-600 block font-bold">منه (مصاريف)</span>
+                      <span className="font-black text-lg text-red-700">{totalOut} د.أ</span>
+                    </div>
+                    <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-sm">
+                      <span className="text-xs text-slate-400 block font-bold">الصافي</span>
+                      <span className="font-black text-lg text-amber-400">{totalIn - totalOut} د.أ</span>
+                    </div>
+                  </div>
 
-{/* محتوى الشاشات */}
-<main class="max-w-6xl mx-auto w-full p-4 flex-1">
+                  <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <table className="w-full text-right text-xs">
+                      <thead className="bg-slate-50 text-slate-500 font-bold border-b">
+                        <tr>
+                          <th className="p-3">التاريخ</th>
+                          <th className="p-3">النوع</th>
+                          <th className="p-3">البيان</th>
+                          <th className="p-3">المبلغ</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {filteredLedger.length === 0 ? (
+                          <tr><td colSpan="4" className="p-4 text-center text-slate-400">لا توجد حركات مالية مسجلة.</td></tr>
+                        ) : (
+                          filteredLedger.map(l => (
+                            <tr key={l.id}>
+                              <td className="p-3 text-slate-500">{l.date}</td>
+                              <td className="p-3 font-bold"><span className={`px-2 py-0.5 rounded ${l.type === 'له' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>{l.type}</span></td>
+                              <td className="p-3 text-slate-800 font-bold">{l.description}</td>
+                              <td className="p-3 font-black">{l.amount} د.أ</td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
 
-{/* شاشة إدارة الموظفين والصلاحيات (للآدمن فقط) */}
-{activeTab === 'user_mgr' && currentUser.role === 'admin' && (
-<div class="space-y-6">
-<div class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
-<h2 class="text-xl font-bold">إدارة الموظفين وتحديد الصلاحيات</h2>
-<p class="text-xs text-slate-400 mt-1">يمكنك من هنا تحديد الأقسام والخدمات التي يحق لكل موظف الدخول إليها والتعامل معها.</p>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-{users.map(u => (
-<div key={u.id} class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-<div class="flex justify-between items-start border-b pb-3">
-<div>
-<h3 class="font-bold text-slate-900 text-lg">{u.name}</h3>
-<p class="text-xs text-slate-500">اسم المستخدم: <span class="font-bold">{u.username}</span></p>
-</div>
-<span class={text-xs px-2.5 py-1 rounded-lg font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>
-{u.role === 'admin' ? 'المدير العام' : 'موظف'}
-</span>
-</div>
-
-{u.role !== 'admin' ? (
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-2">الأقسام والخدمات المتاحة له:</label>
-<div class="flex flex-wrap gap-2">
-{ALL_SERVICES.map(serviceName => {
-const isAllowed = u.allowedServices && u.allowedServices.includes(serviceName);
-return (
-<button
-key={serviceName}
-onClick={() => toggleUserService(u.id, serviceName)}
-class={px-3 py-1.5 rounded-xl text-xs font-bold border transition${isAllowed ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 text-slate-400 border-slate-200 hover:border-slate-300'}`}
->
-{isAllowed ? '✓ ' : '+ '} {serviceName}
-</button>
-);
-})}
-</div>
-</div>
-) : (
-<p class="text-xs text-amber-600 font-bold bg-amber-50 p-2 rounded-xl">المدير العام يملك كافة الصلاحيات على جميع الأقسام تلقائياً.</p>
-)}
-</div>
-))}
-</div>
-</div>
-)}
-
-{/* 1. مواعيد الزيارات والمعاينة */}
-{activeTab === 'visits' && (
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit">
-<h2 class="font-bold text-lg mb-4 text-slate-800 border-b pb-2">حجز موعد زيارة معاينة ({currentService})</h2>
-<form onSubmit={handleAddVisit} class="space-y-3">
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">اسم الزبون</label>
-<input type="text" value={visitForm.name} onChange={e => setVisitForm({...visitForm, name: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: أحمد علي" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">رقم الهاتف</label>
-<input type="text" value={visitForm.phone} onChange={e => setVisitForm({...visitForm, phone: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="0791234567" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">العنوان / اللوكيشن</label>
-<input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="عمان - خلدا" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">تاريخ الزيارة</label>
-<input type="date" value={visitForm.date} onChange={e => setVisitForm({...visitForm, date: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">الموعد المفضل</label>
-<input type="text" value={visitForm.timeStr} onChange={e => setVisitForm({...visitForm, timeStr: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: الساعة 2 ظهراً" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">ملاحظات المعاينة</label>
-<textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="2" placeholder="تفاصيل الخدمة المطلوب معاينتها..."></textarea>
-</div>
-<button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl transition">تسجيل الزيارة قسم ({currentService})</button>
-</form>
-</div>
-
-<div class="md:col-span-2 space-y-4">
-<h2 class="font-bold text-lg text-slate-800">طلبات المعاينة - قسم [{currentService}] ({filteredVisits.length})</h2>
-{filteredVisits.length === 0 ? (
-<div class="bg-white p-8 text-center rounded-2xl border text-slate-400">لا توجد زيارات معاينة لهذا القسم حالياً.</div>
-) : (
-filteredVisits.map(v => (
-<div key={v.id} class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
-<div>
-<div class="flex justify-between items-start mb-2">
-<h3 class="font-bold text-slate-900 text-lg">{v.name}</h3>
-<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">{v.date || 'غير محدد'} | {v.timeStr || 'حسب الاتفاق'}</span>
-</div>
-<p class="text-sm text-slate-600"><strong>الهاتف:</strong> {v.phone}</p>
-<p class="text-sm text-slate-600"><strong>العنوان:</strong> {v.location || 'غير مدخل'}</p>
-{v.notes && <p class="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2">ملاحظات: {v.notes}</p>}
-</div>
-<div class="flex gap-2 border-t pt-3">
-<button onClick={() => convertToJob(v)} class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition">
-✓ تم الاتفاق (تحويل إلى عمل معتمد)
-</button>
-<button onClick={() => setVisits(visits.filter(item => item.id !== v.id))} class="py-2 px-3 bg-slate-100 hover:bg-red-100 text-slate-600 hover:text-red-600 font-bold text-xs rounded-xl transition">
-إلغاء
-</button>
-</div>
-</div>
-))
-)}
-</div>
-</div>
-)}
-
-{/* 2. تنسيق العمليات ومرفقات PDF */}
-{activeTab === 'jobs' && (
-<div class="space-y-4">
-<h2 class="font-bold text-lg text-slate-800">الورش والعمليات المعتمدة والمرفقات - [{currentService}] ({filteredJobs.length})</h2>
-{filteredJobs.length === 0 ? (
-<div class="bg-white p-8 text-center rounded-2xl border text-slate-400">لا توجد ورش عمل معتمدة في هذا القسم حالياً.</div>
-) : (
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-{filteredJobs.map(j => (
-<div key={j.id} class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-<div class="flex justify-between items-start border-b pb-3">
-<div>
-<h3 class="font-bold text-slate-900 text-lg">{j.name}</h3>
-<p class="text-xs text-slate-500">{j.phone} - {j.location}</p>
-</div>
-<span class="text-lg font-black text-emerald-600">{j.price} د.أ</span>
-</div>
-
-<div class="bg-slate-50 p-3 rounded-xl text-xs space-y-1">
-<p><strong>تاريخ الورشة:</strong> {j.jobDate}</p>
-<p><strong>الموعد:</strong> {j.timeStr}</p>
-</div>
-
-{/* رفع وتحميل ملفات PDF */}
-<div class="space-y-3 pt-1 border-t">
-<div class="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl text-xs">
-<div>
-<strong class="block text-slate-800">عرض السعر (Quotation):</strong>
-<span class="text-[10px] text-slate-500">{j.quoteFile ? j.quoteFile.name : 'لم يرفق ملف'}</span>
-</div>
-<div class="flex gap-1">
-{j.quoteFile && (
-<a href={j.quoteFile.url} download={Quotation_${j.name}.pdf`} target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] transition">تحميل PDF</a>
-)}
-<label class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] cursor-pointer transition">
-{j.quoteFile ? 'تغيير' : 'رفع PDF'}
-<input type="file" accept="application/pdf" class="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} />
-</label>
-</div>
-</div>
-
-<div class="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl text-xs">
-<div>
-<strong class="block text-slate-800">الفاتورة (Invoice):</strong>
-<span class="text-[10px] text-slate-500">{j.invoiceFile ? j.invoiceFile.name : 'لم يرفق ملف'}</span>
-</div>
-<div class="flex gap-1">
-{j.invoiceFile && (
-<a href={j.invoiceFile.url} download={Invoice_${j.name}.pdf`} target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] transition">تحميل PDF</a>
-)}
-<label class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg text-[11px] cursor-pointer transition">
-{j.invoiceFile ? 'تغيير' : 'رفع PDF'}
-<input type="file" accept="application/pdf" class="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} />
-</label>
-</div>
-</div>
-</div>
-
-</div>
-))}
-</div>
-)}
-</div>
-)}
-
-{/* 3. الرزنامة والجدول */}
-{activeTab === 'calendar' && (
-<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-<div class="flex justify-between items-center border-b pb-4">
-<h2 class="font-bold text-lg text-slate-800">جدول المواعيد - قسم [{currentService}]</h2>
-<span class="text-xs bg-slate-100 font-bold px-3 py-1.5 rounded-lg">تاريخ اليوم: {todayStr}</span>
-</div>
-<div class="space-y-6">
-<div>
-<h3 class="font-bold text-sm text-amber-600 mb-3">● مواعيد زيارات المعاينة:</h3>
-<div class="space-y-2">
-{filteredVisits.map(v => (
-<div key={v.id} class="p-3 bg-amber-50 border border-amber-200 rounded-xl flex justify-between items-center text-xs">
-<div><strong class="text-slate-800">{v.name}</strong> ({v.location})</div>
-<span class="font-bold text-amber-800">{v.date} | {v.timeStr}</span>
-</div>
-))}
-{filteredVisits.length === 0 && <p class="text-xs text-slate-400">لا توجد زيارات معاينة مبرمجة.</p>}
-</div>
-</div>
-
-<div>
-<h3 class="font-bold text-sm text-emerald-600 mb-3">● ورش العمل والتنفيذ:</h3>
-<div class="space-y-2">
-{filteredJobs.map(j => (
-<div key={j.id} class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex justify-between items-center text-xs">
-<div><strong class="text-slate-800">{j.name}</strong> ({j.location}) - <span class="font-bold text-emerald-700">{j.price} د.أ</span></div>
-<span class="font-bold text-emerald-800">{j.jobDate} | {j.timeStr}</span>
-</div>
-))}
-{filteredJobs.length === 0 && <p class="text-xs text-slate-400">لا توجد ورش عمل مبرمجة.</p>}
-</div>
-</div>
-</div>
-</div>
-)}
-
-{/* 4. خط السير اليومي */}
-{activeTab === 'route' && (
-<div class="space-y-4">
-<div class="bg-slate-900 text-white p-5 rounded-2xl shadow-sm">
-<h2 class="font-bold text-lg">خط السير اليومي - قسم [{currentService}]</h2>
-<p class="text-xs text-slate-400">جميع المواعيد المستحقة اليوم ({todayStr})</p>
-</div>
-
-<div class="space-y-3">
-{filteredVisits.filter(v => v.date === todayStr).map(v => (
-<div key={v.id} class="p-4 bg-white border-r-4 border-r-amber-500 rounded-xl shadow-sm flex justify-between items-center">
-<div>
-<span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">معاينة ميدانية</span>
-<h4 class="font-bold text-slate-800 text-sm mt-1">{v.name}</h4>
-<p class="text-xs text-slate-500">{v.location} - {v.phone}</p>
-</div>
-<span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg">{v.timeStr}</span>
-</div>
-))}
-
-{filteredJobs.filter(j => j.jobDate === todayStr).map(j => (
-<div key={j.id} class="p-4 bg-white border-r-4 border-r-emerald-500 rounded-xl shadow-sm flex justify-between items-center">
-<div>
-<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">ورشة تنفيذ</span>
-<h4 class="font-bold text-slate-800 text-sm mt-1">{j.name}</h4>
-<p class="text-xs text-slate-500">{j.location} - {j.phone}</p>
-</div>
-<span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg">{j.timeStr}</span>
-</div>
-))}
-
-{filteredVisits.filter(v => v.date === todayStr).length === 0 && filteredJobs.filter(j => j.jobDate === todayStr).length === 0 && (
-<div class="bg-white p-8 text-center rounded-2xl border text-slate-400">لا توجد ورش أو زيارات مقيدة لهذا اليوم.</div>
-)}
-</div>
-</div>
-)}
-
-{/* 5. المحاسبة والمديونية */}
-{activeTab === 'accounting' && (
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit space-y-4">
-<h2 class="font-bold text-lg border-b pb-2 text-slate-800">حركة مالية - [{currentService}]</h2>
-<form onSubmit={handleAddLedger} class="space-y-3">
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">نوع الحركة</label>
-<select value={ledgerForm.type} onChange={e => setLedgerForm({...ledgerForm, type: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none">
-<option value="له">مقبوضات (له)</option>
-<option value="منه">مدفوعات ومصاريف (منه)</option>
-</select>
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">المبلغ (د.أ)</label>
-<input type="number" value={ledgerForm.amount} onChange={e => setLedgerForm({...ledgerForm, amount: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="0.00" />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">البيان / التوضيح</label>
-<input type="text" value={ledgerForm.description} onChange={e => setLedgerForm({...ledgerForm, description: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="شرح الدفعة أو المصروف..." />
-</div>
-<div>
-<label class="text-xs font-bold text-slate-600 block mb-1">التاريخ</label>
-<input type="date" value={ledgerForm.date} onChange={e => setLedgerForm({...ledgerForm, date: e.target.value})} class="w-full border p-2.5 rounded-xl text-sm outline-none" />
-</div>
-<button type="submit" class="w-full py-3 bg-slate-800 text-white hover:bg-slate-900 font-bold rounded-xl transition">حفظ في الحسابات</button>
-</form>
-</div>
-
-<div class="md:col-span-2 space-y-4">
-<div class="grid grid-cols-3 gap-3">
-<div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-center">
-<span class="text-xs text-emerald-600 font-bold block">المقبوضات (له)</span>
-<span class="text-xl font-black text-emerald-700">{totalIn} د.أ</span>
-</div>
-<div class="bg-red-50 border border-red-200 p-4 rounded-2xl text-center">
-<span class="text-xs text-red-600 font-bold block">المصاريف (منه)</span>
-<span class="text-xl font-black text-red-700">{totalOut} د.أ</span>
-</div>
-<div class="bg-slate-900 text-white p-4 rounded-2xl text-center">
-<span class="text-xs text-slate-400 font-bold block">صافي القسم</span>
-<span class="text-xl font-black text-amber-400">{totalIn - totalOut} د.أ</span>
-</div>
-</div>
-
-<h3 class="font-bold text-slate-800 pt-2">سجل الحركات المالية لقسم [{currentService}]</h3>
-<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-<table class="w-full text-right text-xs">
-<thead class="bg-slate-50 text-slate-600 border-b">
-<tr>
-<th class="p-3">التاريخ</th>
-<th class="p-3">النوع</th>
-<th class="p-3">البيان</th>
-<th class="p-3">المبلغ</th>
-</tr>
-</thead>
-<tbody class="divide-y">
-{filteredLedger.map(l => (
-<tr key={l.id} class="hover:bg-slate-50">
-<td class="p-3 text-slate-500">{l.date}</td>
-<td class="p-3 font-bold">
-<span class={px-2 py-0.5 rounded ${l.type === 'له' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}}>{l.type}</span>
-</td>
-<td class="p-3 font-bold text-slate-800">{l.description}</td>
-<td class="p-3 font-black text-slate-900">{l.amount} د.أ</td>
-</tr>
-))}
-{filteredLedger.length === 0 && (
-<tr><td colSpan="4" class="p-6 text-center text-slate-400">لا توجد حركات مالية مقيدة في هذا القسم.</td></tr>
-)}
-</tbody>
-</table>
-</div>
-</div>
-</div>
-)}
-
-</main>
-</div>
-);
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script>
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+  </script>
 </body>
 </html>
+

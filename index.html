@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مؤسسة الخدمات المتقدمة</title>
+  <title>مؤسسة الرؤيا المتقدمة</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- React 18 & ReactDOM CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Firebase JS SDK (Compat Versions) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <!-- Cairo Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -24,181 +30,305 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script type="text/babel" data-presets="react">
-    const { useState, useEffect } = React;
+    // =========================================================================
+    // ⚙️ إعدادات FIREBASE المدمجة الخاصة بمشروعك
+    // =========================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyC...", // تم دمج المفاتيح الخاصة بمشروعك
+      authDomain: "roya-app-jo.firebaseapp.com",
+      projectId: "roya-app-jo",
+      storageBucket: "roya-app-jo.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
+
+    // تهيئة فايربيس
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
     const ALL_SERVICES = ['نظافة عامة', 'جلي وتلميع بلاط', 'دراي كلين'];
-    const DEFAULT_USERS = [
-      { id: 'admin_1', name: 'أحمد (المدير العام)', username: 'admin', password: '123', role: 'admin', allowedServices: ALL_SERVICES }
-    ];
 
     function App() {
-      const [users, setUsers] = useState(() => {
-        try {
-          const saved = localStorage.getItem('sys_users_v3');
-          return saved ? JSON.parse(saved) : DEFAULT_USERS;
-        } catch (e) { return DEFAULT_USERS; }
-      });
+      const { useState, useEffect } = React;
+
       const [currentUser, setCurrentUser] = useState(null);
+      const [userProfile, setUserProfile] = useState(null);
+      const [loading, setLoading] = useState(true);
+
       const [authMode, setAuthMode] = useState('login');
       const [loginForm, setLoginForm] = useState({ username: '', password: '' });
       const [regForm, setRegForm] = useState({ name: '', username: '', password: '' });
-      const [currentService, setCurrentService] = useState('');
+
+      const [currentService, setCurrentService] = useState(ALL_SERVICES[0]);
       const [activeTab, setActiveTab] = useState('visits');
 
-      const [visits, setVisits] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('sys_visits')) || []; } catch(e) { return []; }
-      });
-      const [jobs, setJobs] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('sys_jobs')) || []; } catch(e) { return []; }
-      });
-      const [ledger, setLedger] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('sys_ledger')) || []; } catch(e) { return []; }
-      });
+      // البيانات المزامنة سحابياً
+      const [usersList, setUsersList] = useState([]);
+      const [visits, setVisits] = useState([]);
+      const [jobs, setJobs] = useState([]);
+      const [ledger, setLedger] = useState([]);
 
-      // الحالات الخاصة بالنماذج والتعديل
+      // حالات النماذج والتعديل
       const [visitForm, setVisitForm] = useState({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' });
-      const [editingVisit, setEditingVisit] = useState(null); // المعاينة الجاري تعديلها
+      const [editingVisit, setEditingVisit] = useState(null);
 
-      const [convertingVisit, setConvertingVisit] = useState(null); // المعاينة الجاري تحويلها
+      const [convertingVisit, setConvertingVisit] = useState(null);
       const [convertModalForm, setConvertModalForm] = useState({ price: '', workDate: '', workTime: '08:00 صباحاً', workNotes: '' });
 
-      const [editingJob, setEditingJob] = useState(null); // الورشة الجاري تعديلها
-
+      const [editingJob, setEditingJob] = useState(null);
       const [ledgerForm, setLedgerForm] = useState({ type: 'له', amount: '', description: '', date: '' });
-      const [expandedDates, setExpandedDates] = useState({}); // للتحكم بفتح وإغلاق أيام الأجيندة
+      const [expandedDates, setExpandedDates] = useState({});
 
-      useEffect(() => { localStorage.setItem('sys_users_v3', JSON.stringify(users)); }, [users]);
-      useEffect(() => { localStorage.setItem('sys_visits', JSON.stringify(visits)); }, [visits]);
-      useEffect(() => { localStorage.setItem('sys_jobs', JSON.stringify(jobs)); }, [jobs]);
-      useEffect(() => { localStorage.setItem('sys_ledger', JSON.stringify(ledger)); }, [ledger]);
+      // 1. متابعة حالة تسجيل الدخول تلقائياً (تمنع الخروج عند التحديث)
+      useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            setCurrentUser(user);
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+              const data = userDoc.data();
+              setUserProfile(data);
+              const allowed = data.role === 'admin' ? ALL_SERVICES : (data.allowedServices || []);
+              if (allowed.length > 0) setCurrentService(allowed[0]);
+            }
+          } else {
+            setCurrentUser(null);
+            setUserProfile(null);
+          }
+          setLoading(false);
+        });
 
-      const handleLogin = (e) => {
+        return () => unsubscribe();
+      }, []);
+
+      // 2. المزامنة اللحظية للبيانات بين كافة الأجهزة والحسابات
+      useEffect(() => {
+        if (!currentUser) return;
+
+        const unsubVisits = db.collection('visits').onSnapshot(snapshot => {
+          setVisits(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        const unsubJobs = db.collection('jobs').onSnapshot(snapshot => {
+          setJobs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        const unsubLedger = db.collection('ledger').onSnapshot(snapshot => {
+          setLedger(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        const unsubUsers = db.collection('users').onSnapshot(snapshot => {
+          setUsersList(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        return () => {
+          unsubVisits();
+          unsubJobs();
+          unsubLedger();
+          unsubUsers();
+        };
+      }, [currentUser]);
+
+      // تسجيل الدخول
+      const handleLogin = async (e) => {
         e.preventDefault();
-        const found = users.find(u => u.username.toLowerCase() === loginForm.username.trim().toLowerCase() && u.password === loginForm.password);
-        if (found) {
-          setCurrentUser(found);
-          const allowed = found.role === 'admin' ? ALL_SERVICES : (found.allowedServices || []);
-          if (allowed.length > 0) setCurrentService(allowed[0]);
+        if (!loginForm.username || !loginForm.password) return alert('يرجى تعبئة كافة الحقول');
+        const email = loginForm.username.trim().toLowerCase() + '@roya.internal';
+        try {
+          await auth.signInWithEmailAndPassword(email, loginForm.password);
           setLoginForm({ username: '', password: '' });
-        } else {
+        } catch (err) {
           alert('اسم المستخدم أو كلمة المرور غير صحيحة!');
         }
       };
 
-      const handleRegister = (e) => {
+      // إنشاء حساب جديد
+      const handleRegister = async (e) => {
         e.preventDefault();
-        if (!regForm.name || !regForm.username || !regForm.password) return alert('يرجى تعبئة جميع الحقول المطلوبة');
-        if (users.some(u => u.username.toLowerCase() === regForm.username.trim().toLowerCase())) return alert('اسم المستخدم مستخدم بالفعل!');
-        const newUser = { id: 'usr_' + Date.now(), name: regForm.name, username: regForm.username.trim(), password: regForm.password, role: 'user', allowedServices: ['نظافة عامة'] };
-        setUsers([...users, newUser]);
-        alert('تم إنشاء الحساب بنجاح!');
-        setRegForm({ name: '', username: '', password: '' });
-        setAuthMode('login');
-      };
+        if (!regForm.name || !regForm.username || !regForm.password) return alert('يرجى تعبئة كافة الحقول');
+        const email = regForm.username.trim().toLowerCase() + '@roya.internal';
+        
+        try {
+          const res = await auth.createUserWithEmailAndPassword(email, regForm.password);
+          const isFirstUser = usersList.length === 0;
+          const newUserProfile = {
+            uid: res.user.uid,
+            name: regForm.name,
+            username: regForm.username.trim(),
+            role: isFirstUser ? 'admin' : 'user',
+            allowedServices: isFirstUser ? ALL_SERVICES : ['نظافة عامة']
+          };
 
-      const toggleUserService = (userId, serviceName) => {
-        setUsers(users.map(u => {
-          if (u.id === userId) {
-            const currentServices = u.allowedServices || [];
-            const hasService = currentServices.includes(serviceName);
-            const updated = hasService ? currentServices.filter(s => s !== serviceName) : [...currentServices, serviceName];
-            return { ...u, allowedServices: updated };
+          await db.collection('users').doc(res.user.uid).set(newUserProfile);
+          alert('تم إنشاء الحساب بنجاح وتأمينه سحابياً!');
+          setRegForm({ name: '', username: '', password: '' });
+        } catch (err) {
+          if (err.code === 'auth/email-already-in-use') {
+            alert('اسم المستخدم مستخدم بالفعل، اختر اسماً آخر');
+          } else {
+            alert('حدث خطأ أثناء إنشاء الحساب: ' + err.message);
           }
-          return u;
-        }));
+        }
       };
 
-      // إضافة/تعديل زيارة المعاينة
-      const handleSaveVisit = (e) => {
+      // تعديل صلاحيات الموظف (للأدمن)
+      const toggleUserService = async (userId, serviceName) => {
+        const targetUser = usersList.find(u => u.id === userId);
+        if (!targetUser) return;
+        const currentServices = targetUser.allowedServices || [];
+        const hasService = currentServices.includes(serviceName);
+        const updated = hasService ? currentServices.filter(s => s !== serviceName) : [...currentServices, serviceName];
+
+        await db.collection('users').doc(userId).update({ allowedServices: updated });
+      };
+
+      // إضافة أو تعديل معاينة
+      const handleSaveVisit = async (e) => {
         e.preventDefault();
-        if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف على الأقل');
+        if (!visitForm.name || !visitForm.phone) return alert('يرجى تعبئة الاسم ورقم الهاتف');
 
         if (editingVisit) {
-          setVisits(visits.map(v => v.id === editingVisit.id ? { ...v, ...visitForm } : v));
+          await db.collection('visits').doc(editingVisit.id).update(visitForm);
           setEditingVisit(null);
-          alert('تم تحديث بيانات معاينة الزبون بنجاح');
+          alert('تم تحديث المعاينة سحابياً');
         } else {
-          setVisits([...visits, { ...visitForm, id: Date.now(), service: currentService }]);
+          await db.collection('visits').add({
+            ...visitForm,
+            service: currentService,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
           alert('تمت إضافة موعد المعاينة بنجاح');
         }
         setVisitForm({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' });
       };
 
-      const handleStartEditVisit = (v) => {
-        setEditingVisit(v);
-        setVisitForm({ name: v.name, phone: v.phone, location: v.location || '', mapUrl: v.mapUrl || '', date: v.date || '', timeStr: v.timeStr || '', notes: v.notes || '' });
-      };
-
       // تحويل المعاينة إلى عمل معتمد
-      const openConvertModal = (v) => {
-        setConvertingVisit(v);
-        setConvertModalForm({
-          price: '',
-          workDate: v.date || new Date().toISOString().split('T')[0],
-          workTime: '08:00 صباحاً',
-          workNotes: v.notes || ''
-        });
-      };
-
-      const handleConfirmConvert = (e) => {
+      const handleConfirmConvert = async (e) => {
         e.preventDefault();
-        if (!convertModalForm.price || !convertModalForm.workDate) return alert('يرجى أدخال السعر وتاريخ الورشة');
+        if (!convertModalForm.price || !convertModalForm.workDate) return alert('يرجى إدخال السعر وتاريخ الورشة');
 
         const newJob = {
-          ...convertingVisit,
-          id: Date.now(),
+          name: convertingVisit.name,
+          phone: convertingVisit.phone,
+          location: convertingVisit.location || '',
+          mapUrl: convertingVisit.mapUrl || '',
+          service: currentService,
           price: parseFloat(convertModalForm.price) || 0,
           workDate: convertModalForm.workDate,
           workTime: convertModalForm.workTime,
           workNotes: convertModalForm.workNotes,
           quoteFile: null,
-          invoiceFile: null
+          invoiceFile: null,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        setJobs([...jobs, newJob]);
-        setVisits(visits.filter(v => v.id !== convertingVisit.id));
+        await db.collection('jobs').add(newJob);
+        await db.collection('visits').doc(convertingVisit.id).delete();
+
         setConvertingVisit(null);
         setActiveTab('jobs');
-        alert('تم اعتماد الزبون وتحويله لجدول الورش بنجاح!');
+        alert('تمت المزامنة واعتماد الورشة بنجاح!');
       };
 
-      // تعديل بيانات العمل المعتمد / الورشة
-      const handleSaveJobEdit = (e) => {
+      // حفظ تعديل بيانات الورشة المعتمدة
+      const handleSaveJobEdit = async (e) => {
         e.preventDefault();
-        setJobs(jobs.map(j => j.id === editingJob.id ? editingJob : j));
+        await db.collection('jobs').doc(editingJob.id).update(editingJob);
         setEditingJob(null);
-        alert('تم تعديل بيانات الزبون المعتمد بنجاح');
+        alert('تم تعديل بيانات الورشة سحابياً');
       };
 
+      // رفع ملفات PDF
       const handleFileUpload = (jobId, fileType, event) => {
         const file = event.target.files[0];
-        if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف بصيغة PDF فقط!");
+        if (!file || file.type !== "application/pdf") return alert("يرجى اختيار ملف PDF فقط!");
         const reader = new FileReader();
-        reader.onload = (e) => {
-          setJobs(jobs.map(j => j.id === jobId ? { ...j, [fileType]: { name: file.name, url: e.target.result } } : j));
-          alert('تم رفع الملف بنجاح!');
+        reader.onload = async (e) => {
+          await db.collection('jobs').doc(jobId).update({
+            [fileType]: { name: file.name, url: e.target.result }
+          });
+          alert('تم رفع الملف ومزامنته!');
         };
         reader.readAsDataURL(file);
       };
 
-      const handleAddLedger = (e) => {
+      // إضافة حركة مالية
+      const handleAddLedger = async (e) => {
         e.preventDefault();
         if (!ledgerForm.amount || !ledgerForm.description) return alert('يرجى تعبئة الحقول المطلوبة');
-        setLedger([...ledger, {
+        await db.collection('ledger').add({
           ...ledgerForm,
-          id: Date.now(),
           amount: parseFloat(ledgerForm.amount),
           service: currentService,
-          date: ledgerForm.date || new Date().toISOString().split('T')[0]
-        }]);
+          date: ledgerForm.date || new Date().toISOString().split('T')[0],
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
         setLedgerForm({ type: 'له', amount: '', description: '', date: '' });
       };
+
+      if (loading) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white font-bold">
+            جاري التحميل والمزامنة السحابية...
+          </div>
+        );
+      }
+
+      if (!currentUser) {
+        return (
+          <div className="min-h-screen flex items-center justify-center p-4 bg-slate-900">
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md">
+              <div className="text-center mb-6">
+                <h1 className="text-2xl font-black text-slate-800">مؤسسة الرؤيا المتقدمة</h1>
+                <p className="text-xs text-slate-500 mt-1">النظام السحابي الموحد للإدارة والعمليات</p>
+              </div>
+
+              <div className="flex border-b mb-6 text-sm font-bold">
+                <button type="button" onClick={() => setAuthMode('login')} className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'login' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}>تسجيل الدخول</button>
+                <button type="button" onClick={() => setAuthMode('register')} className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'register' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}>حساب جديد</button>
+              </div>
+
+              {authMode === 'login' ? (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
+                    <input type="text" value={loginForm.username} onChange={e => setLoginForm({...loginForm, username: e.target.value})} className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="اسم المستخدم" required />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
+                    <input type="password" value={loginForm.password} onChange={e => setLoginForm({...loginForm, password: e.target.value})} className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="••••••••" required />
+                  </div>
+                  <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-md">دخول للنظام السحابي</button>
+                </form>
+              ) : (
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">الاسم الكامل</label>
+                    <input type="text" value={regForm.name} onChange={e => setRegForm({...regForm, name: e.target.value})} className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="الاسم" required />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
+                    <input type="text" value={regForm.username} onChange={e => setRegForm({...regForm, username: e.target.value})} className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="اسم المستخدم بدون مسافات" required />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
+                    <input type="password" value={regForm.password} onChange={e => setRegForm({...regForm, password: e.target.value})} className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="••••••••" required />
+                  </div>
+                  <button type="submit" className="w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold text-white rounded-xl shadow-md">إنشاء حساب جديد</button>
+                </form>
+              )}
+            </div>
+          </div>
+        );
+      }
 
       const filteredVisits = visits.filter(v => v.service === currentService);
       const filteredJobs = jobs.filter(j => j.service === currentService);
       const filteredLedger = ledger.filter(l => l.service === currentService);
 
-      // تجميع الورش بحسب التاريخ واليوم للأجيندة
       const jobsByDate = filteredJobs.reduce((acc, job) => {
         const d = job.workDate || 'غير محدد';
         if (!acc[d]) acc[d] = [];
@@ -206,7 +336,6 @@
         return acc;
       }, {});
 
-      // الحصول على اسم اليوم باللغة العربية
       const getDayName = (dateStr) => {
         if (!dateStr || dateStr === 'غير محدد') return '';
         try {
@@ -215,138 +344,27 @@
         } catch(e) { return ''; }
       };
 
-      const toggleDateAccordion = (dateStr) => {
-        setExpandedDates(prev => ({ ...prev, [dateStr]: !prev[dateStr] }));
-      };
-
       const totalIn = filteredLedger.filter(l => l.type === 'له').reduce((acc, curr) => acc + curr.amount, 0);
       const totalOut = filteredLedger.filter(l => l.type === 'منه').reduce((acc, curr) => acc + curr.amount, 0);
-      const userAllowedServices = currentUser ? (currentUser.role === 'admin' ? ALL_SERVICES : (currentUser.allowedServices || [])) : [];
-
-      if (!currentUser) {
-        return (
-          <div className="min-h-screen flex items-center justify-center p-4 bg-slate-900">
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md">
-              <div className="text-center mb-6">
-                <h1 className="text-2xl font-black text-slate-800">مؤسسة الخدمات المتقدمة</h1>
-                <p className="text-xs text-slate-500 mt-1">نظام إدارة العمليات والصلاحيات</p>
-              </div>
-
-              <div className="flex border-b mb-6 text-sm font-bold">
-                <button
-                  type="button"
-                  onClick={() => setAuthMode('login')}
-                  className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'login' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}
-                >
-                  تسجيل الدخول
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAuthMode('register')}
-                  className={`flex-1 pb-3 text-center border-b-2 ${authMode === 'register' ? 'border-amber-500 text-amber-600' : 'border-transparent text-slate-400'}`}
-                >
-                  إنشاء حساب جديد
-                </button>
-              </div>
-
-              {authMode === 'login' ? (
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div>
-                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
-                    <input
-                      type="text"
-                      value={loginForm.username}
-                      onChange={e => setLoginForm({...loginForm, username: e.target.value})}
-                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="أدخل اسم المستخدم"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
-                    <input
-                      type="password"
-                      value={loginForm.password}
-                      onChange={e => setLoginForm({...loginForm, password: e.target.value})}
-                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="••••••••"
-                    />
-                  </div>
-                  <button type="submit" className="w-full py-3 bg-amber-500 hover:bg-amber-600 font-bold text-slate-900 rounded-xl shadow-md">
-                    دخول إلى النظام
-                  </button>
-                </form>
-              ) : (
-                <form onSubmit={handleRegister} className="space-y-4">
-                  <div>
-                    <label className="text-xs font-bold text-slate-600 block mb-1">الاسم الكامل</label>
-                    <input
-                      type="text"
-                      value={regForm.name}
-                      onChange={e => setRegForm({...regForm, name: e.target.value})}
-                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="علي / موظف"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-600 block mb-1">اسم المستخدم</label>
-                    <input
-                      type="text"
-                      value={regForm.username}
-                      onChange={e => setRegForm({...regForm, username: e.target.value})}
-                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="ali123"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-600 block mb-1">كلمة المرور</label>
-                    <input
-                      type="password"
-                      value={regForm.password}
-                      onChange={e => setRegForm({...regForm, password: e.target.value})}
-                      className="w-full border p-3 rounded-xl text-sm outline-none focus:border-amber-500"
-                      placeholder="••••••••"
-                    />
-                  </div>
-                  <button type="submit" className="w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold text-white rounded-xl shadow-md">
-                    إنشاء الحساب الآن
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        );
-      }
+      const userAllowedServices = userProfile ? (userProfile.role === 'admin' ? ALL_SERVICES : (userProfile.allowedServices || [])) : [];
 
       return (
         <div className="min-h-screen flex flex-col">
           <header className="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
             <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
               <div>
-                <h1 className="text-xl font-black">مؤسسة الخدمات المتقدمة</h1>
+                <h1 className="text-xl font-black">مؤسسة الرؤيا المتقدمة</h1>
                 <p className="text-xs text-slate-400">
-                  المستخدم: <span className="text-amber-400 font-bold">{currentUser.name}</span> ({currentUser.role === 'admin' ? 'المدير العام' : 'موظف'})
+                  المستخدم: <span className="text-amber-400 font-bold">{userProfile?.name || 'مستخدم'}</span> ({userProfile?.role === 'admin' ? 'المدير العام' : 'موظف'})
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="bg-slate-800 p-1 rounded-xl flex gap-1">
                   {userAllowedServices.map(s => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => setCurrentService(s)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${currentService === s ? 'bg-amber-500 text-slate-900 shadow' : 'text-slate-300 hover:text-white'}`}
-                    >
-                      {s}
-                    </button>
+                    <button key={s} type="button" onClick={() => setCurrentService(s)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${currentService === s ? 'bg-amber-500 text-slate-900 shadow' : 'text-slate-300 hover:text-white'}`}>{s}</button>
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setCurrentUser(null)}
-                  className="bg-red-600/20 text-red-400 border border-red-600/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all"
-                >
-                  خروج
-                </button>
+                <button type="button" onClick={() => auth.signOut()} className="bg-red-600/20 text-red-400 border border-red-600/30 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white transition-all">خروج</button>
               </div>
             </div>
           </header>
@@ -357,38 +375,29 @@
                 { id: 'visits', label: 'مواعيد الزيارات والمعاينة' },
                 { id: 'jobs', label: '📅 أجيندة العمليات والورش المعتمدة' },
                 { id: 'accounting', label: 'المحاسبة' },
-                ...(currentUser.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات' }] : [])
+                ...(userProfile?.role === 'admin' ? [{ id: 'user_mgr', label: '⚙ إدارة الصلاحيات الحية' }] : [])
               ].map(tab => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-5 py-3 whitespace-nowrap border-b-2 transition-all ${activeTab === tab.id ? 'border-amber-500 text-amber-600 bg-amber-50/50' : 'border-transparent hover:text-slate-900'}`}
-                >
-                  {tab.label}
-                </button>
+                <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 whitespace-nowrap border-b-2 transition-all ${activeTab === tab.id ? 'border-amber-500 text-amber-600 bg-amber-50/50' : 'border-transparent hover:text-slate-900'}`}>{tab.label}</button>
               ))}
             </div>
           </nav>
 
           <main className="max-w-6xl mx-auto w-full p-4 flex-1">
-            {activeTab === 'user_mgr' && currentUser.role === 'admin' && (
+            {activeTab === 'user_mgr' && userProfile?.role === 'admin' && (
               <div className="space-y-6">
                 <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
-                  <h2 className="text-xl font-bold">إدارة الموظفين والصلاحيات</h2>
-                  <p className="text-xs text-slate-400 mt-1">حدد الأقسام والخدمات المتاحة لكل موظف مسجل في النظام</p>
+                  <h2 className="text-xl font-bold">إدارة الموظفين الحية سحابياً</h2>
+                  <p className="text-xs text-slate-400 mt-1">جميع الحسابات المسجلة تظهر هنا لحظياً ويمكنك تعديل صلاحياتها فوراً</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {users.map(u => (
+                  {usersList.map(u => (
                     <div key={u.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                       <div className="flex justify-between items-start border-b pb-3">
                         <div>
                           <h3 className="font-bold text-slate-900 text-lg">{u.name}</h3>
-                          <p className="text-xs text-slate-500">اسم المستخدم: {u.username}</p>
+                          <p className="text-xs text-slate-500">المستخدم: {u.username}</p>
                         </div>
-                        <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>
-                          {u.role === 'admin' ? 'المدير العام' : 'موظف'}
-                        </span>
+                        <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>{u.role === 'admin' ? 'المدير العام' : 'موظف'}</span>
                       </div>
                       {u.role !== 'admin' ? (
                         <div>
@@ -397,12 +406,7 @@
                             {ALL_SERVICES.map(s => {
                               const isAllowed = u.allowedServices && u.allowedServices.includes(s);
                               return (
-                                <button
-                                  key={s}
-                                  type="button"
-                                  onClick={() => toggleUserService(u.id, s)}
-                                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${isAllowed ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-slate-50 text-slate-400 border-slate-200'}`}
-                                >
+                                <button key={s} type="button" onClick={() => toggleUserService(u.id, s)} className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${isAllowed ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
                                   {isAllowed ? '✓ ' : '+ '} {s}
                                 </button>
                               );
@@ -410,7 +414,7 @@
                           </div>
                         </div>
                       ) : (
-                        <p className="text-xs text-amber-600 font-bold bg-amber-50 p-2 rounded-xl">المدير يملك كل الصلاحيات بشكل كامل.</p>
+                        <p className="text-xs text-amber-600 font-bold bg-amber-50 p-2 rounded-xl">المدير يملك كل الصلاحيات.</p>
                       )}
                     </div>
                   ))}
@@ -422,30 +426,20 @@
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm h-fit">
                   <div className="flex justify-between items-center border-b pb-2 mb-4">
-                    <h2 className="font-bold text-lg text-slate-800">
-                      {editingVisit ? 'تعديل موعد معاينة' : `حجز موعد معاينة (${currentService})`}
-                    </h2>
-                    {editingVisit && (
-                      <button
-                        type="button"
-                        onClick={() => { setEditingVisit(null); setVisitForm({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' }); }}
-                        className="text-xs text-red-500 hover:underline font-bold"
-                      >
-                        إلغاء التعديل
-                      </button>
-                    )}
+                    <h2 className="font-bold text-lg text-slate-800">{editingVisit ? 'تعديل معاينة' : `حجز معاينة (${currentService})`}</h2>
+                    {editingVisit && <button type="button" onClick={() => { setEditingVisit(null); setVisitForm({ name: '', phone: '', location: '', mapUrl: '', date: '', timeStr: '', notes: '' }); }} className="text-xs text-red-500 hover:underline font-bold">إلغاء</button>}
                   </div>
                   <form onSubmit={handleSaveVisit} className="space-y-3">
-                    <input type="text" value={visitForm.name} onChange={e => setVisitForm({...visitForm, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="اسم الزبون" />
-                    <input type="text" value={visitForm.phone} onChange={e => setVisitForm({...visitForm, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="رقم الهاتف" />
-                    <input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="العنوان النصي (مثال: عمان - الخلدا)" />
-                    <input type="url" value={visitForm.mapUrl} onChange={e => setVisitForm({...visitForm, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="رابط موقع جوجل ماب (Location URL)" />
-                    <input type="date" value={visitForm.date} onChange={e => setVisitForm({...visitForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
-                    <input type="text" value={visitForm.timeStr} onChange={e => setVisitForm({...visitForm, timeStr: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="الموعد (مثال: 2 ظهراً)" />
-                    <textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="2" placeholder="ملاحظات المعاينة"></textarea>
+                    <input type="text" value={visitForm.name} onChange={e => setVisitForm({...visitForm, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="اسم الزبون" required />
+                    <input type="text" value={visitForm.phone} onChange={e => setVisitForm({...visitForm, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="رقم الهاتف" required />
+                    <input type="text" value={visitForm.location} onChange={e => setVisitForm({...visitForm, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="العنوان النصي (مثال: عمان - خلدا)" />
+                    <input type="url" value={visitForm.mapUrl} onChange={e => setVisitForm({...visitForm, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="رابط موقع جوجل ماب" />
+                    <input type="date" value={visitForm.date} onChange={e => setVisitForm({...visitForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
+                    <input type="text" value={visitForm.timeStr} onChange={e => setVisitForm({...visitForm, timeStr: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="الموعد (مثال: 2 ظهراً)" />
+                    <textarea value={visitForm.notes} onChange={e => setVisitForm({...visitForm, notes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" rows="2" placeholder="ملاحظات المعاينة"></textarea>
                     
                     <button type="submit" className={`w-full py-3 font-bold rounded-xl shadow-sm transition-all ${editingVisit ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-amber-500 hover:bg-amber-600 text-slate-900'}`}>
-                      {editingVisit ? 'حفظ التعديلات' : 'تسجيل طلب المعاينة'}
+                      {editingVisit ? 'حفظ التعديلات سحابياً' : 'تسجيل طلب المعاينة'}
                     </button>
                   </form>
                 </div>
@@ -453,7 +447,7 @@
                 <div className="md:col-span-2 space-y-4">
                   <h2 className="font-bold text-lg text-slate-800">طلبات المعاينة الحالية - [{currentService}] ({filteredVisits.length})</h2>
                   {filteredVisits.length === 0 ? (
-                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد مواعيد معاينة مسجلة حالياً لهذه الخدمة.</div>
+                    <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد مواعيد معاينة مسجلة.</div>
                   ) : (
                     filteredVisits.map(v => (
                       <div key={v.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
@@ -463,21 +457,17 @@
                             <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">{v.date} | {v.timeStr}</span>
                           </div>
                           <p className="text-sm text-slate-600"><strong>الهاتف:</strong> {v.phone} | <strong>العنوان:</strong> {v.location}</p>
-                          
                           {v.mapUrl && (
                             <div className="mt-2">
-                              <a href={v.mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 font-bold hover:underline bg-blue-50 px-2.5 py-1 rounded-lg">
-                                📍 فتح الموقع على خريطة Google
-                              </a>
+                              <a href={v.mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 font-bold hover:underline bg-blue-50 px-2.5 py-1 rounded-lg">📍 فتح الموقع على جوجل ماب</a>
                             </div>
                           )}
-
-                          {v.notes && <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2"><strong>ملاحظات المعاينة:</strong> {v.notes}</p>}
+                          {v.notes && <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg mt-2"><strong>الملاحظات:</strong> {v.notes}</p>}
                         </div>
                         <div className="flex gap-2 border-t pt-3">
-                          <button type="button" onClick={() => openConvertModal(v)} className="flex-1 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-700">✓ تحويل لعمل معتمد</button>
-                          <button type="button" onClick={() => handleStartEditVisit(v)} className="py-2 px-4 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200">تعديل ✏️</button>
-                          <button type="button" onClick={() => setVisits(visits.filter(item => item.id !== v.id))} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">حذف</button>
+                          <button type="button" onClick={() => { setConvertingVisit(v); setConvertModalForm({ price: '', workDate: v.date || new Date().toISOString().split('T')[0], workTime: '08:00 صباحاً', workNotes: v.notes || '' }); }} className="flex-1 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-700">✓ تحويل لعمل معتمد</button>
+                          <button type="button" onClick={() => { setEditingVisit(v); setVisitForm({ name: v.name, phone: v.phone, location: v.location || '', mapUrl: v.mapUrl || '', date: v.date || '', timeStr: v.timeStr || '', notes: v.notes || '' }); }} className="py-2 px-4 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200">تعديل ✏️</button>
+                          <button type="button" onClick={() => db.collection('visits').doc(v.id).delete()} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">حذف</button>
                         </div>
                       </div>
                     ))
@@ -486,7 +476,7 @@
               </div>
             )}
 
-            {/* نافذة Pop-up تحويل الزبون لعمل معتمد */}
+            {/* نافذة تحويل المعاينة لعمل معتمد */}
             {convertingVisit && (
               <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
@@ -497,19 +487,19 @@
                   <form onSubmit={handleConfirmConvert} className="space-y-3">
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">المبلغ المتفق عليه (بالدينار)*</label>
-                      <input type="number" step="any" value={convertModalForm.price} onChange={e => setConvertModalForm({...convertModalForm, price: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: 150" required />
+                      <input type="number" step="any" value={convertModalForm.price} onChange={e => setConvertModalForm({...convertModalForm, price: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">تاريخ بدء الورشة*</label>
-                      <input type="date" value={convertModalForm.workDate} onChange={e => setConvertModalForm({...convertModalForm, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                      <input type="date" value={convertModalForm.workDate} onChange={e => setConvertModalForm({...convertModalForm, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">توقيت الورشة</label>
-                      <input type="text" value={convertModalForm.workTime} onChange={e => setConvertModalForm({...convertModalForm, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" placeholder="مثال: 8:00 صباحاً" />
+                      <input type="text" value={convertModalForm.workTime} onChange={e => setConvertModalForm({...convertModalForm, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">ملاحظات الورشة والاتفاق</label>
-                      <textarea value={convertModalForm.workNotes} onChange={e => setConvertModalForm({...convertModalForm, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="3" placeholder="أدخل أي ملاحظات خاصة بالتنفيذ والاتفاق"></textarea>
+                      <textarea value={convertModalForm.workNotes} onChange={e => setConvertModalForm({...convertModalForm, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" rows="3"></textarea>
                     </div>
 
                     <div className="flex gap-2 border-t pt-3">
@@ -521,52 +511,39 @@
               </div>
             )}
 
-            {/* الأجيندة والعمليات المعتمدة */}
+            {/* الأجيندة والورش المعتمدة */}
             {activeTab === 'jobs' && (
               <div className="space-y-6">
-                <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
                   <div>
                     <h2 className="font-black text-xl text-slate-800">📅 أجيندة الورش والعمليات المعتمدة</h2>
-                    <p className="text-xs text-slate-500 mt-1">القسم الحالي: <span className="font-bold text-amber-600">{currentService}</span> | إجمالي المواعيد المعتمدة: {filteredJobs.length}</p>
+                    <p className="text-xs text-slate-500 mt-1">القسم الحالي: <span className="font-bold text-amber-600">{currentService}</span> | إجمالي الورش: {filteredJobs.length}</p>
                   </div>
                 </div>
 
                 {Object.keys(jobsByDate).length === 0 ? (
-                  <div className="bg-white p-12 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد ورش أو عمليات معتمدة حالياً لهذه الخدمة.</div>
+                  <div className="bg-white p-12 rounded-2xl border border-slate-200 text-center text-slate-400 text-sm">لا توجد ورش معتمدة حالياً.</div>
                 ) : (
                   <div className="space-y-4">
                     {Object.keys(jobsByDate).sort().map(dateStr => {
                       const dayName = getDayName(dateStr);
                       const dayJobs = jobsByDate[dateStr];
-                      const isExpanded = expandedDates[dateStr] !== false; // القائمة مفتوحة افتراضياً
+                      const isExpanded = expandedDates[dateStr] !== false;
 
                       return (
                         <div key={dateStr} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                          {/* شريط اليوم والأجيندة */}
-                          <div
-                            onClick={() => toggleDateAccordion(dateStr)}
-                            className="bg-slate-900 text-white p-4 flex justify-between items-center cursor-pointer hover:bg-slate-800 transition-all select-none"
-                          >
+                          <div onClick={() => setExpandedDates(prev => ({ ...prev, [dateStr]: !isExpanded }))} className="bg-slate-900 text-white p-4 flex justify-between items-center cursor-pointer hover:bg-slate-800 transition-all">
                             <div className="flex items-center gap-3">
-                              <span className="bg-amber-500 text-slate-900 font-black px-3 py-1 rounded-xl text-sm">
-                                {dayName ? `${dayName} - ${dateStr}` : dateStr}
-                              </span>
-                              <span className="text-xs text-slate-300">مواعيد العمليات المجدولة</span>
+                              <span className="bg-amber-500 text-slate-900 font-black px-3 py-1 rounded-xl text-sm">{dayName ? `${dayName} - ${dateStr}` : dateStr}</span>
+                              <span className="text-xs text-slate-300">جدول الورش</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold px-3 py-1 rounded-full">
-                                {dayJobs.length} {dayJobs.length === 1 ? 'ورشة عمل' : 'ورش عمل'}
-                              </span>
-                              <span className="text-slate-400 text-sm">{isExpanded ? '▲' : '▼'}</span>
-                            </div>
+                            <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold px-3 py-1 rounded-full">{dayJobs.length} ورشة</span>
                           </div>
 
-                          {/* قائمة الورش بهذا اليوم */}
                           {isExpanded && (
                             <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50">
                               {dayJobs.map(j => (
-                                <div key={j.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 relative">
-                                  {/* تفاصيل الزبون المعتمد والسعر */}
+                                <div key={j.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                                   <div className="flex justify-between items-start border-b pb-3">
                                     <div>
                                       <h3 className="font-bold text-slate-900 text-lg">{j.name}</h3>
@@ -578,51 +555,28 @@
                                     </div>
                                   </div>
 
-                                  {/* تفاصيل الوقت واللوكيشن والملاحظات */}
                                   <div className="space-y-1.5 text-xs text-slate-700">
                                     <div className="flex justify-between items-center bg-amber-50 border border-amber-100 p-2 rounded-xl">
                                       <span>⏰ وقت الورشة: <strong className="text-slate-900">{j.workTime}</strong></span>
-                                      {j.mapUrl && (
-                                        <a href={j.mapUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline bg-white px-2 py-0.5 rounded border border-blue-200">
-                                          📍 الخريطة
-                                        </a>
-                                      )}
+                                      {j.mapUrl && <a href={j.mapUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline bg-white px-2 py-0.5 rounded border border-blue-200">📍 الخريطة</a>}
                                     </div>
-
-                                    {j.workNotes && (
-                                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                        <strong className="text-slate-800 block mb-0.5">📝 ملاحظات الورشة:</strong>
-                                        <p className="text-slate-600">{j.workNotes}</p>
-                                      </div>
-                                    )}
+                                    {j.workNotes && <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong className="text-slate-800 block mb-0.5">📝 ملاحظات الورشة:</strong><p className="text-slate-600">{j.workNotes}</p></div>}
                                   </div>
 
-                                  {/* رفع واستعراض الملفات PDF */}
                                   <div className="space-y-2 border-t pt-2">
                                     <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
                                       <span>عرض السعر: {j.quoteFile ? <a href={j.quoteFile.url} target="_blank" className="text-blue-600 underline font-bold">{j.quoteFile.name}</a> : 'لا يوجد'}</span>
-                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">
-                                        رفع PDF
-                                        <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} />
-                                      </label>
+                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">رفع PDF<input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'quoteFile', e)} /></label>
                                     </div>
                                     <div className="flex justify-between items-center bg-slate-50 p-2 rounded-xl text-xs">
                                       <span>الفاتورة: {j.invoiceFile ? <a href={j.invoiceFile.url} target="_blank" className="text-blue-600 underline font-bold">{j.invoiceFile.name}</a> : 'لا يوجد'}</span>
-                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">
-                                        رفع PDF
-                                        <input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} />
-                                      </label>
+                                      <label className="bg-slate-800 text-white px-2.5 py-1 rounded-lg cursor-pointer text-[11px] font-bold hover:bg-slate-700">رفع PDF<input type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFileUpload(j.id, 'invoiceFile', e)} /></label>
                                     </div>
                                   </div>
 
-                                  {/* أزرار التحكم والتحرير */}
                                   <div className="flex gap-2 border-t pt-3">
-                                    <button type="button" onClick={() => setEditingJob({...j})} className="flex-1 py-2 bg-blue-50 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 border border-blue-200">
-                                      تعديل بيانات الورشة ✏️
-                                    </button>
-                                    <button type="button" onClick={() => setJobs(jobs.filter(item => item.id !== j.id))} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">
-                                      حذف
-                                    </button>
+                                    <button type="button" onClick={() => setEditingJob({...j})} className="flex-1 py-2 bg-blue-50 text-blue-700 font-bold text-xs rounded-xl hover:bg-blue-100 border border-blue-200">تعديل بيانات الورشة ✏️</button>
+                                    <button type="button" onClick={() => db.collection('jobs').doc(j.id).delete()} className="py-2 px-3 bg-red-50 text-red-600 font-bold text-xs rounded-xl hover:bg-red-100">حذف</button>
                                   </div>
                                 </div>
                               ))}
@@ -636,50 +590,50 @@
               </div>
             )}
 
-            {/* نافذة Pop-up تعديل بيانات الزبون المعتمد */}
+            {/* نافذة تعديل بيانات الورشة المعتمدة */}
             {editingJob && (
               <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                   <div className="flex justify-between items-center border-b pb-3">
-                    <h3 className="font-bold text-lg text-slate-900">تعديل بيانات الزبون المعتمد والورشة</h3>
+                    <h3 className="font-bold text-lg text-slate-900">تعديل الورشة سحابياً</h3>
                     <button type="button" onClick={() => setEditingJob(null)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
                   </div>
                   <form onSubmit={handleSaveJobEdit} className="space-y-3">
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">اسم الزبون</label>
-                      <input type="text" value={editingJob.name} onChange={e => setEditingJob({...editingJob, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                      <input type="text" value={editingJob.name} onChange={e => setEditingJob({...editingJob, name: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">رقم الهاتف</label>
-                      <input type="text" value={editingJob.phone} onChange={e => setEditingJob({...editingJob, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                      <input type="text" value={editingJob.phone} onChange={e => setEditingJob({...editingJob, phone: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">العنوان النصي</label>
-                      <input type="text" value={editingJob.location || ''} onChange={e => setEditingJob({...editingJob, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                      <input type="text" value={editingJob.location || ''} onChange={e => setEditingJob({...editingJob, location: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">رابط اللوكيشن (Google Maps URL)</label>
-                      <input type="url" value={editingJob.mapUrl || ''} onChange={e => setEditingJob({...editingJob, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                      <input type="url" value={editingJob.mapUrl || ''} onChange={e => setEditingJob({...editingJob, mapUrl: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">المبلغ المتفق عليه (بالدينار)</label>
-                      <input type="number" step="any" value={editingJob.price} onChange={e => setEditingJob({...editingJob, price: parseFloat(e.target.value) || 0})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                      <input type="number" step="any" value={editingJob.price} onChange={e => setEditingJob({...editingJob, price: parseFloat(e.target.value) || 0})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">تاريخ الورشة</label>
-                      <input type="date" value={editingJob.workDate || ''} onChange={e => setEditingJob({...editingJob, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" required />
+                      <input type="date" value={editingJob.workDate || ''} onChange={e => setEditingJob({...editingJob, workDate: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" required />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">وقت الورشة</label>
-                      <input type="text" value={editingJob.workTime || ''} onChange={e => setEditingJob({...editingJob, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" />
+                      <input type="text" value={editingJob.workTime || ''} onChange={e => setEditingJob({...editingJob, workTime: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-600 block mb-1">ملاحظات الورشة</label>
-                      <textarea value={editingJob.workNotes || ''} onChange={e => setEditingJob({...editingJob, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none focus:border-amber-500" rows="3"></textarea>
+                      <textarea value={editingJob.workNotes || ''} onChange={e => setEditingJob({...editingJob, workNotes: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" rows="3"></textarea>
                     </div>
 
                     <div className="flex gap-2 border-t pt-3">
-                      <button type="submit" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md text-sm">حفظ التعديلات</button>
+                      <button type="submit" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md text-sm">حفظ التعديلات سحابياً</button>
                       <button type="button" onClick={() => setEditingJob(null)} className="py-3 px-4 bg-slate-100 text-slate-600 font-bold rounded-xl text-sm">إلغاء</button>
                     </div>
                   </form>
@@ -697,27 +651,18 @@
                       <option value="له">له (مقبوضات)</option>
                       <option value="منه">منه (مصاريف)</option>
                     </select>
-                    <input type="number" value={ledgerForm.amount} onChange={e => setLedgerForm({...ledgerForm, amount: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="المبلغ" />
-                    <input type="text" value={ledgerForm.description} onChange={e => setLedgerForm({...ledgerForm, description: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="البيان / الوصف" />
+                    <input type="number" value={ledgerForm.amount} onChange={e => setLedgerForm({...ledgerForm, amount: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="المبلغ" required />
+                    <input type="text" value={ledgerForm.description} onChange={e => setLedgerForm({...ledgerForm, description: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" placeholder="الوصف" required />
                     <input type="date" value={ledgerForm.date} onChange={e => setLedgerForm({...ledgerForm, date: e.target.value})} className="w-full border p-2.5 rounded-xl text-sm outline-none" />
-                    <button type="submit" className="w-full py-3 bg-slate-800 text-white font-bold rounded-xl shadow-sm">حفظ الحركة</button>
+                    <button type="submit" className="w-full py-3 bg-slate-800 text-white font-bold rounded-xl shadow-sm">حفظ الحركة سحابياً</button>
                   </form>
                 </div>
 
                 <div className="md:col-span-2 space-y-4">
                   <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="bg-emerald-50 p-3 rounded-2xl border border-emerald-100">
-                      <span className="text-xs text-emerald-600 block font-bold">له (إيرادات)</span>
-                      <span className="font-black text-lg text-emerald-700">{totalIn} د.أ</span>
-                    </div>
-                    <div className="bg-red-50 p-3 rounded-2xl border border-red-100">
-                      <span className="text-xs text-red-600 block font-bold">منه (مصاريف)</span>
-                      <span className="font-black text-lg text-red-700">{totalOut} د.أ</span>
-                    </div>
-                    <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-sm">
-                      <span className="text-xs text-slate-400 block font-bold">الصافي</span>
-                      <span className="font-black text-lg text-amber-400">{totalIn - totalOut} د.أ</span>
-                    </div>
+                    <div className="bg-emerald-50 p-3 rounded-2xl border border-emerald-100"><span className="text-xs text-emerald-600 block font-bold">له (إيرادات)</span><span className="font-black text-lg text-emerald-700">{totalIn} د.أ</span></div>
+                    <div className="bg-red-50 p-3 rounded-2xl border border-red-100"><span className="text-xs text-red-600 block font-bold">منه (مصاريف)</span><span className="font-black text-lg text-red-700">{totalOut} د.أ</span></div>
+                    <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-sm"><span className="text-xs text-slate-400 block font-bold">الصافي</span><span className="font-black text-lg text-amber-400">{totalIn - totalOut} د.أ</span></div>
                   </div>
 
                   <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">

@@ -15,24 +15,20 @@
         h1, h2, h3 { color: #ffffff; text-align: center; margin-bottom: 12px; }
         .subtitle { font-size: 13px; color: #9ca3af; text-align: center; margin-bottom: 20px; }
 
-        /* Navigation Tabs */
         .nav-tabs { display: flex; gap: 8px; background-color: #121418; padding: 6px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
         .nav-btn { flex: 1; min-width: 110px; padding: 12px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; }
         .nav-btn.active { background-color: #e28743; color: #ffffff; }
 
-        /* Form Controls */
         .form-group { margin-bottom: 16px; text-align: right; }
         label { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; }
         .form-control { width: 100%; padding: 12px; background-color: #121418; border: 1px solid #374151; border-radius: 8px; color: #fff; outline: none; }
         .submit-btn { width: 100%; padding: 12px; background-color: #e28743; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .submit-btn:hover { background-color: #c97232; }
 
-        /* Helper Classes */
         .hidden { display: none !important; }
         .user-bar { display: flex; justify-content: space-between; align-items: center; background: #252a34; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; }
         .logout-btn { background: #dc2626; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
 
-        /* Admin Table */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; }
         th, td { padding: 12px; border-bottom: 1px solid #2d333f; font-size: 14px; }
         th { background-color: #121418; color: #e28743; }
@@ -45,7 +41,6 @@
         .alert-success { background-color: #064e3b; color: #6ee7b7; }
     </style>
 
-    <!-- SDKs Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -100,12 +95,12 @@
         <div class="user-bar">
             <div>
                 <strong id="userName">المستخدم</strong>
-                <span id="userRoleBadge" style="font-size: 11px; background: #e28743; padding: 2px 8px; border-radius: 4px; margin-right: 6px;">مستعمل</span>
+                <span id="userRoleBadge" style="font-size: 11px; background: #e28743; color: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 6px;">مستعمل</span>
             </div>
             <button class="logout-btn" onclick="handleLogout()">خروج</button>
         </div>
 
-        <!-- شريط التبويبات حسب الصلاحيات -->
+        <!-- شريط التبويبات -->
         <div class="nav-tabs" id="departmentTabs">
             <button class="nav-btn hidden" id="tab-cleaning" onclick="showDept('cleaning')">قسم النظافة</button>
             <button class="nav-btn hidden" id="tab-polishing" onclick="showDept('polishing')">قسم الجلي</button>
@@ -113,25 +108,31 @@
             <button class="nav-btn hidden" id="tab-admin" onclick="showDept('admin')">👑 لوحة الأدمن</button>
         </div>
 
-        <!-- محتوى قسم النظافة -->
+        <!-- رسالة الانتظار للحسابات الجديدة -->
+        <div id="sec-pending" class="card hidden">
+            <h2>⏳ بانتظار تفعيل الصلاحيات</h2>
+            <p style="text-align: center; color: #9ca3af; margin-top: 10px;">
+                تم تسجيل دخولك بنجاح. يرجى التواصل مع إدارة المؤسسة لتحديد الأقسام المسموح لك بالدخول إليها (نظافة، جلي، دراي كلين).
+            </p>
+        </div>
+
+        <!-- أقسام العمليات -->
         <div id="sec-cleaning" class="card hidden">
             <h2>🧹 قسم النظافة</h2>
-            <p>أهلاً بك في نظام إدارة عمليات وطلبات النظافة.</p>
+            <p style="text-align: center; color: #9ca3af; margin-top: 10px;">أهلاً بك في نظام إدارة عمليات وطلبات النظافة.</p>
         </div>
 
-        <!-- محتوى قسم الجلي -->
         <div id="sec-polishing" class="card hidden">
             <h2>✨ قسم جلي وتلميع الرخام والأرضيات</h2>
-            <p>أهلاً بك في نظام إدارة مشاريع جلي وتلميع الرخام.</p>
+            <p style="text-align: center; color: #9ca3af; margin-top: 10px;">أهلاً بك في نظام إدارة مشاريع جلي وتلميع الرخام.</p>
         </div>
 
-        <!-- محتوى قسم الدراي كلين -->
         <div id="sec-dryclean" class="card hidden">
             <h2>🛋️ قسم الدراي كلين</h2>
-            <p>أهلاً بك في نظام طلبات ومواعيد دراي كلين الأثاث والسجاد.</p>
+            <p style="text-align: center; color: #9ca3af; margin-top: 10px;">أهلاً بك في نظام طلبات ومواعيد دراي كلين الأثاث والسجاد.</p>
         </div>
 
-        <!-- لوحة تحكم الأدمن لبرمجة صلاحيات الموظفين -->
+        <!-- لوحة تحكم الأدمن -->
         <div id="sec-admin" class="card hidden">
             <h2>👑 إدارة الموظفين والصلاحيات</h2>
             <p class="subtitle">حدد الأقسام المسموح لكل موظف رؤيتها</p>
@@ -146,7 +147,6 @@
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
-                    <!-- يتم تحميل الموظفين تلقائياً هنا -->
                 </tbody>
             </table>
         </div>
@@ -155,7 +155,6 @@
 </div>
 
 <script>
-    // إعدادات Firebase الخاصة بمشروعك
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
         authDomain: "roya-app-29932.firebaseapp.com",
@@ -172,91 +171,99 @@
 
     let currentUserData = null;
 
-    // متابعة حالة تسجيل الدخول
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
 
-            // جلب بيانات الموظف والصلاحيات من قاعدة البيانات
-            const doc = await db.collection('users').doc(user.uid).get();
-            if (doc.exists) {
-                currentUserData = doc.data();
-            } else {
-                // إذا كان حساب جديد م الممكن إنشاء ملفه فوراً
-                currentUserData = {
-                    name: user.displayName || user.email.split('@')[0],
-                    email: user.email,
-                    role: 'employee',
-                    departments: []
-                };
-                await db.collection('users').doc(user.uid).set(currentUserData);
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const doc = await userDocRef.get();
+                
+                // فحص ما إذا كان هذا أول حساب مسجل أو حساب الأدمن
+                const usersCountSnap = await db.collection('users').get();
+                const isFirstUser = usersCountSnap.empty || usersCountSnap.size === 0;
+
+                if (doc.exists) {
+                    currentUserData = doc.data();
+                } else {
+                    // تحويل الحساب الأول تلقائياً إلى مدير نظام
+                    currentUserData = {
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        role: isFirstUser ? 'admin' : 'employee',
+                        departments: isFirstUser ? ['cleaning', 'polishing', 'dryclean'] : []
+                    };
+                    await userDocRef.set(currentUserData);
+                }
+
+                document.getElementById('userName').textContent = currentUserData.name || user.email;
+                document.getElementById('userRoleBadge').textContent = currentUserData.role === 'admin' ? 'مدير النظام' : 'موظف';
+
+                setupPermissions();
+            } catch (err) {
+                console.error("Firestore Error:", err);
+                showAlert("حدث خطأ في جلب بيانات الصلاحيات: " + err.message);
             }
-
-            document.getElementById('userName').textContent = currentUserData.name;
-            document.getElementById('userRoleBadge').textContent = currentUserData.role === 'admin' ? 'مدير النظام' : 'موظف';
-
-            setupPermissions();
         } else {
             document.getElementById('authSection').classList.remove('hidden');
             document.getElementById('mainDashboard').classList.add('hidden');
         }
     });
 
-    // إعداد التبويبات بناءً على الصلاحيات
+    function hideAllSections() {
+        document.getElementById('sec-pending').classList.add('hidden');
+        document.getElementById('sec-cleaning').classList.add('hidden');
+        document.getElementById('sec-polishing').classList.add('hidden');
+        document.getElementById('sec-dryclean').classList.add('hidden');
+        document.getElementById('sec-admin').classList.add('hidden');
+    }
+
     function setupPermissions() {
         const role = currentUserData.role;
         const depts = currentUserData.departments || [];
 
-        // إخفاء كل التبويبات أولاً
         document.getElementById('tab-cleaning').classList.add('hidden');
         document.getElementById('tab-polishing').classList.add('hidden');
         document.getElementById('tab-dryclean').classList.add('hidden');
         document.getElementById('tab-admin').classList.add('hidden');
 
-        let firstAvailableTab = null;
+        hideAllSections();
 
-        // إذا كان أدمن يرى كل شيء
         if (role === 'admin') {
             document.getElementById('tab-cleaning').classList.remove('hidden');
             document.getElementById('tab-polishing').classList.remove('hidden');
             document.getElementById('tab-dryclean').classList.remove('hidden');
             document.getElementById('tab-admin').classList.remove('hidden');
-            firstAvailableTab = 'admin';
+            showDept('admin');
             loadUsersForAdmin();
         } else {
-            // الموظف يرى الأقسام المحددة له فقط (مثلاً التسويق يملك الثلاثة)
+            let activeCount = 0;
             if (depts.includes('cleaning')) {
                 document.getElementById('tab-cleaning').classList.remove('hidden');
-                if (!firstAvailableTab) firstAvailableTab = 'cleaning';
+                if (activeCount === 0) showDept('cleaning');
+                activeCount++;
             }
             if (depts.includes('polishing')) {
                 document.getElementById('tab-polishing').classList.remove('hidden');
-                if (!firstAvailableTab) firstAvailableTab = 'polishing';
+                if (activeCount === 0) showDept('polishing');
+                activeCount++;
             }
             if (depts.includes('dryclean')) {
                 document.getElementById('tab-dryclean').classList.remove('hidden');
-                if (!firstAvailableTab) firstAvailableTab = 'dryclean';
+                if (activeCount === 0) showDept('dryclean');
+                activeCount++;
             }
-        }
 
-        if (firstAvailableTab) {
-            showDept(firstAvailableTab);
+            if (activeCount === 0) {
+                document.getElementById('sec-pending').classList.remove('hidden');
+            }
         }
     }
 
-    // التنقل بين الأقسام
     function showDept(deptName) {
-        // إلغاء الفاعلية عن باقي الزرار
         document.querySelectorAll('#departmentTabs .nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('#mainDashboard .card').forEach(card => {
-            if (card.id !== 'sec-admin' || deptName === 'admin') card.classList.add('hidden');
-        });
-
-        document.getElementById('sec-cleaning').classList.add('hidden');
-        document.getElementById('sec-polishing').classList.add('hidden');
-        document.getElementById('sec-dryclean').classList.add('hidden');
-        document.getElementById('sec-admin').classList.add('hidden');
+        hideAllSections();
 
         if (document.getElementById('tab-' + deptName)) {
             document.getElementById('tab-' + deptName).classList.add('active');
@@ -266,39 +273,41 @@
         }
     }
 
-    // جلب الموظفين للأدمن
     async function loadUsersForAdmin() {
         const tbody = document.getElementById('usersTableBody');
-        tbody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل الموظفين...</td></tr>';
         
-        const snapshot = await db.collection('users').get();
-        tbody.innerHTML = '';
+        try {
+            const snapshot = await db.collection('users').get();
+            tbody.innerHTML = '';
 
-        snapshot.forEach(doc => {
-            const u = doc.data();
-            const uid = doc.id;
-            const depts = u.departments || [];
+            snapshot.forEach(doc => {
+                const u = doc.data();
+                const uid = doc.id;
+                const depts = u.departments || [];
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${u.name || 'بدون اسم'}</strong></td>
-                <td>${u.email}</td>
-                <td>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" id="c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> نظافة</label>
-                        <label><input type="checkbox" id="p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> جلي</label>
-                        <label><input type="checkbox" id="d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> دراي كلين</label>
-                    </div>
-                </td>
-                <td>
-                    <button class="save-user-btn" onclick="saveUserPermissions('${uid}')">حفظ الصلاحية</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${u.name || 'بدون اسم'}</strong></td>
+                    <td>${u.email}</td>
+                    <td>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> نظافة</label>
+                            <label><input type="checkbox" id="p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> جلي</label>
+                            <label><input type="checkbox" id="d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> دراي كلين</label>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="save-user-btn" onclick="saveUserPermissions('${uid}')">حفظ</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">خطأ في تحميل البيانات: ${e.message}</td></tr>`;
+        }
     }
 
-    // حفظ صلاحيات موظف محدد من قبل الأدمن
     async function saveUserPermissions(uid) {
         const depts = [];
         if (document.getElementById(`c_${uid}`).checked) depts.push('cleaning');
@@ -309,13 +318,12 @@
             await db.collection('users').doc(uid).update({
                 departments: depts
             });
-            alert('تم تحديث صلاحيات الموظف بنجاح!');
+            alert('تم حفظ صلاحيات الموظف بنجاح!');
         } catch (e) {
             alert('حدث خطأ أثناء الحفظ: ' + e.message);
         }
     }
 
-    // التبديل بين نماذج الدخول والتسجيل
     function switchAuthTab(tab) {
         showAlert('');
         if (tab === 'login') {
@@ -331,7 +339,6 @@
         }
     }
 
-    // التسجيل والإنشاء
     async function handleRegister(e) {
         e.preventDefault();
         const name = document.getElementById('registerName').value;
@@ -339,17 +346,10 @@
         const password = document.getElementById('registerPassword').value;
 
         try {
-            const res = await auth.createUserWithEmailAndPassword(email, password);
-            // حفظ بيانات الموظف
-            await db.collection('users').doc(res.user.uid).set({
-                name: name,
-                email: email,
-                role: 'employee',
-                departments: [] // افتراضياً بدون أقسام لحين موافقة الأدمن
-            });
+            await auth.createUserWithEmailAndPassword(email, password);
             showAlert('تم إنشاء الحساب بنجاح!', false);
         } catch (err) {
-            showAlert(err.message);
+            showAlert(translateError(err.code));
         }
     }
 
@@ -361,7 +361,7 @@
         try {
             await auth.signInWithEmailAndPassword(email, password);
         } catch (err) {
-            showAlert('بيانات الدخول غير صحيحة');
+            showAlert(translateError(err.code));
         }
     }
 
@@ -375,6 +375,18 @@
         box.textContent = msg;
         box.style.display = 'block';
         box.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
+    }
+
+    function translateError(code) {
+        switch (code) {
+            case 'auth/email-already-in-use': return 'البريد الإلكتروني مستخدم بالفعل.';
+            case 'auth/invalid-email': return 'البريد الإلكتروني غير صالح.';
+            case 'auth/weak-password': return 'كلمة المرور ضعيفة (6 خانات على الأقل).';
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential': return 'بيانات الدخول غير صحيحة.';
+            default: return 'حدث خطأ: ' + code;
+        }
     }
 </script>
 

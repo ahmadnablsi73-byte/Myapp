@@ -172,29 +172,40 @@
     let currentUserData = null;
 
     auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('mainDashboard').classList.remove('hidden');
+    const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
 
-            try {
-                const userDocRef = db.collection('users').doc(user.uid);
-                const doc = await userDocRef.get();
-                
-                // فحص ما إذا كان هذا أول حساب مسجل أو حساب الأدمن
-                const usersCountSnap = await db.collection('users').get();
-                const isFirstUser = usersCountSnap.empty || usersCountSnap.size === 0;
+    if (user) {
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('mainDashboard').classList.remove('hidden');
 
-                if (doc.exists) {
-                    currentUserData = doc.data();
-                } else {
-                    // تحويل الحساب الأول تلقائياً إلى مدير نظام
-                    currentUserData = {
-                        name: user.displayName || user.email.split('@')[0],
-                        email: user.email,
-                        role: isFirstUser ? 'admin' : 'employee',
-                        departments: isFirstUser ? ['cleaning', 'polishing', 'dryclean'] : []
-                    };
-                    await userDocRef.set(currentUserData);
+        try {
+            const userDocRef = db.collection('users').doc(user.uid);
+            const doc = await userDocRef.get();
+            
+            // فحص ما إذا كان البريد هو بريد الأدمن
+            const isAdminEmail = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+
+            if (doc.exists) {
+                currentUserData = doc.data();
+                // ترقية الحساب فوراً للأدمن إذا كان الإيميل يطابق بريدك
+                if (isAdminEmail && currentUserData.role !== 'admin') {
+                    currentUserData.role = 'admin';
+                    currentUserData.departments = ['cleaning', 'polishing', 'dryclean'];
+                    await userDocRef.update({
+                        role: 'admin',
+                        departments: ['cleaning', 'polishing', 'dryclean']
+                    });
+                }
+            } else {
+                currentUserData = {
+                    name: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    role: isAdminEmail ? 'admin' : 'employee',
+                    departments: isAdminEmail ? ['cleaning', 'polishing', 'dryclean'] : []
+                };
+                await userDocRef.set(currentUserData);
+            }
+
                 }
 
                 document.getElementById('userName').textContent = currentUserData.name || user.email;

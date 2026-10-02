@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مؤسسة الرؤيا المتقدمة - لأعمال الأرضيات والجلي والصيانة</title>
+    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للخدمات والمستندات</title>
+    <!-- خط Tajawal وأيقونات Bootstrap -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
     <style>
         :root {
             --bg-dark: #0b0d10;             /* أسود عميق */
@@ -17,15 +19,16 @@
             --navy-hover: #32558c;          /* كحلي للتفاعل */
             --text-light: #f3f4f6;          /* أوف وايت */
             --text-gray: #9ca3af;           /* رمادي للنصوص */
+            --success-green: #10b981;       /* أخضر نجاح */
+            --warning-amber: #f59e0b;       /* أصفر تنبيه */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
-        
-        .container { max-width: 1150px; margin: 0 auto; padding: 15px; }
-        
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+
         /* -------------------------------------------------- */
-        /*  تنسيقات البروفايل العام (Public Profile)           */
+        /*  1. البروفايل العام للشركة (Public Profile)       */
         /* -------------------------------------------------- */
         .public-header { 
             background: linear-gradient(180deg, #141720 0%, #0b0d10 100%); 
@@ -34,7 +37,6 @@
             border-bottom: 2px solid var(--primary-navy); 
             box-shadow: 0 4px 20px rgba(37, 64, 107, 0.25);
         }
-
         .company-logo {
             max-width: 160px;
             height: auto;
@@ -43,17 +45,12 @@
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-
-        .company-logo:hover {
-            transform: scale(1.03);
-        }
-
+        .company-logo:hover { transform: scale(1.03); }
         .public-header h1 { font-size: 26px; font-weight: 800; color: var(--text-light); margin-bottom: 6px; }
         .public-header p { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
         .contact-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
         
         .hero-section { padding: 30px 20px; text-align: center; background: var(--card-dark); margin: 20px 0; border-radius: 16px; border: 1px solid var(--border-dark); }
-        
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 20px; }
         
         .service-card, .project-card { background: var(--card-dark); border: 1px solid var(--border-dark); padding: 20px; border-radius: 12px; text-align: center; transition: 0.3s; position: relative; }
@@ -62,18 +59,21 @@
         .service-card h3, .project-card h3 { font-size: 18px; margin-bottom: 8px; color: #60a5fa; }
         .service-card p, .project-card p { font-size: 13px; color: var(--text-gray); line-height: 1.6; }
         .project-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-dark); }
-
         .public-footer { background: #07080a; padding: 25px 20px; text-align: center; border-top: 1px solid var(--border-dark); font-size: 13px; color: var(--text-gray); margin-top: 40px; }
 
         /* -------------------------------------------------- */
-        /*  تنسيقات لوحة التحكم والنظام الداخلي             */
+        /*  2. لوحة التحكم والنظام الداخلي                    */
         /* -------------------------------------------------- */
         .card { background-color: var(--card-dark); border-radius: 16px; padding: 20px; border: 1px solid var(--border-dark); margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-        .main-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
-        .main-nav-btn { flex: 1; min-width: 130px; padding: 12px 10px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; }
-        .main-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
+        .user-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-lighter); padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-dark); flex-wrap: wrap; gap: 10px; }
+        
+        /* التنقل بين الأقسام الرئيسية والفرعية */
+        .nav-tabs, .sub-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
+        .nav-btn, .sub-nav-btn { flex: 1; min-width: 120px; padding: 10px 8px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 13px; text-align: center; }
+        .nav-btn.active, .sub-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
 
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        /* النماذج والجداول */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; color: var(--text-light); margin-bottom: 5px; font-weight: 500; }
         .form-control { width: 100%; padding: 10px 12px; background-color: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
@@ -84,15 +84,41 @@
         .btn-navy:hover { background-color: var(--navy-hover); }
         .btn-outline { background: transparent; color: var(--text-light); border: 1px solid var(--border-dark); }
         .btn-outline:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+        .btn-success { background-color: var(--success-green); color: #fff; }
+        .btn-warning { background-color: var(--warning-amber); color: #000; }
         .btn-danger { background-color: #ef4444; color: #fff; }
 
-        .hidden { display: none !important; }
-        .user-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-lighter); padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-dark); }
+        .table-responsive { overflow-x: auto; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border-dark); }
+        th { background-color: var(--card-lighter); color: #60a5fa; }
 
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
+        .badge-pending { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f6; }
+        .badge-done { background: #10b98122; color: #10b981; border: 1px solid #10b981; }
+
+        .stat-card { background: var(--card-lighter); border: 1px solid var(--border-dark); padding: 15px; border-radius: 12px; text-align: center; }
+        .stat-card .val { font-size: 20px; font-weight: bold; color: #60a5fa; margin-top: 5px; }
+
+        .hidden { display: none !important; }
         .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 480px; border: 1px solid var(--border-dark); }
+        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 500px; border: 1px solid var(--border-dark); max-height: 90vh; overflow-y: auto; }
+
+        /* -------------------------------------------------- */
+        /*  3. تنسيقات الطباعة (A4 Invoice & Quotes)           */
+        /* -------------------------------------------------- */
+        @media print {
+            body * { visibility: hidden; }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; padding: 20px; }
+            .no-print { display: none !important; }
+            table { border: 1px solid #000 !important; }
+            th, td { border: 1px solid #000 !important; color: #000 !important; }
+            th { background-color: #f2f2f2 !important; }
+        }
     </style>
 
+    <!-- Firebase SDKs Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -104,10 +130,9 @@
 <!-- ================================================== -->
 <div id="publicProfileView">
     <header class="public-header">
-        <!-- شعار المؤسسة قابل للنقر للدخول الخفي -->
         <img id="mainCompanyLogo" src="https://via.placeholder.com/160x160/141720/3b82f6?text=ADVANTAGE+VISION" alt="مؤسسة الرؤيا المتقدمة" class="company-logo" title="انقر 3 مرات للدخول الخفي">
         <h1 id="logoClickTarget" style="cursor: pointer;">مؤسسة الرؤيا المتقدمة</h1>
-        <p id="headerSubtitle">لأعمال الأرضيات الخرسانية، جلي وتلميع الرخام، والإيبوكسي</p>
+        <p id="headerSubtitle">لأعمال الأرضيات الخرسانية، جلي وتلميع الرخام، والإيبوكسي والصيانة</p>
         
         <div class="contact-btns">
             <a href="tel:0782066652" id="phoneCallBtn" class="btn btn-navy"><i class="bi bi-telephone-fill"></i> إتصال مباشر: 0782066652</a>
@@ -122,7 +147,7 @@
             <p id="aboutUsText" style="color: var(--text-gray); line-height: 1.8; max-width: 850px; margin: 0 auto; font-size: 15px;">
                 مؤسسة الرؤيا المتقدمة، متخصصون في تنفيذ ومعالجة كافة أنواع الأرضيات بجودة عالية وحلول عملية وديكورية متكاملة.
             </p>
-            <div id="establishedYearTag" style="margin-top: 15px; font-weight: bold; color: var(--primary-blue); font-size: 14px;"></div>
+            <div id="establishedYearTag" style="margin-top: 15px; font-weight: bold; color: var(--primary-blue); font-size: 14px;">تأسست عام 2020</div>
         </section>
 
         <!-- الخدمات -->
@@ -150,11 +175,11 @@
 </div>
 
 <!-- ================================================== -->
-<!-- 2. شاشة الدخول الخفية                              -->
+<!-- 2. نافذة تسجيل الدخول الخفية                       -->
 <!-- ================================================== -->
 <div id="authSection" class="modal-overlay hidden">
     <div class="modal-content">
-        <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 لوحة التحكم والنظام الداخلي</h2>
+        <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 الدخول إلى النظام الداخلي</h2>
         <div class="form-group">
             <label>البريد الإلكتروني</label>
             <input type="email" id="loginEmail" class="form-control" placeholder="name@domain.com">
@@ -171,107 +196,276 @@
 </div>
 
 <!-- ================================================== -->
-<!-- 3. لوحة التحكم والسيستم الداخلي                     -->
+<!-- 3. لوحة التحكم والنظام الداخلي الكامل               -->
 <!-- ================================================== -->
 <div id="mainDashboard" class="container hidden" style="padding-top: 20px;">
     
+    <!-- شريط معلومات المستخدم -->
     <div class="user-bar">
         <div>
-            <strong id="userName" style="color: #60a5fa;">المدير العام</strong>
+            مرحباً: <strong id="userName" style="color: #60a5fa;">المدير العام</strong>
+            <span id="adminBadge" class="badge badge-done hidden" style="margin-right: 8px;">ADMIN</span>
         </div>
         <div>
-            <button class="btn btn-outline" onclick="showPublicProfile()">🌐 معاينة البروفايل العام</button>
-            <button class="btn btn-danger" onclick="handleLogout()">تسجيل الخروج</button>
+            <button class="btn btn-outline" onclick="showPublicProfile()"><i class="bi bi-globe"></i> معاينة البروفايل العام</button>
+            <button class="btn btn-danger" onclick="handleLogout()"><i class="bi bi-box-arrow-right"></i> خروج</button>
         </div>
     </div>
 
-    <!-- التنقل الرئيسي -->
-    <div class="main-nav">
-        <button class="main-nav-btn active" id="mTab-content" onclick="switchControlTab('content')">🖼️ إدارة الهوية ومحتوى البروفايل</button>
-        <button class="main-nav-btn" id="mTab-inspections" onclick="switchControlTab('inspections')">📝 المعاينات والورش</button>
+    <!-- التنقل بين الأقسام التشغيلية الثلاثة + الهوية والصلاحيات -->
+    <div class="nav-tabs">
+        <button class="nav-btn active" id="tab-polishing" onclick="switchMainTab('polishing')">✨ جلي وتلميع الرخام</button>
+        <button class="nav-btn" id="tab-cleaning" onclick="switchMainTab('cleaning')">🧹 النظافة العامة</button>
+        <button class="nav-btn" id="tab-dryclean" onclick="switchMainTab('dryclean')">🛋️ الدراي كلين</button>
+        <button class="nav-btn" id="tab-identity" onclick="switchMainTab('identity')">🖼️ إدارة البروفايل والهوية</button>
+        <button class="nav-btn hidden" id="tab-admin" onclick="switchMainTab('admin')">👑 إدارة الموظفين</button>
     </div>
 
-    <!-- قسم إدارة الهوية والبروفايل -->
-    <div id="sec-content">
+    <!-- التنقل بين الأقسام الوظيفية الداخليّة -->
+    <div class="sub-nav" id="functionalNav">
+        <button class="sub-nav-btn active" id="sub-inspections" onclick="switchSubTab('inspections')">📝 المعاينات (عميل جديد)</button>
+        <button class="sub-nav-btn" id="sub-jobs" onclick="switchSubTab('jobs')">📅 الورش والمواعيد</button>
+        <button class="sub-nav-btn hidden" id="sub-subscriptions" onclick="switchSubTab('subscriptions')">🔄 الاشتراكات الشهرية</button>
+        <button class="sub-nav-btn" id="sub-accounting" onclick="switchSubTab('accounting')">💰 المحاسبة والمالية</button>
+    </div>
+
+    <!-- محتوى الأقسام الوظيفية -->
+    <div id="functionalContent">
+
+        <!-- 1. قسم المعاينات (عميل جديد) -->
+        <div id="sec-inspections" class="card">
+            <h3>📝 إدخال معاينة جديد</h3>
+            <div class="form-grid" style="margin-top: 15px;">
+                <div class="form-group"><label>اسم العميل</label><input type="text" id="inspName" class="form-control"></div>
+                <div class="form-group"><label>رقم الهاتف</label><input type="text" id="inspPhone" class="form-control"></div>
+                <div class="form-group"><label>الموقع / العنوان</label><input type="text" id="inspLocation" class="form-control"></div>
+                <div class="form-group"><label>تاريخ المعاينة</label><input type="date" id="inspDate" class="form-control"></div>
+            </div>
+            <div class="form-group"><label>ملاحظات المعاينة والتفاصيل</label><textarea id="inspNotes" class="form-control" rows="2"></textarea></div>
+            <button class="btn btn-navy" onclick="addInspection()">+ إضافة طلب معاينة</button>
+
+            <h4 style="margin-top: 25px; color: #60a5fa;">قائمة المعاينات القادمة</h4>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العميل</th>
+                            <th>الهاتف</th>
+                            <th>الموقع</th>
+                            <th>التاريخ</th>
+                            <th>الملاحظات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inspectionsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. قسم الورش والمواعيد -->
+        <div id="sec-jobs" class="card hidden">
+            <h3>📅 الورش والمواعيد المؤكدة</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العميل</th>
+                            <th>الهاتف</th>
+                            <th>الموقع</th>
+                            <th>التكلفة الإجمالية</th>
+                            <th>المبلغ المدفوع</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. قسم الاشتراكات الشهرية (خاص بالنظافة العامة) -->
+        <div id="sec-subscriptions" class="card hidden">
+            <h3>🔄 عقود والاشتراكات الشهرية (خاص بقطاع النظافة)</h3>
+            <div class="form-grid" style="margin-top: 15px;">
+                <div class="form-group"><label>اسم الشفرة / العميل</label><input type="text" id="subClientName" class="form-control"></div>
+                <div class="form-group"><label>القيمة الشهرية ($/JOD)</label><input type="number" id="subAmount" class="form-control"></div>
+                <div class="form-group"><label>يوم الزيارة الأسبوعي</label>
+                    <select id="subDay" class="form-control">
+                        <option value="السبت">السبت</option>
+                        <option value="الأحد">الأحد</option>
+                        <option value="الإثنين">الإثنين</option>
+                        <option value="الثلاثاء">الثلاثاء</option>
+                        <option value="الأربعاء">الأربعاء</option>
+                        <option value="الخميس">الخميس</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-navy" onclick="addSubscription()">+ إضافة اشتراك جديد</button>
+
+            <h4 style="margin-top: 25px; color: #60a5fa;">الاشتراكات النشطة</h4>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>العميل</th>
+                            <th>القيمة الشهريّة</th>
+                            <th>اليوم المخصص</th>
+                            <th>تاريخ الزيارة القادمة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscriptionsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. قسم المحاسبة ودفتر الأستاذ -->
+        <div id="sec-accounting" class="card hidden">
+            <h3>💰 دفتر الأستاذ والمحاسبة المالية</h3>
+            <div class="grid-3" style="margin-bottom: 20px;">
+                <div class="stat-card"><div>إجمالي الإيرادات</div><div class="val" id="statIncomes" style="color: #10b981;">0 JOD</div></div>
+                <div class="stat-card"><div>إجمالي المصاريف</div><div class="val" id="statExpenses" style="color: #ef4444;">0 JOD</div></div>
+                <div class="stat-card"><div>صافي الأرباح</div><div class="val" id="statNet">0 JOD</div></div>
+            </div>
+
+            <h4>تسجيل حركة مالية جديدة</h4>
+            <div class="form-grid" style="margin-top: 10px;">
+                <div class="form-group"><label>النوع</label>
+                    <select id="accType" class="form-control">
+                        <option value="income">إيراد (+)</option>
+                        <option value="expense">مصروف (-)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>المبلغ</label><input type="number" id="accAmount" class="form-control"></div>
+                <div class="form-group"><label>البيان / الوصف</label><input type="text" id="accDesc" class="form-control" placeholder="مثال: دفعة عميل / شراء مواد جلي"></div>
+            </div>
+            <button class="btn btn-navy" onclick="addTransaction()">+ تسجيل الحركة</button>
+
+            <h4 style="margin-top: 25px; color: #60a5fa;">سجل الحركات المالية</h4>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>النوع</th>
+                            <th>الوصف</th>
+                            <th>المبلغ</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountingTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- قسم إدارة الهوية والبروفايل العام -->
+    <div id="sec-identity" class="card hidden">
+        <h3>🎨 إدارة الهوية ومحتوى البروفايل العام</h3>
+        <div class="form-grid" style="margin-top: 15px;">
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>رابط صورة اللوجو (Logo URL)</label>
+                <input type="text" id="editLogoUrl" class="form-control">
+            </div>
+            <div class="form-group"><label>سنة التأسيس</label><input type="text" id="editEstYear" class="form-control"></div>
+            <div class="form-group"><label>رقم الهاتف</label><input type="text" id="editPhone" class="form-control"></div>
+        </div>
+        <div class="form-group"><label>نص (من نحن)</label><textarea id="editAboutUs" class="form-control" rows="3"></textarea></div>
+        <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ البيانات الأساسية</button>
+
+        <hr style="border-color: var(--border-dark); margin: 20px 0;">
+
+        <!-- إضافة خدمات جديدة للبروفايل -->
+        <h4>🛠️ إضافة خدمة جديدة للواجهة العامة</h4>
+        <div class="form-grid" style="margin-top: 10px;">
+            <div class="form-group"><label>عنوان الخدمة</label><input type="text" id="serviceTitle" class="form-control"></div>
+            <div class="form-group"><label>وصف الخدمة</label><input type="text" id="serviceDesc" class="form-control"></div>
+        </div>
+        <button class="btn btn-navy" onclick="addService()">+ إضافة الخدمة</button>
+        <div id="adminServicesList" class="grid-3" style="margin-top: 15px;"></div>
+
+        <hr style="border-color: var(--border-dark); margin: 20px 0;">
+
+        <!-- إضافة مشاريع جديدة -->
+        <h4>🏗️ إضافة مشروع لمعرض الأعمال</h4>
+        <div class="form-grid" style="margin-top: 10px;">
+            <div class="form-group"><label>عنوان المشروع</label><input type="text" id="projectTitle" class="form-control"></div>
+            <div class="form-group"><label>رابط صورة المشروع</label><input type="text" id="projectImgUrl" class="form-control"></div>
+            <div class="form-group" style="grid-column: 1 / -1;"><label>تفاصيل المشروع</label><input type="text" id="projectDesc" class="form-control"></div>
+        </div>
+        <button class="btn btn-navy" onclick="addProject()">+ إضافة المشروع</button>
+        <div id="adminProjectsList" class="grid-3" style="margin-top: 15px;"></div>
+    </div>
+
+    <!-- قسم لوحة الأدمن (إدارة صلاحيات الموظفين) -->
+    <div id="sec-admin" class="card hidden">
+        <h3>👑 لوحة الأدمن وإدارة صلاحيات الموظفين</h3>
+        <p style="color: var(--text-gray); margin-bottom: 15px; font-size: 13px;">تخصيص صلاحيات الأقسام للبريد الإلكتروني المRegistered.</p>
         
-        <!-- تعديل الشعار والمعلومات الأساسية -->
-        <div class="card">
-            <h3>🎨 تعديل الشعار (اللوجو) والمعلومات الأساسية</h3>
-            <div class="form-grid" style="margin-top: 15px;">
-                <div class="form-group" style="grid-column: 1 / -1;">
-                    <label>رابط صورة اللوجو (Logo URL)</label>
-                    <input type="text" id="editLogoUrl" class="form-control" placeholder="ضع رابط صورة اللوجو هنا (https://...)">
-                </div>
-                <div class="form-group">
-                    <label>سنة التأسيس</label>
-                    <input type="text" id="editEstYear" class="form-control" placeholder="تأسست عام 2020">
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف للاتصال</label>
-                    <input type="text" id="editPhone" class="form-control" value="0782066652">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>نص (من نحن)</label>
-                <textarea id="editAboutUs" class="form-control" rows="3" placeholder="اكتب نبذة عن المؤسسة..."></textarea>
-            </div>
-            <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ الشعار والبيانات الأساسية</button>
+        <div class="form-grid">
+            <div class="form-group"><label>البريد الإلكتروني للموظف</label><input type="email" id="empEmail" class="form-control"></div>
+            <div class="form-group"><label>اسم الموظف</label><input type="text" id="empName" class="form-control"></div>
         </div>
-
-        <!-- إضافة وتعديل الخدمات -->
-        <div class="card">
-            <h3>🛠️ إضافة خدمة جديدة</h3>
-            <div class="form-grid" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>عنوان الخدمة</label>
-                    <input type="text" id="serviceTitle" class="form-control" placeholder="مثال: جلي الرخام بالألماس">
-                </div>
-                <div class="form-group">
-                    <label>وصف مختصر للخدمة</label>
-                    <input type="text" id="serviceDesc" class="form-control" placeholder="تفاصيل الخدمة...">
-                </div>
-            </div>
-            <button class="btn btn-navy" onclick="addService()">+ إضافة الخدمة</button>
-
-            <h4 style="margin-top: 20px; color: #60a5fa;">الخدمات الحالية:</h4>
-            <div id="adminServicesList" class="grid-3" style="margin-top: 10px;"></div>
+        <div style="margin-bottom: 15px;">
+            <label style="margin-bottom: 8px;">الصلاحيات الأقسام:</label>
+            <label><input type="checkbox" id="permPolishing" checked> ✨ جلي وتلميع الرخام</label> &nbsp;&nbsp;
+            <label><input type="checkbox" id="permCleaning" checked> 🧹 النظافة العامة</label> &nbsp;&nbsp;
+            <label><input type="checkbox" id="permDryclean" checked> 🛋️ الدراي كلين</label>
         </div>
+        <button class="btn btn-navy" onclick="saveUserPermissions()">💾 حفظ صلاحيات الموظف</button>
 
-        <!-- إضافة وتعديل المشاريع -->
-        <div class="card">
-            <h3>🏗️ إضافة مشروع جديد لمعرض الأعمال</h3>
-            <div class="form-grid" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>عنوان المشروع</label>
-                    <input type="text" id="projectTitle" class="form-control" placeholder="مثال: مشروع إيبوكسي فلل - عمان">
-                </div>
-                <div class="form-group">
-                    <label>رابط صورة المشروع (Image URL)</label>
-                    <input type="text" id="projectImgUrl" class="form-control" placeholder="https://...رابط الصورة">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>تفاصيل المشروع</label>
-                <input type="text" id="projectDesc" class="form-control" placeholder="نوع العمل، المساحة، التفاصيل...">
-            </div>
-            <button class="btn btn-navy" onclick="addProject()">+ إضافة المشروع لمعرض الأعمال</button>
-
-            <h4 style="margin-top: 20px; color: #60a5fa;">المشاريع الحالية:</h4>
-            <div id="adminProjectsList" class="grid-3" style="margin-top: 10px;"></div>
+        <h4 style="margin-top: 25px; color: #60a5fa;">قائمة الموظفين والصلاحيات</h4>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr><th>اسم الموظف</th><th>البريد الإلكتروني</th><th>الصلاحيات</th></tr>
+                </thead>
+                <tbody id="employeesTableBody"></tbody>
+            </table>
         </div>
-
-    </div>
-
-    <!-- قسم المعاينات -->
-    <div id="sec-inspections" class="card hidden">
-        <h3>📝 قسم إدارة المعاينات والمواعيد الداخلي</h3>
-        <p style="color: var(--text-gray); margin-top: 10px;">السجلات الداخليّة للورش والمواعيد والمحاسبة.</p>
     </div>
 
 </div>
 
+<!-- ================================================== -->
+<!-- 4. قالب العرض والتوليد للطباعة (A4 Printable Area) -->
+<!-- ================================================== -->
+<div id="printableArea" class="hidden">
+    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
+        <h1 style="font-size: 24px; color: #000;">مؤسسة الرؤيا المتقدمة لأعمال الأرضيات والجلي</h1>
+        <p style="font-size: 14px; color: #333;">عمان - الأردن | هاتف: 0782066652</p>
+        <h2 id="printDocTitle" style="margin-top: 15px; text-decoration: underline;">عرض سعر / فاتورة</h2>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px;">
+        <div><strong>اسم العميل:</strong> <span id="printClientName">-</span></div>
+        <div><strong>التاريخ:</strong> <span id="printDate">-</span></div>
+    </div>
+    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #000; padding: 8px; background: #eee;">البيان / الخدمة</th>
+                <th style="border: 1px solid #000; padding: 8px; background: #eee;">المبلغ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #000; padding: 10px;" id="printServiceDesc">خدمات جلي وتلميع رخام</td>
+                <td style="border: 1px solid #000; padding: 10px;" id="printAmount">0 JOD</td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 14px;">
+        <div>توقيع وتختم المؤسسة: ____________</div>
+        <div>توقيع العميل: ____________</div>
+    </div>
+    <button class="no-print btn btn-navy" style="margin-top: 30px;" onclick="window.print()">🖨️ طباعة المستند الآن</button>
+    <button class="no-print btn btn-outline" style="margin-top: 30px;" onclick="closePrintView()">إغلاق</button>
+</div>
+
+<!-- Scripts & Application Logic -->
 <script>
-    // Firebase Config
+    // 1. Firebase Config Setup
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
         authDomain: "roya-app-29932.firebaseapp.com",
@@ -285,9 +479,13 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let clickCount = 0;
+    const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
+    let currentMainDepartment = 'polishing'; // default: polishing
+    let currentSubTab = 'inspections';
+    let currentUserPermissions = { polishing: true, cleaning: true, dryclean: true };
 
-    // الدخول الخفي عند الضغط 3 مرات على الشعار أو العنوان
+    // Secret Login Trigger (Click 3 times on logo/title)
+    let clickCount = 0;
     const triggerElements = [document.getElementById('logoClickTarget'), document.getElementById('mainCompanyLogo')];
     triggerElements.forEach(el => {
         if(el) {
@@ -310,12 +508,27 @@
             document.getElementById('authSection').classList.remove('hidden');
         }
     }
-
     function closeSecretLogin() { document.getElementById('authSection').classList.add('hidden'); }
     function showPublicProfile() {
         document.getElementById('mainDashboard').classList.add('hidden');
         document.getElementById('publicProfileView').classList.remove('hidden');
     }
+
+    // Auth Listeners & Login
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('userName').textContent = user.email;
+            if (user.email === ADMIN_EMAIL) {
+                document.getElementById('adminBadge').classList.remove('hidden');
+                document.getElementById('tab-admin').classList.remove('hidden');
+            } else {
+                document.getElementById('adminBadge').classList.add('hidden');
+                document.getElementById('tab-admin').classList.add('hidden');
+                loadUserPermissions(user.email);
+            }
+            loadDepartmentData();
+        }
+    });
 
     async function handleLogin() {
         const email = document.getElementById('loginEmail').value.trim();
@@ -328,15 +541,280 @@
         } catch (err) { alert('بيانات الدخول غير صحيحة'); }
     }
 
-    function handleLogout() { auth.signOut().then(() => showPublicProfile()); }
-
-    function switchControlTab(tab) {
-        document.getElementById('sec-content').classList.toggle('hidden', tab !== 'content');
-        document.getElementById('sec-inspections').classList.toggle('hidden', tab !== 'inspections');
-        document.getElementById('mTab-content').classList.toggle('active', tab === 'content');
-        document.getElementById('mTab-inspections').classList.toggle('active', tab === 'inspections');
+    function handleLogout() {
+        auth.signOut().then(() => showPublicProfile());
     }
 
+    // Switch Navigation Tabs
+    function switchMainTab(dept) {
+        currentMainDepartment = dept;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-${dept}`)?.classList.add('active');
+
+        if (dept === 'identity') {
+            document.getElementById('functionalNav').classList.add('hidden');
+            document.getElementById('functionalContent').classList.add('hidden');
+            document.getElementById('sec-identity').classList.remove('hidden');
+            document.getElementById('sec-admin').classList.add('hidden');
+            return;
+        }
+        if (dept === 'admin') {
+            document.getElementById('functionalNav').classList.add('hidden');
+            document.getElementById('functionalContent').classList.add('hidden');
+            document.getElementById('sec-identity').classList.add('hidden');
+            document.getElementById('sec-admin').classList.remove('hidden');
+            loadEmployeesList();
+            return;
+        }
+
+        document.getElementById('functionalNav').classList.remove('hidden');
+        document.getElementById('functionalContent').classList.remove('hidden');
+        document.getElementById('sec-identity').classList.add('hidden');
+        document.getElementById('sec-admin').classList.add('hidden');
+
+        // Toggle Subscriptions tab only for cleaning department
+        if (dept === 'cleaning') {
+            document.getElementById('sub-subscriptions').classList.remove('hidden');
+        } else {
+            document.getElementById('sub-subscriptions').classList.add('hidden');
+            if(currentSubTab === 'subscriptions') switchSubTab('inspections');
+        }
+
+        loadDepartmentData();
+    }
+
+    function switchSubTab(sub) {
+        currentSubTab = sub;
+        document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`sub-${sub}`)?.classList.add('active');
+
+        document.getElementById('sec-inspections').classList.toggle('hidden', sub !== 'inspections');
+        document.getElementById('sec-jobs').classList.toggle('hidden', sub !== 'jobs');
+        document.getElementById('sec-subscriptions').classList.toggle('hidden', sub !== 'subscriptions');
+        document.getElementById('sec-accounting').classList.toggle('hidden', sub !== 'accounting');
+
+        loadDepartmentData();
+    }
+
+    // CRUD Operations for Department Data
+    function loadDepartmentData() {
+        if (currentSubTab === 'inspections') loadInspections();
+        if (currentSubTab === 'jobs') loadJobs();
+        if (currentSubTab === 'subscriptions' && currentMainDepartment === 'cleaning') loadSubscriptions();
+        if (currentSubTab === 'accounting') loadAccounting();
+    }
+
+    // 1. المعاينات
+    function addInspection() {
+        const name = document.getElementById('inspName').value;
+        const phone = document.getElementById('inspPhone').value;
+        const loc = document.getElementById('inspLocation').value;
+        const date = document.getElementById('inspDate').value;
+        const notes = document.getElementById('inspNotes').value;
+
+        if (!name) return alert('يرجى إدخال اسم العميل');
+
+        db.collection('inspections').add({
+            department: currentMainDepartment,
+            clientName: name,
+            phone: phone,
+            location: loc,
+            date: date,
+            notes: notes,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            document.getElementById('inspName').value = '';
+            document.getElementById('inspPhone').value = '';
+            document.getElementById('inspLocation').value = '';
+            document.getElementById('inspNotes').value = '';
+            loadInspections();
+        });
+    }
+
+    function loadInspections() {
+        db.collection('inspections').where('department', '==', currentMainDepartment).get().then(snapshot => {
+            let html = '';
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                html += `
+                    <tr>
+                        <td>${item.clientName}</td>
+                        <td>${item.phone || '-'}</td>
+                        <td>${item.location || '-'}</td>
+                        <td>${item.date || '-'}</td>
+                        <td>${item.notes || '-'}</td>
+                        <td>
+                            <button class="btn btn-success" onclick="convertToJob('${doc.id}')">تأكيد ورشة</button>
+                            <button class="btn btn-danger" onclick="deleteDoc('inspections', '${doc.id}')">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('inspectionsTableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات.</td></tr>';
+        });
+    }
+
+    function convertToJob(docId) {
+        db.collection('inspections').doc(docId).get().then(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                const cost = prompt('أدخل التكلفة الإجمالية للورشة (JOD):', '100');
+                if (cost !== null) {
+                    db.collection('jobs').add({
+                        department: currentMainDepartment,
+                        clientName: data.clientName,
+                        phone: data.phone,
+                        location: data.location,
+                        totalCost: parseFloat(cost) || 0,
+                        paidAmount: 0,
+                        status: 'pending',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        db.collection('inspections').doc(docId).delete();
+                        alert('تم تحويل العميل إلى ورشة مؤكدة بنجاح!');
+                        loadInspections();
+                    });
+                }
+            }
+        });
+    }
+
+    // 2. الورش
+    function loadJobs() {
+        db.collection('jobs').where('department', '==', currentMainDepartment).get().then(snapshot => {
+            let html = '';
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                html += `
+                    <tr>
+                        <td>${item.clientName}</td>
+                        <td>${item.phone || '-'}</td>
+                        <td>${item.location || '-'}</td>
+                        <td>${item.totalCost} JOD</td>
+                        <td>${item.paidAmount || 0} JOD</td>
+                        <td><span class="badge ${item.status === 'done' ? 'badge-done' : 'badge-pending'}">${item.status === 'done' ? 'منتهية' : 'قيد التنفيذ'}</span></td>
+                        <td>
+                            <button class="btn btn-outline" onclick="openPrintModal('${item.clientName}', '${item.totalCost}')">🖨️ طباعة عرض/فاتورة</button>
+                            <button class="btn btn-warning" onclick="toggleJobStatus('${doc.id}', '${item.status}')">تغيير الحالة</button>
+                            <button class="btn btn-danger" onclick="deleteDoc('jobs', '${doc.id}')">حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('jobsTableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;">لا توجد ورش.</td></tr>';
+        });
+    }
+
+    function toggleJobStatus(docId, currentStatus) {
+        const nextStatus = currentStatus === 'pending' ? 'done' : 'pending';
+        db.collection('jobs').doc(docId).update({ status: nextStatus }).then(() => loadJobs());
+    }
+
+    // 3. الاشتراكات (للنظافة)
+    function addSubscription() {
+        const name = document.getElementById('subClientName').value;
+        const amount = parseFloat(document.getElementById('subAmount').value) || 0;
+        const day = document.getElementById('subDay').value;
+
+        if (!name) return alert('يرجى إدخال اسم العميل/الاشتراك');
+
+        db.collection('subscriptions').add({
+            clientName: name,
+            monthlyAmount: amount,
+            dayOfWeek: day,
+            nextVisit: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            document.getElementById('subClientName').value = '';
+            document.getElementById('subAmount').value = '';
+            loadSubscriptions();
+        });
+    }
+
+    function loadSubscriptions() {
+        db.collection('subscriptions').get().then(snapshot => {
+            let html = '';
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                html += `
+                    <tr>
+                        <td>${item.clientName}</td>
+                        <td>${item.monthlyAmount} JOD</td>
+                        <td>${item.dayOfWeek}</td>
+                        <td>${item.nextVisit || '-'}</td>
+                        <td>
+                            <button class="btn btn-success" onclick="completeVisit('${doc.id}', '${item.nextVisit}')">تأكيد الزيارة (+7 أيام)</button>
+                            <button class="btn btn-danger" onclick="deleteDoc('subscriptions', '${doc.id}')">إلغاء</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('subscriptionsTableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">لا توجد اشتراكات.</td></tr>';
+        });
+    }
+
+    function completeVisit(docId, currentDate) {
+        const d = currentDate ? new Date(currentDate) : new Date();
+        d.setDate(d.getDate() + 7);
+        db.collection('subscriptions').doc(docId).update({
+            nextVisit: d.toISOString().split('T')[0]
+        }).then(() => loadSubscriptions());
+    }
+
+    // 4. المحاسبة ودفتر الأستاذ
+    function addTransaction() {
+        const type = document.getElementById('accType').value;
+        const amount = parseFloat(document.getElementById('accAmount').value) || 0;
+        const desc = document.getElementById('accDesc').value;
+
+        if (!amount) return alert('يرجى إدخال قيمة المبلغ');
+
+        db.collection('accounting').add({
+            department: currentMainDepartment,
+            type: type,
+            amount: amount,
+            desc: desc,
+            date: new Date().toISOString().split('T')[0],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            document.getElementById('accAmount').value = '';
+            document.getElementById('accDesc').value = '';
+            loadAccounting();
+        });
+    }
+
+    function loadAccounting() {
+        db.collection('accounting').where('department', '==', currentMainDepartment).get().then(snapshot => {
+            let html = '';
+            let totalIn = 0;
+            let totalOut = 0;
+
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                if (item.type === 'income') totalIn += item.amount;
+                if (item.type === 'expense') totalOut += item.amount;
+
+                html += `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td><span class="badge ${item.type === 'income' ? 'badge-done' : 'badge-pending'}">${item.type === 'income' ? 'إيراد' : 'مصروف'}</span></td>
+                        <td>${item.desc || '-'}</td>
+                        <td style="color: ${item.type === 'income' ? '#10b981' : '#ef4444'}; font-weight:bold;">${item.type === 'income' ? '+' : '-'}${item.amount} JOD</td>
+                        <td><button class="btn btn-danger" onclick="deleteDoc('accounting', '${doc.id}')">حذف</button></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('statIncomes').textContent = `${totalIn} JOD`;
+            document.getElementById('statExpenses').textContent = `${totalOut} JOD`;
+            document.getElementById('statNet').textContent = `${totalIn - totalOut} JOD`;
+            document.getElementById('statNet').style.color = (totalIn - totalOut) >= 0 ? '#10b981' : '#ef4444';
+
+            document.getElementById('accountingTableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">لا توجد حركة مالية مسجلة.</td></tr>';
+        });
+    }
+
+    // إدارة الهوية والبروفايل العام
     window.onload = function() {
         loadGeneralInfo();
         loadServices();
@@ -369,18 +847,13 @@
     }
 
     function saveGeneralInfo() {
-        const logo = document.getElementById('editLogoUrl').value.trim();
-        const about = document.getElementById('editAboutUs').value;
-        const est = document.getElementById('editEstYear').value;
-        const phone = document.getElementById('editPhone').value;
-
         db.collection('settings').doc('profile_info').set({
-            logoUrl: logo,
-            aboutUs: about,
-            estYear: est,
-            phone: phone
+            logoUrl: document.getElementById('editLogoUrl').value.trim(),
+            aboutUs: document.getElementById('editAboutUs').value,
+            estYear: document.getElementById('editEstYear').value,
+            phone: document.getElementById('editPhone').value
         }, { merge: true }).then(() => {
-            alert('تم حفظ الشعار والمعلومات بنجاح!');
+            alert('تم حفظ البيانات بنجاح!');
             loadGeneralInfo();
         });
     }
@@ -408,24 +881,12 @@
 
             snapshot.forEach(doc => {
                 const item = doc.data();
-                publicHtml += `
-                    <div class="service-card">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <h3>${item.title}</h3>
-                        <p>${item.desc || ''}</p>
-                    </div>
-                `;
-                adminHtml += `
-                    <div class="service-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.desc || ''}</p>
-                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('services', '${doc.id}')">حذف</button>
-                    </div>
-                `;
+                publicHtml += `<div class="service-card"><i class="bi bi-check-circle-fill"></i><h3>${item.title}</h3><p>${item.desc || ''}</p></div>`;
+                adminHtml += `<div class="service-card"><h3>${item.title}</h3><p>${item.desc || ''}</p><button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('services', '${doc.id}')">حذف</button></div>`;
             });
 
             if (publicHtml) document.getElementById('publicServicesContainer').innerHTML = publicHtml;
-            document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات مضافة.</p>';
+            document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات mضافة.</p>';
         });
     }
 
@@ -433,7 +894,6 @@
         const title = document.getElementById('projectTitle').value;
         const img = document.getElementById('projectImgUrl').value;
         const desc = document.getElementById('projectDesc').value;
-
         if (!title) return alert('يرجى إدخال عنوان المشروع');
 
         db.collection('projects').add({
@@ -468,22 +928,76 @@
                         <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
                         <h3>${item.title}</h3>
                         <p>${item.desc || ''}</p>
-                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف المشروع</button>
+                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف</button>
                     </div>
                 `;
             });
 
-            document.getElementById('publicProjectsContainer').innerHTML = publicHtml || '<p style="text-align:center; grid-column: 1/-1; color: var(--text-gray);">لا توجد مشاريع مضافة حالياً.</p>';
+            document.getElementById('publicProjectsContainer').innerHTML = publicHtml || '<p style="text-align:center; grid-column: 1/-1; color: var(--text-gray);">لا توجد مشاريع مضافة.</p>';
             document.getElementById('adminProjectsList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد مشاريع مضافة.</p>';
         });
     }
 
+    // إدارة المستخدمين والصلاحيات (الأدمن)
+    function saveUserPermissions() {
+        const email = document.getElementById('empEmail').value.trim();
+        const name = document.getElementById('empName').value;
+        if (!email) return alert('يرجى إدخال البريد الإلكتروني');
+
+        const perms = {
+            polishing: document.getElementById('permPolishing').checked,
+            cleaning: document.getElementById('permCleaning').checked,
+            dryclean: document.getElementById('permDryclean').checked
+        };
+
+        db.collection('users').doc(email).set({
+            name: name,
+            email: email,
+            permissions: perms
+        }).then(() => {
+            alert('تم حفظ صلاحيات الموظف بنجاح!');
+            loadEmployeesList();
+        });
+    }
+
+    function loadEmployeesList() {
+        db.collection('users').get().then(snapshot => {
+            let html = '';
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                const permsStr = Object.keys(item.permissions || {}).filter(k => item.permissions[k]).join(', ');
+                html += `<tr><td>${item.name || '-'}</td><td>${item.email}</td><td>${permsStr}</td></tr>`;
+            });
+            document.getElementById('employeesTableBody').innerHTML = html || '<tr><td colspan="3">لا يوجد موظفين مسجلين.</td></tr>';
+        });
+    }
+
+    function loadUserPermissions(email) {
+        db.collection('users').doc(email).get().then(doc => {
+            if (doc.exists) {
+                currentUserPermissions = doc.data().permissions || {};
+                document.getElementById('tab-polishing').style.display = currentUserPermissions.polishing ? 'inline-flex' : 'none';
+                document.getElementById('tab-cleaning').style.display = currentUserPermissions.cleaning ? 'inline-flex' : 'none';
+                document.getElementById('tab-dryclean').style.display = currentUserPermissions.dryclean ? 'inline-flex' : 'none';
+            }
+        });
+    }
+
+    // طباعة العروض والفواتير
+    function openPrintModal(clientName, amount) {
+        document.getElementById('printClientName').textContent = clientName;
+        document.getElementById('printAmount').textContent = `${amount} JOD`;
+        document.getElementById('printDate').textContent = new Date().toISOString().split('T')[0];
+        document.getElementById('printableArea').classList.remove('hidden');
+    }
+
+    function closePrintView() {
+        document.getElementById('printableArea').classList.add('hidden');
+    }
+
     function deleteDoc(col, id) {
         if (confirm('هل أنت تأكد من الحذف؟')) {
-            db.collection(col).doc(id).delete().then(() => {
-                if (col === 'services') loadServices();
-                if (col === 'projects') loadProjects();
-            });
+            db.collection(col).doc(id).delete().then(() => loadDepartmentData());
         }
     }
 </script>

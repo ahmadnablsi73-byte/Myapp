@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للأرضيات والخدمات</title>
+    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للخدمات والمستندات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
         body { background-color: #121418; color: #ffffff; min-height: 100vh; padding: 15px; }
         
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1150px; margin: 0 auto; }
         .card { background-color: #1e2229; border-radius: 16px; padding: 20px; border: 1px solid #2d333f; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         
         h1, h2, h3, h4 { color: #ffffff; text-align: center; margin-bottom: 10px; }
@@ -17,16 +17,16 @@
 
         /* Main Nav Tabs */
         .main-nav { display: flex; gap: 8px; background-color: #121418; padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid #2d333f; }
-        .main-nav-btn { flex: 1; min-width: 140px; padding: 12px 10px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; }
+        .main-nav-btn { flex: 1; min-width: 130px; padding: 12px 10px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; }
         .main-nav-btn.active { background-color: #e28743; color: #ffffff; }
 
         /* Sub Nav Tabs */
         .sub-nav { display: flex; gap: 6px; background-color: #181c23; padding: 5px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; border: 1px solid #282f3d; }
-        .sub-nav-btn { flex: 1; min-width: 110px; padding: 10px 8px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 13px; }
+        .sub-nav-btn { flex: 1; min-width: 110px; padding: 10px 8px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 13px; white-space: nowrap; }
         .sub-nav-btn.active { background-color: #2d3748; color: #38bdf8; border: 1px solid #38bdf8; }
 
         /* Forms Grid */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; color: #d1d5db; margin-bottom: 5px; font-weight: 500; }
         .form-control { width: 100%; padding: 10px 12px; background-color: #121418; border: 1px solid #374151; border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
@@ -34,7 +34,7 @@
         textarea.form-control { resize: vertical; min-height: 70px; }
 
         /* Buttons */
-        .btn { padding: 8px 14px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
+        .btn { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
         .btn-primary { background-color: #e28743; color: #fff; }
         .btn-primary:hover { background-color: #c97232; }
         .btn-success { background-color: #10b981; color: #fff; }
@@ -52,7 +52,7 @@
         
         /* Tables */
         .table-responsive { overflow-x: auto; margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 650px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 700px; }
         th, td { padding: 10px 12px; border-bottom: 1px solid #2d333f; font-size: 13px; vertical-align: middle; }
         th { background-color: #121418; color: #e28743; font-weight: 700; }
         tr:hover { background-color: #1a1e26; }
@@ -167,6 +167,7 @@
             <div class="sub-nav">
                 <button class="sub-nav-btn active" id="sTab-inspections" onclick="switchSubDept('inspections')">📝 عميل جديد (معاينات)</button>
                 <button class="sub-nav-btn" id="sTab-appointments" onclick="switchSubDept('appointments')">📅 المواعيد والورش</button>
+                <button class="sub-nav-btn hidden" id="sTab-subscriptions" onclick="switchSubDept('subscriptions')">🔄 الاشتراكات الشهرية</button>
                 <button class="sub-nav-btn" id="sTab-accounting" onclick="switchSubDept('accounting')">💰 المحاسبة (دفتر الأستاذ)</button>
             </div>
 
@@ -284,7 +285,76 @@
                 </div>
             </div>
 
-            <!-- 3. قسم المحاسبة (دفتر الأستاذ) -->
+            <!-- 3. قسم الاشتراكات الشهرية (خاص بقسم النظافة العامة) -->
+            <div id="subSec-subscriptions" class="card hidden">
+                <h3>🔄 قسم الاشتراكات الشهرية (خاص بالنظافة العامة)</h3>
+                <p class="subtitle">إدارة الزيارات الأسبوعية ومتابعة تحصيل الاشتراكات الشهرية</p>
+
+                <form onsubmit="handleSaveSubscription(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>اسم العميل</label>
+                            <input type="text" id="subName" class="form-control" required placeholder="اسم مشترك النظافة">
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الهاتف</label>
+                            <input type="text" id="subPhone" class="form-control" placeholder="07XXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label>الموقع النصي</label>
+                            <input type="text" id="subLocText" class="form-control" placeholder="المنطقة، الشارع">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط اللوكيشن</label>
+                            <input type="url" id="subLocUrl" class="form-control" placeholder="https://maps.google.com/?q=...">
+                        </div>
+                        <div class="form-group">
+                            <label>اليوم المخصص للزيارة الأسبوعية</label>
+                            <select id="subVisitDay" class="form-control" required>
+                                <option value="السبت">السبت</option>
+                                <option value="الأحد">الأحد</option>
+                                <option value="الاثنين">الاثنين</option>
+                                <option value="الثلاثاء">الثلاثاء</option>
+                                <option value="الأربعاء">الأربعاء</option>
+                                <option value="الخميس">الخميس</option>
+                                <option value="الجمعة">الجمعة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>تاريخ أول زيارة قادمة</label>
+                            <input type="date" id="subNextDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>قيمة الاشتراك الشهري (د.أ)</label>
+                            <input type="number" step="0.1" id="subAmount" class="form-control" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">+ إضافة مشترك جديد</button>
+                </form>
+
+                <hr style="border: 0; border-top: 1px solid #2d333f; margin: 25px 0;">
+
+                <h3>📋 سجل المشتركين ومتابعة الزيارات والتحصيل</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم العميل والهاتف</th>
+                                <th>الموقع واللوكيشن</th>
+                                <th>يوم الزيارة الأسبوعي</th>
+                                <th>الزيارة القادمة</th>
+                                <th>قيمة الاشتراك</th>
+                                <th>حالة التحصيل الشهري</th>
+                                <th>إجراء الزيارة الأسبوعية</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptionsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. قسم المحاسبة (دفتر الأستاذ) -->
             <div id="subSec-accounting" class="card hidden">
                 <h3>💰 قسم المحاسبة (دفتر الأستاذ المالي)</h3>
                 <p class="subtitle">تسجيل وتتبع حركة الحسابات والأرشفة الشهرية</p>
@@ -316,7 +386,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>البيان / الوصف</label>
-                            <input type="text" id="accDesc" class="form-control" required placeholder="مثال: دفعة من عميل / شراء مواد">
+                            <input type="text" id="accDesc" class="form-control" required placeholder="مثال: دفعة من عميل / تحصيل اشتراك / شراء مواد">
                         </div>
                         <div class="form-group">
                             <label>نوع الحركة</label>
@@ -363,7 +433,7 @@
 
         </div>
 
-        <!-- 4. لوحة الأدمن (إدارة الموظفين) -->
+        <!-- 5. لوحة الأدمن (إدارة الموظفين) -->
         <div id="sec-admin" class="card hidden">
             <h2>👑 لوحة تحكم الأدمن والصلاحيات</h2>
             <p class="subtitle">تحديد الأقسام المسموح لكل موظف الدخول إليها</p>
@@ -446,7 +516,7 @@
     <div class="modal-content">
         <h3 id="pdfModalTitle">📄 رفع مستند PDF</h3>
         <input type="hidden" id="pdfModalDocId">
-        <input type="hidden" id="pdfModalType"> <!-- 'priceOffer' or 'invoice' -->
+        <input type="hidden" id="pdfModalType">
 
         <div class="form-group" style="margin-top: 15px;">
             <label>اختر ملف الـ PDF من جهازك</label>
@@ -458,7 +528,7 @@
         </div>
 
         <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button type="button" class="btn btn-primary" style="flex:1;" onclick="submitPdfUpload()">حفظ وحفظ المستند</button>
+            <button type="button" class="btn btn-primary" style="flex:1;" onclick="submitPdfUpload()">حفظ المستند</button>
             <button type="button" class="btn btn-secondary" onclick="closePdfModal()">إلغاء</button>
         </div>
     </div>
@@ -487,10 +557,11 @@
     // App State Variables
     let currentUserData = null;
     let currentMainDept = 'polishing'; // 'polishing', 'cleaning', 'dryclean', 'admin'
-    let currentSubDept = 'inspections'; // 'inspections', 'appointments', 'accounting'
+    let currentSubDept = 'inspections'; // 'inspections', 'appointments', 'subscriptions', 'accounting'
 
     // Today Date YYYY-MM-DD
     const todayStr = new Date().toISOString().split('T')[0];
+    const currentMonthStr = todayStr.substring(0, 7); // YYYY-MM
 
     // Auth Listener
     auth.onAuthStateChanged(async (user) => {
@@ -581,7 +652,14 @@
             document.getElementById('sec-admin').classList.add('hidden');
             document.getElementById('deptContainer').classList.remove('hidden');
             
-            // Set Titles according to Department
+            // Show Subscriptions tab ONLY for Cleaning department
+            if (dept === 'cleaning') {
+                document.getElementById('sTab-subscriptions').classList.remove('hidden');
+            } else {
+                document.getElementById('sTab-subscriptions').classList.add('hidden');
+                if (currentSubDept === 'subscriptions') currentSubDept = 'inspections';
+            }
+
             const titles = {
                 'polishing': '✨ قسم جلي البلاط',
                 'cleaning': '🧹 قسم النظافة العامة',
@@ -592,8 +670,9 @@
             // Initialize dates
             document.getElementById('inspDate').value = todayStr;
             document.getElementById('appFilterDate').value = todayStr;
+            document.getElementById('subNextDate').value = todayStr;
             document.getElementById('accDate').value = todayStr;
-            document.getElementById('accMonthFilter').value = todayStr.substring(0, 7);
+            document.getElementById('accMonthFilter').value = currentMonthStr;
 
             switchSubDept(currentSubDept);
         }
@@ -605,18 +684,20 @@
         document.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
         if (document.getElementById('sTab-' + sub)) document.getElementById('sTab-' + sub).classList.add('active');
 
-        ['inspections', 'appointments', 'accounting'].forEach(s => {
+        ['inspections', 'appointments', 'subscriptions', 'accounting'].forEach(s => {
             document.getElementById('subSec-' + s).classList.add('hidden');
         });
         document.getElementById('subSec-' + sub).classList.remove('hidden');
 
         if (sub === 'inspections') loadInspectionsList();
         if (sub === 'appointments') loadAppointmentsForSelectedDate();
+        if (sub === 'subscriptions') loadSubscriptionsList();
         if (sub === 'accounting') loadAccountingData();
     }
 
     // Helper: Collection Names
     function getClientsCollection() { return `clients_${currentMainDept}`; }
+    function getSubscriptionsCollection() { return `subscriptions_cleaning`; }
     function getAccountingCollection() { return `accounting_${currentMainDept}`; }
 
     // ================= 1. قسم المعاينات (عميل جديد) =================
@@ -624,7 +705,7 @@
         e.preventDefault();
         const data = {
             dept: currentMainDept,
-            type: 'inspection', // 'inspection' or 'workshop'
+            type: 'inspection',
             name: document.getElementById('inspName').value.trim(),
             phone: document.getElementById('inspPhone').value.trim(),
             locText: document.getElementById('inspLocText').value.trim(),
@@ -885,16 +966,16 @@
             const storageRef = storage.ref(`documents/${currentMainDept}/${Date.now()}_${file.name}`);
             
             try {
-                alert('جاري رفع ملف ה-PDF إلى التخزين السحابي...');
+                alert('جاري رفع ملف الـ PDF إلى التخزين السحابي...');
                 const snap = await storageRef.put(file);
                 finalUrl = await snap.ref.getDownloadURL();
             } catch (err) {
-                alert('حدث خطأ أثناء رفع الملف: ' + err.message + '\nسيتم استخدام الرابط المباشر إن وجد.');
+                alert('حدث خطأ أثناء رفع الملف السحابي: ' + err.message + '\nإذا لم تتفعل خوادم التخزين، يمكنك وضع رابط مباشر للمستند.');
             }
         }
 
         if (!finalUrl) {
-            alert('يرجى إما اختيار ملف PDF أو وضع رابط مباشر للمستند');
+            alert('يرجى اختيار ملف PDF أو وضع رابط مباشر للمستند');
             return;
         }
 
@@ -904,13 +985,131 @@
 
         try {
             await db.collection(getClientsCollection()).doc(id).update(updateData);
-            alert('تم ربط المستند بالطلب بنجاح!');
+            alert('تم حفظ المستند وربطه بالطلب بنجاح!');
             closePdfModal();
             loadAppointmentsForSelectedDate();
         } catch (err) { alert('خطأ أثناء حفظ الرابط: ' + err.message); }
     }
 
-    // ================= 3. قسم المحاسبة (دفتر الأستاذ) =================
+    // ================= 3. قسم الاشتراكات الشهرية (النظافة العامة) =================
+    async function handleSaveSubscription(e) {
+        e.preventDefault();
+        const data = {
+            name: document.getElementById('subName').value.trim(),
+            phone: document.getElementById('subPhone').value.trim(),
+            locText: document.getElementById('subLocText').value.trim(),
+            locUrl: document.getElementById('subLocUrl').value.trim(),
+            visitDay: document.getElementById('subVisitDay').value,
+            nextVisitDate: document.getElementById('subNextDate').value || todayStr,
+            amount: parseFloat(document.getElementById('subAmount').value) || 0,
+            paymentStatus: 'لم يتم التحصيل', // 'تم التحصيل' or 'لم يتم التحصيل'
+            paidMonth: currentMonthStr,
+            lastVisitDate: '',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await db.collection(getSubscriptionsCollection()).add(data);
+            alert('تم إضافة مشترك جديد بنجاح!');
+            e.target.reset();
+            document.getElementById('subNextDate').value = todayStr;
+            loadSubscriptionsList();
+        } catch (err) {
+            alert('خطأ أثناء الحفظ: ' + err.message);
+        }
+    }
+
+    async function loadSubscriptionsList() {
+        const tbody = document.getElementById('subscriptionsTableBody');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري تحميل قائمة الاشتراكات...</td></tr>';
+
+        try {
+            const snap = await db.collection(getSubscriptionsCollection()).get();
+            tbody.innerHTML = '';
+
+            snap.forEach(doc => {
+                const sub = doc.data();
+                const id = doc.id;
+
+                const locBtn = sub.locUrl ? `<a href="${sub.locUrl}" target="_blank" class="btn btn-info" style="padding: 2px 6px;">📍 رابط</a>` : '-';
+                const isPaid = sub.paymentStatus === 'تم التحصيل' && sub.paidMonth === currentMonthStr;
+
+                const payBadge = isPaid 
+                    ? `<span class="badge badge-done">💳 تم تحصيل شهر (${sub.paidMonth || currentMonthStr})</span>` 
+                    : `<span class="badge badge-debit">❌ لم يتم التحصيل (${currentMonthStr})</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${sub.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${sub.phone || ''}</small></td>
+                        <td>${sub.locText || '-'} <br>${locBtn}</td>
+                        <td><span class="badge badge-pending">${sub.visitDay || 'غير محدد'}</span></td>
+                        <td><strong>${sub.nextVisitDate || '-'}</strong></td>
+                        <td><strong>${sub.amount || 0} د.أ</strong></td>
+                        <td>${payBadge}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding:4px 8px;" onclick="markWeeklyVisitDone('${id}', '${sub.nextVisitDate}')">✔ تمت زيارة اليوم</button>
+                        </td>
+                        <td>
+                            <button class="btn ${isPaid ? 'btn-secondary' : 'btn-primary'}" style="padding:3px 6px;" onclick="toggleSubscriptionPayment('${id}', '${isPaid ? 'لم يتم التحصيل' : 'تم التحصيل'}')">
+                                ${isPaid ? 'إعادة لم يتم الدفع' : '💳 تحصيل الاشتراك'}
+                            </button>
+                            <button class="btn btn-danger" style="padding:3px 6px;" onclick="deleteSubscription('${id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (snap.empty) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا يوجد مشتركين في هذا القسم حالياً</td></tr>';
+            }
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
+        }
+    }
+
+    // الترحيل الآلي للزيارة القادمة (إضافة 7 أيام تلقائياً)
+    async function markWeeklyVisitDone(id, currentDateStr) {
+        let baseDate = currentDateStr ? new Date(currentDateStr) : new Date();
+        if (isNaN(baseDate.getTime())) baseDate = new Date();
+
+        // إضافة 7 أيام للجدولة القادمة
+        baseDate.setDate(baseDate.getDate() + 7);
+        const nextWeekStr = baseDate.toISOString().split('T')[0];
+
+        try {
+            await db.collection(getSubscriptionsCollection()).doc(id).update({
+                lastVisitDate: todayStr,
+                nextVisitDate: nextWeekStr
+            });
+            alert(`تم تأكيد زيارة اليوم بنجاح!\nتمت جدولة الزيارة القادمة أوتوماتيكياً بتاريخ: ${nextWeekStr}`);
+            loadSubscriptionsList();
+        } catch (err) {
+            alert('حدث خطأ في الجدولة الآلية: ' + err.message);
+        }
+    }
+
+    // تبديل حالة التحصيل المالي للاشتراك الشهري
+    async function toggleSubscriptionPayment(id, newStatus) {
+        try {
+            await db.collection(getSubscriptionsCollection()).doc(id).update({
+                paymentStatus: newStatus,
+                paidMonth: currentMonthStr
+            });
+            alert(`تم تحديث حالة تحصيل الاشتراك إلى: ${newStatus}`);
+            loadSubscriptionsList();
+        } catch (err) {
+            alert('خطأ في تحديث التحصيل: ' + err.message);
+        }
+    }
+
+    async function deleteSubscription(id) {
+        if (confirm('هل تأكد حذف اشتراك هذا العميل؟')) {
+            await db.collection(getSubscriptionsCollection()).doc(id).delete();
+            loadSubscriptionsList();
+        }
+    }
+
+    // ================= 4. قسم المحاسبة (دفتر الأستاذ) =================
     async function handleSaveAccountingEntry(e) {
         e.preventDefault();
         const desc = document.getElementById('accDesc').value.trim();
@@ -933,7 +1132,7 @@
     }
 
     async function loadAccountingData() {
-        const monthFilter = document.getElementById('accMonthFilter').value || todayStr.substring(0, 7);
+        const monthFilter = document.getElementById('accMonthFilter').value || currentMonthStr;
         const tbody = document.getElementById('accountingTableBody');
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل دفتر الأستاذ...</td></tr>';
 
@@ -993,7 +1192,7 @@
         }
     }
 
-    // ================= 4. لوحة الأدمن (إدارة الموظفين) =================
+    // ================= 5. لوحة الأدمن (إدارة الموظفين) =================
     async function loadAdminUsersList() {
         const tbody = document.getElementById('adminUsersTableBody');
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل القائمة...</td></tr>';

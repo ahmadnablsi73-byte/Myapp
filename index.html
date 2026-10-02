@@ -401,7 +401,7 @@
     <!-- قسم لوحة الأدمن (إدارة صلاحيات الموظفين) -->
     <div id="sec-admin" class="card hidden">
         <h3>👑 لوحة الأدمن وإدارة صلاحيات الموظفين</h3>
-        <p style="color: var(--text-gray); margin-bottom: 15px; font-size: 13px;">تخصيص صلاحيات الأقسام للبريد الإلكتروني المRegistered.</p>
+        <p style="color: var(--text-gray); margin-bottom: 15px; font-size: 13px;">تخصيص صلاحيات الأقسام للبريد الإلكتروني المسجل.</p>
         
         <div class="form-grid">
             <div class="form-group"><label>البريد الإلكتروني للموظف</label><input type="email" id="empEmail" class="form-control"></div>
@@ -411,7 +411,7 @@
             <label style="margin-bottom: 8px;">الصلاحيات الأقسام:</label>
             <label><input type="checkbox" id="permPolishing" checked> ✨ جلي وتلميع الرخام</label> &nbsp;&nbsp;
             <label><input type="checkbox" id="permCleaning" checked> 🧹 النظافة العامة</label> &nbsp;&nbsp;
-            <label><input type="checkbox" id="permDryclean" checked> 🛋️ الدراي كلين</label>
+            <label><input type="checkbox" id="permDryclean" checked> 🛋️️ الدراي كلين</label>
         </div>
         <button class="btn btn-navy" onclick="saveUserPermissions()">💾 حفظ صلاحيات الموظف</button>
 
@@ -886,7 +886,7 @@
             });
 
             if (publicHtml) document.getElementById('publicServicesContainer').innerHTML = publicHtml;
-            document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات mضافة.</p>';
+            document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات مضافة.</p>';
         });
     }
 

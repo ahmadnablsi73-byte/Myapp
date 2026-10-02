@@ -3,716 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للخدمات والمستندات</title>
+    <title>مؤسسة الرؤيا المتقدمة - لأعمال الأرضيات والجلي والصيانة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-navy: #1e365d;   /* الأزرق الملكي المستخرج من عرض السعر */
-            --primary-orange: #e28743;
-            --bg-dark: #121418;
-            --card-dark: #1e2229;
-            --border-dark: #2d333f;
-            --text-gray: #9ca3af;
+            --bg-dark: #0b0d10;             /* أسود عميق */
+            --card-dark: #141720;           /* رمادي معدني داكن */
+            --card-lighter: #1d2230;        /* رمادي خرساني مائل للكحلي */
+            --border-dark: #2a3142;         /* حد معدني */
+            --primary-blue: #3b82f6;        /* أزرق معدني لامع */
+            --primary-navy: #25406b;        /* كحلي اللوجو المعتمد */
+            --navy-hover: #32558c;          /* كحلي للتفاعل */
+            --text-light: #f3f4f6;          /* أوف وايت */
+            --text-gray: #9ca3af;           /* رمادي للنصوص */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
-        body { background-color: var(--bg-dark); color: #ffffff; min-height: 100vh; padding: 15px; }
+        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
         
-        .container { max-width: 1150px; margin: 0 auto; }
-        .card { background-color: var(--card-dark); border-radius: 16px; padding: 20px; border: 1px solid var(--border-dark); margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .container { max-width: 1150px; margin: 0 auto; padding: 15px; }
         
-        h1, h2, h3, h4 { color: #ffffff; text-align: center; margin-bottom: 10px; }
-        .subtitle { font-size: 13px; color: var(--text-gray); text-align: center; margin-bottom: 20px; }
+        /* -------------------------------------------------- */
+        /*  تنسيقات البروفايل العام (Public Profile)           */
+        /* -------------------------------------------------- */
+        .public-header { 
+            background: linear-gradient(180deg, #141720 0%, #0b0d10 100%); 
+            padding: 40px 20px 30px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--primary-navy); 
+            box-shadow: 0 4px 20px rgba(37, 64, 107, 0.25);
+        }
 
-        /* Main Nav Tabs */
+        .company-logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0px 6px 15px rgba(59, 130, 246, 0.3));
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .company-logo:hover {
+            transform: scale(1.03);
+        }
+
+        .public-header h1 { font-size: 26px; font-weight: 800; color: var(--text-light); margin-bottom: 6px; }
+        .public-header p { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
+        .contact-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        
+        .hero-section { padding: 30px 20px; text-align: center; background: var(--card-dark); margin: 20px 0; border-radius: 16px; border: 1px solid var(--border-dark); }
+        
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 20px; }
+        
+        .service-card, .project-card { background: var(--card-dark); border: 1px solid var(--border-dark); padding: 20px; border-radius: 12px; text-align: center; transition: 0.3s; position: relative; }
+        .service-card:hover, .project-card:hover { border-color: var(--primary-blue); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); }
+        .service-card i { font-size: 32px; color: var(--primary-blue); margin-bottom: 10px; display: block; }
+        .service-card h3, .project-card h3 { font-size: 18px; margin-bottom: 8px; color: #60a5fa; }
+        .service-card p, .project-card p { font-size: 13px; color: var(--text-gray); line-height: 1.6; }
+        .project-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-dark); }
+
+        .public-footer { background: #07080a; padding: 25px 20px; text-align: center; border-top: 1px solid var(--border-dark); font-size: 13px; color: var(--text-gray); margin-top: 40px; }
+
+        /* -------------------------------------------------- */
+        /*  تنسيقات لوحة التحكم والنظام الداخلي             */
+        /* -------------------------------------------------- */
+        .card { background-color: var(--card-dark); border-radius: 16px; padding: 20px; border: 1px solid var(--border-dark); margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .main-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
         .main-nav-btn { flex: 1; min-width: 130px; padding: 12px 10px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; }
-        .main-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid #3b82f6; }
+        .main-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
 
-        /* Sub Nav Tabs */
-        .sub-nav { display: flex; gap: 6px; background-color: #181c23; padding: 5px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; border: 1px solid #282f3d; }
-        .sub-nav-btn { flex: 1; min-width: 110px; padding: 10px 8px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 13px; white-space: nowrap; }
-        .sub-nav-btn.active { background-color: var(--primary-navy); color: #38bdf8; border: 1px solid #38bdf8; }
-
-        /* Forms Grid */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
-        label { display: block; font-size: 12px; color: #d1d5db; margin-bottom: 5px; font-weight: 500; }
-        .form-control { width: 100%; padding: 10px 12px; background-color: var(--bg-dark); border: 1px solid #374151; border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
-        .form-control:focus { border-color: var(--primary-navy); }
-        textarea.form-control { resize: vertical; min-height: 70px; }
-
-        /* Buttons */
-        .btn { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
-        .btn-primary { background-color: var(--primary-navy); color: #fff; border: 1px solid #2563eb; }
-        .btn-primary:hover { background-color: #2563eb; }
-        .btn-success { background-color: #10b981; color: #fff; }
-        .btn-success:hover { background-color: #059669; }
-        .btn-danger { background-color: #ef4444; color: #fff; }
-        .btn-danger:hover { background-color: #dc2626; }
-        .btn-info { background-color: #0284c7; color: #fff; }
-        .btn-info:hover { background-color: #0369a1; }
-        .btn-secondary { background-color: #4b5563; color: #fff; }
-        .btn-block { width: 100%; padding: 12px; font-size: 14px; }
-
-        /* Utility */
-        .hidden { display: none !important; }
-        .user-bar { display: flex; justify-content: space-between; align-items: center; background: #252a34; padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--text-light); margin-bottom: 5px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 12px; background-color: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
+        .form-control:focus { border-color: var(--primary-blue); }
         
-        /* Tables */
-        .table-responsive { overflow-x: auto; margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 700px; }
-        th, td { padding: 10px 12px; border-bottom: 1px solid var(--border-dark); font-size: 13px; vertical-align: middle; }
-        th { background-color: var(--bg-dark); color: #38bdf8; font-weight: 700; }
-        tr:hover { background-color: #1a1e26; }
+        .btn { padding: 9px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+        .btn-navy { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
+        .btn-navy:hover { background-color: var(--navy-hover); }
+        .btn-outline { background: transparent; color: var(--text-light); border: 1px solid var(--border-dark); }
+        .btn-outline:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+        .btn-danger { background-color: #ef4444; color: #fff; }
 
-        /* Badges */
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
-        .badge-pending { background: #f59e0b; color: #000; }
-        .badge-workshop { background: #3b82f6; color: #fff; }
-        .badge-done { background: #10b981; color: #fff; }
-        .badge-debit { background: #ef4444; color: #fff; }
-        .badge-credit { background: #10b981; color: #fff; }
+        .hidden { display: none !important; }
+        .user-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-lighter); padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-dark); }
 
-        /* Summary Bar for Appointments */
-        .day-summary-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-dark); padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-dark); margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .summary-pill { background: #252a34; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; color: #38bdf8; border: 1px solid #374151; }
-
-        /* Accounting Summary Cards */
-        .accounting-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .acc-card { background: var(--bg-dark); padding: 15px; border-radius: 10px; border: 1px solid var(--border-dark); text-align: center; }
-        .acc-card .val { font-size: 20px; font-weight: bold; margin-top: 5px; }
-
-        /* Modal Overlay */
         .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; border: 1px solid #374151; }
-
-        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; }
-        .alert-error { background-color: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; }
-        .alert-success { background-color: #064e3b; color: #6ee7b7; border: 1px solid #047857; }
-
-        /* -------------------------------------------------- */
-        /*  تنسيقات الطباعة وعرض السعر الرسمي (A4 Print PDF)   */
-        /* -------------------------------------------------- */
-        #quotation-template {
-            display: none;
-            background: #ffffff !important;
-            color: #000000 !important;
-            padding: 30px;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-            #quotation-template, #quotation-template * { visibility: visible; }
-            #quotation-template {
-                display: block !important;
-                position: absolute;
-                left: 0; top: 0;
-                width: 100%;
-                padding: 10mm;
-            }
-            @page { size: A4; margin: 0; }
-        }
-
-        .quote-header { border-bottom: 3px solid #1e365d; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .quote-title-badge { background-color: #1e365d; color: #fff; padding: 6px 20px; font-size: 18px; font-weight: bold; border-radius: 4px; }
-        .client-info-box { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; color: #1e293b; font-size: 14px; }
-        .quote-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .quote-table th { background-color: #1e365d; color: #ffffff; padding: 10px; text-align: center; font-size: 14px; }
-        .quote-table td { border: 1px solid #cbd5e1; padding: 10px; vertical-align: top; font-size: 13px; color: #0f172a; }
-        .summary-card { background-color: #f1f5f9; border-right: 4px solid #1e365d; padding: 12px; border-radius: 4px; color: #0f172a; margin-bottom: 15px; }
-        .terms-box { border: 1px dashed #94a3b8; border-radius: 6px; padding: 12px 16px; background-color: #fafafa; color: #334155; margin-bottom: 25px; }
-        .quote-footer { background-color: #1e365d; color: #ffffff; padding: 10px; font-size: 13px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 480px; border: 1px solid var(--border-dark); }
     </style>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
-<div class="container">
+<!-- ================================================== -->
+<!-- 1. البروفايل العام للشركة (الواجهة الرئيسية)       -->
+<!-- ================================================== -->
+<div id="publicProfileView">
+    <header class="public-header">
+        <!-- شعار المؤسسة قابل للنقر للدخول الخفي -->
+        <img id="mainCompanyLogo" src="https://via.placeholder.com/160x160/141720/3b82f6?text=ADVANTAGE+VISION" alt="مؤسسة الرؤيا المتقدمة" class="company-logo" title="انقر 3 مرات للدخول الخفي">
+        <h1 id="logoClickTarget" style="cursor: pointer;">مؤسسة الرؤيا المتقدمة</h1>
+        <p id="headerSubtitle">لأعمال الأرضيات الخرسانية، جلي وتلميع الرخام، والإيبوكسي</p>
+        
+        <div class="contact-btns">
+            <a href="tel:0782066652" id="phoneCallBtn" class="btn btn-navy"><i class="bi bi-telephone-fill"></i> إتصال مباشر: 0782066652</a>
+            <a href="https://wa.me/962782066652" id="whatsappBtn" target="_blank" class="btn btn-outline"><i class="bi bi-whatsapp"></i> محادثة واتساب</a>
+        </div>
+    </header>
 
-    <!-- شاشة تسجيل الدخول -->
-    <div id="authSection" class="card" style="max-width: 420px; margin: 40px auto;">
-        <h1>مؤسسة الرؤيا المتقدمة</h1>
-        <p class="subtitle">النظام الموحد للخدمات والمستندات السحابية</p>
+    <div class="container">
+        <!-- من نحن -->
+        <section class="hero-section">
+            <h2 style="color: #60a5fa; margin-bottom: 12px;">من نحن</h2>
+            <p id="aboutUsText" style="color: var(--text-gray); line-height: 1.8; max-width: 850px; margin: 0 auto; font-size: 15px;">
+                مؤسسة الرؤيا المتقدمة، متخصصون في تنفيذ ومعالجة كافة أنواع الأرضيات بجودة عالية وحلول عملية وديكورية متكاملة.
+            </p>
+            <div id="establishedYearTag" style="margin-top: 15px; font-weight: bold; color: var(--primary-blue); font-size: 14px;"></div>
+        </section>
 
-        <div class="main-nav">
-            <button type="button" class="main-nav-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">تسجيل دخول</button>
-            <button type="button" class="main-nav-btn" id="registerTabBtn" onclick="switchAuthTab('register')">حساب جديد</button>
+        <!-- الخدمات -->
+        <h2 style="text-align: center; margin-top: 35px; color: var(--text-light);">🛠 خدماتنا</h2>
+        <div class="grid-3" id="publicServicesContainer">
+            <div class="service-card"><i class="bi bi-gem"></i><h3>جلي وتلميع الرخام</h3><p>معالجة وجلي الرخام بالألماس الكريستالي ومواد الحماية.</p></div>
+            <div class="service-card"><i class="bi bi-layers-half"></i><h3>أرضيات الإيبوكسي والتيرتزو</h3><p>تطبيق إيبوكسي الورش والمستودعات والتيرتزو الديكوري.</p></div>
         </div>
 
-        <div id="alertBox" class="alert hidden"></div>
-
-        <div id="loginForm">
-            <div class="form-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="loginEmail" class="form-control" placeholder="name@domain.com">
-            </div>
-            <div class="form-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
-            </div>
-            <button type="button" class="btn btn-primary btn-block" onclick="handleLogin()">دخول للنظام</button>
-        </div>
-
-        <div id="registerForm" class="hidden">
-            <div class="form-group">
-                <label>الاسم الكامل</label>
-                <input type="text" id="registerName" class="form-control" placeholder="اسم الموظف">
-            </div>
-            <div class="form-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="registerEmail" class="form-control" placeholder="name@domain.com">
-            </div>
-            <div class="form-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="registerPassword" class="form-control" placeholder="••••••••">
-            </div>
-            <button type="button" class="btn btn-primary btn-block" onclick="handleRegister()">إنشاء حساب</button>
+        <!-- معرض المشاريع -->
+        <h2 style="text-align: center; margin-top: 45px; color: var(--text-light);">🏗️ مشاريعنا وأعمالنا</h2>
+        <div class="grid-3" id="publicProjectsContainer">
+            <p style="text-align: center; grid-column: 1/-1; color: var(--text-gray);">جاري تحميل المشاريع...</p>
         </div>
     </div>
 
-    <!-- الشاشة الرئيسية بعد تسجيل الدخول -->
-    <div id="mainDashboard" class="hidden">
-        
-        <!-- الشريط العلوي للمستخدم -->
-        <div class="user-bar">
-            <div>
-                <strong id="userName">المستخدم</strong>
-                <span id="userRoleBadge" class="badge badge-pending" style="margin-right: 8px;">مستعمل</span>
-            </div>
+    <!-- التذييل السفلي -->
+    <footer class="public-footer">
+        <p>جميع الحقوق محفوظة © مؤسسة الرؤيا المتقدمة</p>
+        <p style="margin-top: 8px; font-size: 11px; opacity: 0.5;">
+            عمان - الأردن
+            <span id="secretAdminBtn" onclick="openSecretLogin()" style="cursor: pointer; margin-right: 15px;" title="النظام الداخلي">🔒</span>
+        </p>
+    </footer>
+</div>
+
+<!-- ================================================== -->
+<!-- 2. شاشة الدخول الخفية                              -->
+<!-- ================================================== -->
+<div id="authSection" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 لوحة التحكم والنظام الداخلي</h2>
+        <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="name@domain.com">
+        </div>
+        <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 15px;">
+            <button type="button" class="btn btn-navy" style="flex:1;" onclick="handleLogin()">دخول</button>
+            <button type="button" class="btn btn-outline" onclick="closeSecretLogin()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================== -->
+<!-- 3. لوحة التحكم والسيستم الداخلي                     -->
+<!-- ================================================== -->
+<div id="mainDashboard" class="container hidden" style="padding-top: 20px;">
+    
+    <div class="user-bar">
+        <div>
+            <strong id="userName" style="color: #60a5fa;">المدير العام</strong>
+        </div>
+        <div>
+            <button class="btn btn-outline" onclick="showPublicProfile()">🌐 معاينة البروفايل العام</button>
             <button class="btn btn-danger" onclick="handleLogout()">تسجيل الخروج</button>
         </div>
-
-        <!-- الأقسام الرئيسية للموقع -->
-        <div class="main-nav" id="mainDeptTabs">
-            <button class="main-nav-btn hidden" id="mTab-polishing" onclick="switchMainDept('polishing')">✨ جلي البلاط</button>
-            <button class="main-nav-btn hidden" id="mTab-cleaning" onclick="switchMainDept('cleaning')">🧹 النظافة العامة</button>
-            <button class="main-nav-btn hidden" id="mTab-dryclean" onclick="switchMainDept('dryclean')">🛋️ الدراي كلين</button>
-            <button class="main-nav-btn hidden" id="mTab-admin" onclick="switchMainDept('admin')">👑 لوحة الأدمن</button>
-        </div>
-
-        <!-- رسالة الانتظار عند عدم تفعيل الصلاحيات -->
-        <div id="sec-pending" class="card hidden">
-            <h2>⏳ بانتظار تحديد الصلاحيات</h2>
-            <p class="subtitle" style="margin-top: 10px;">تم تسجيل دخولك بنجاح. يرجى من مدير النظام تحديد الأقسام المسموح لك بالعمل عليها.</p>
-        </div>
-
-        <!-- غلاف الأقسام الرئيسية الثلاثة -->
-        <div id="deptContainer" class="hidden">
-            
-            <div class="sub-nav">
-                <button class="sub-nav-btn active" id="sTab-inspections" onclick="switchSubDept('inspections')">📝 عميل جديد (معاينات)</button>
-                <button class="sub-nav-btn" id="sTab-appointments" onclick="switchSubDept('appointments')">📅 المواعيد والورش</button>
-                <button class="sub-nav-btn hidden" id="sTab-subscriptions" onclick="switchSubDept('subscriptions')">🔄 الاشتراكات الشهرية</button>
-                <button class="sub-nav-btn" id="sTab-accounting" onclick="switchSubDept('accounting')">💰 المحاسبة (دفتر الأستاذ)</button>
-            </div>
-
-            <!-- 1. قسم عميل جديد (المعاينات) -->
-            <div id="subSec-inspections" class="card">
-                <h3 id="inspDeptTitle">📝 نموذج إدخال معاينة جديدة</h3>
-                <p class="subtitle">جميع الحقول اختيارية ويمكن الحفظ دون تعبئة كافة الحقول</p>
-
-                <form onsubmit="handleSaveInspection(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>اسم العميل</label>
-                            <input type="text" id="inspName" class="form-control" placeholder="اسم العميل">
-                        </div>
-                        <div class="form-group">
-                            <label>رقم الهاتف</label>
-                            <input type="text" id="inspPhone" class="form-control" placeholder="07XXXXXXXX">
-                        </div>
-                        <div class="form-group">
-                            <label>موقع العميل النصي</label>
-                            <input type="text" id="inspLocText" class="form-control" placeholder="المنطقة، الشارع، المعالم القريبة">
-                        </div>
-                        <div class="form-group">
-                            <label>رابط اللوكيشن (الخريطة)</label>
-                            <input type="url" id="inspLocUrl" class="form-control" placeholder="https://maps.google.com/?q=...">
-                        </div>
-                        <div class="form-group">
-                            <label>التاريخ المخطط</label>
-                            <input type="date" id="inspDate" class="form-control">
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>ملاحظات المعاينة</label>
-                            <textarea id="inspNotes" class="form-control" placeholder="أي تفاصيل أو متطلبات خاصة..."></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">+ حفظ المعاينة في السجل</button>
-                </form>
-
-                <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
-
-                <h3>📋 قائمة المعاينات (سجل المعاينات)</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم العميل</th>
-                                <th>رقم الهاتف</th>
-                                <th>العنوان النصي</th>
-                                <th>اللوكيشن</th>
-                                <th>التاريخ</th>
-                                <th>ملاحظات</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inspectionsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 2. قسم المواعيد والورش -->
-            <div id="subSec-appointments" class="card hidden">
-                <h3>📅 المواعيد والورش المؤكدة</h3>
-                <p class="subtitle">عرض وإدارة المواعيد بنظام يومي مستقل</p>
-
-                <div class="day-summary-bar">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label style="margin:0;">تاريخ اليوم:</label>
-                        <input type="date" id="appFilterDate" class="form-control" style="width: auto;" onchange="loadAppointmentsForSelectedDate()">
-                        <button type="button" class="btn btn-secondary" onclick="setAppDateToToday()">اليوم</button>
-                    </div>
-                    <div id="daySummaryPill" class="summary-pill">
-                        [ عدد الورش: 0 | عدد المعاينات: 0 ]
-                    </div>
-                </div>
-
-                <h4 style="text-align: right; color: #f59e0b; margin-top: 15px;">🔍 المعاينات المجدولة لهذا اليوم</h4>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>العميل</th>
-                                <th>الهاتف</th>
-                                <th>الموقع</th>
-                                <th>الخريطة</th>
-                                <th>الملاحظات</th>
-                                <th>إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dayInspectionsTableBody"></tbody>
-                    </table>
-                </div>
-
-                <br><hr style="border: 0; border-top: 1px solid var(--border-dark);"><br>
-
-                <h4 style="text-align: right; color: #10b981;">🛠️ الورش المؤكدة لهذا اليوم</h4>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>العميل والهاتف</th>
-                                <th>الموقع</th>
-                                <th>المبلغ / المساحة</th>
-                                <th>ملاحظات الورشة</th>
-                                <th>عرض السعر (PDF)</th>
-                                <th>الفاتورة (PDF)</th>
-                                <th>الحالة</th>
-                                <th>إجراءات الإدارة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dayWorkshopsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 3. قسم الاشتراكات الشهرية -->
-            <div id="subSec-subscriptions" class="card hidden">
-                <h3>🔄 قسم الاشتراكات الشهرية (خاص بالنظافة العامة)</h3>
-                <p class="subtitle">إدارة الزيارات الأسبوعية ومتابعة تحصيل الاشتراكات الشهرية</p>
-
-                <form onsubmit="handleSaveSubscription(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>اسم العميل</label>
-                            <input type="text" id="subName" class="form-control" required placeholder="اسم مشترك النظافة">
-                        </div>
-                        <div class="form-group">
-                            <label>رقم الهاتف</label>
-                            <input type="text" id="subPhone" class="form-control" placeholder="07XXXXXXXX">
-                        </div>
-                        <div class="form-group">
-                            <label>الموقع النصي</label>
-                            <input type="text" id="subLocText" class="form-control" placeholder="المنطقة، الشارع">
-                        </div>
-                        <div class="form-group">
-                            <label>رابط اللوكيشن</label>
-                            <input type="url" id="subLocUrl" class="form-control" placeholder="https://maps.google.com/?q=...">
-                        </div>
-                        <div class="form-group">
-                            <label>اليوم المخصص للزيارة الأسبوعية</label>
-                            <select id="subVisitDay" class="form-control" required>
-                                <option value="السبت">السبت</option>
-                                <option value="الأحد">الأحد</option>
-                                <option value="الاثنين">الاثنين</option>
-                                <option value="الثلاثاء">الثلاثاء</option>
-                                <option value="الأربعاء">الأربعاء</option>
-                                <option value="الخميس">الخميس</option>
-                                <option value="الجمعة">الجمعة</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>تاريخ أول زيارة قادمة</label>
-                            <input type="date" id="subNextDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>قيمة الاشتراك الشهري (د.أ)</label>
-                            <input type="number" step="0.1" id="subAmount" class="form-control" required placeholder="0.00">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">+ إضافة مشترك جديد</button>
-                </form>
-
-                <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
-
-                <h3>📋 سجل المشتركين ومتابعة الزيارات والتحصيل</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم العميل والهاتف</th>
-                                <th>الموقع واللوكيشن</th>
-                                <th>يوم الزيارة الأسبوعي</th>
-                                <th>الزيارة القادمة</th>
-                                <th>قيمة الاشتراك</th>
-                                <th>حالة التحصيل الشهري</th>
-                                <th>إجراء الزيارة الأسبوعية</th>
-                                <th>إجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="subscriptionsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 4. قسم المحاسبة (دفتر الأستاذ) -->
-            <div id="subSec-accounting" class="card hidden">
-                <h3>💰 قسم المحاسبة (دفتر الأستاذ المالي)</h3>
-                <p class="subtitle">تسجيل وتتبع حركة الحسابات والأرشفة الشهرية</p>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-dark); padding: 10px 15px; border-radius: 8px;">
-                    <span style="font-size: 13px; font-weight: bold;">📅 تصفح الشهر المالي:</span>
-                    <input type="month" id="accMonthFilter" class="form-control" style="width: 180px;" onchange="loadAccountingData()">
-                </div>
-
-                <div class="accounting-summary">
-                    <div class="acc-card">
-                        <span style="color: #10b981; font-size: 12px; font-weight: bold;">مجموع له (إيرادات)</span>
-                        <div class="val" style="color: #10b981;" id="accTotalCredit">0.00 د.أ</div>
-                    </div>
-                    <div class="acc-card">
-                        <span style="color: #ef4444; font-size: 12px; font-weight: bold;">مجموع عليه (مصاريف)</span>
-                        <div class="val" style="color: #ef4444;" id="accTotalDebit">0.00 د.أ</div>
-                    </div>
-                    <div class="acc-card">
-                        <span style="color: #38bdf8; font-size: 12px; font-weight: bold;">الرصيد الصافي</span>
-                        <div class="val" style="color: #38bdf8;" id="accNetBalance">0.00 د.أ</div>
-                    </div>
-                </div>
-
-                <form onsubmit="handleSaveAccountingEntry(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>البيان / الوصف</label>
-                            <input type="text" id="accDesc" class="form-control" required placeholder="مثال: دفعة من عميل / تحصيل اشتراك / شراء مواد">
-                        </div>
-                        <div class="form-group">
-                            <label>نوع الحركة</label>
-                            <select id="accType" class="form-control" required>
-                                <option value="credit">له (إيراد / مدخول)</option>
-                                <option value="debit">عليه (مصروف / دفعة للخارج)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>المبلغ (د.أ)</label>
-                            <input type="number" step="0.01" id="accAmount" class="form-control" required placeholder="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label>التاريخ</label>
-                            <input type="date" id="accDate" class="form-control" required>
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>ملاحظات إضافية</label>
-                            <input type="text" id="accNotes" class="form-control" placeholder="ملاحظات الحساب...">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-block">+ تسجيل حركة مالية</button>
-                </form>
-
-                <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
-
-                <h3>📊 جدول الحركات المالية للأستاذ</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>التاريخ</th>
-                                <th>البيان / الوصف</th>
-                                <th>النوع</th>
-                                <th>المبلغ</th>
-                                <th>ملاحظات</th>
-                                <th>إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody id="accountingTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- 5. لوحة الأدمن (إدارة الموظفين) -->
-        <div id="sec-admin" class="card hidden">
-            <h2>👑 لوحة تحكم الأدمن والصلاحيات</h2>
-            <p class="subtitle">تحديد الأقسام المسموح لكل موظف الدخول إليها</p>
-
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اسم الموظف</th>
-                            <th>البريد الإلكتروني</th>
-                            <th>الأقسام المسموحة</th>
-                            <th>حفظ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminUsersTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
 
-</div>
+    <!-- التنقل الرئيسي -->
+    <div class="main-nav">
+        <button class="main-nav-btn active" id="mTab-content" onclick="switchControlTab('content')">🖼️ إدارة الهوية ومحتوى البروفايل</button>
+        <button class="main-nav-btn" id="mTab-inspections" onclick="switchControlTab('inspections')">📝 المعاينات والورش</button>
+    </div>
 
-<!-- ================= مودال تعديل بيانات العميل / الورشة ================= -->
-<div id="editClientModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <h3>✏️ تعديل بيانات العميل / الورشة</h3>
-        <input type="hidden" id="editModalDocId">
+    <!-- قسم إدارة الهوية والبروفايل -->
+    <div id="sec-content">
         
-        <div class="form-group">
-            <label>اسم العميل</label>
-            <input type="text" id="mEditName" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>رقم الهاتف</label>
-            <input type="text" id="mEditPhone" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>الموقع النصي</label>
-            <input type="text" id="mEditLocText" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>رابط اللوكيشن</label>
-            <input type="url" id="mEditLocUrl" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>التاريخ</label>
-            <input type="date" id="mEditDate" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>ملاحظات المعاينة الأصلية</label>
-            <textarea id="mEditNotes" class="form-control"></textarea>
-        </div>
-
-        <div id="modalWorkshopFields" style="border-top: 1px dashed #374151; padding-top: 10px; margin-top: 10px;">
-            <h4 style="color: #10b981; text-align: right; margin-bottom: 8px;">حقول الورشة</h4>
-            <div class="form-group">
-                <label>المبلغ الإجمالي (د.أ)</label>
-                <input type="number" step="0.1" id="mEditAmount" class="form-control">
+        <!-- تعديل الشعار والمعلومات الأساسية -->
+        <div class="card">
+            <h3>🎨 تعديل الشعار (اللوجو) والمعلومات الأساسية</h3>
+            <div class="form-grid" style="margin-top: 15px;">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>رابط صورة اللوجو (Logo URL)</label>
+                    <input type="text" id="editLogoUrl" class="form-control" placeholder="ضع رابط صورة اللوجو هنا (https://...)">
+                </div>
+                <div class="form-group">
+                    <label>سنة التأسيس</label>
+                    <input type="text" id="editEstYear" class="form-control" placeholder="تأسست عام 2020">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف للاتصال</label>
+                    <input type="text" id="editPhone" class="form-control" value="0782066652">
+                </div>
             </div>
             <div class="form-group">
-                <label>المساحة (م²)</label>
-                <input type="number" step="0.1" id="mEditArea" class="form-control">
+                <label>نص (من نحن)</label>
+                <textarea id="editAboutUs" class="form-control" rows="3" placeholder="اكتب نبذة عن المؤسسة..."></textarea>
+            </div>
+            <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ الشعار والبيانات الأساسية</button>
+        </div>
+
+        <!-- إضافة وتعديل الخدمات -->
+        <div class="card">
+            <h3>🛠️ إضافة خدمة جديدة</h3>
+            <div class="form-grid" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان الخدمة</label>
+                    <input type="text" id="serviceTitle" class="form-control" placeholder="مثال: جلي الرخام بالألماس">
+                </div>
+                <div class="form-group">
+                    <label>وصف مختصر للخدمة</label>
+                    <input type="text" id="serviceDesc" class="form-control" placeholder="تفاصيل الخدمة...">
+                </div>
+            </div>
+            <button class="btn btn-navy" onclick="addService()">+ إضافة الخدمة</button>
+
+            <h4 style="margin-top: 20px; color: #60a5fa;">الخدمات الحالية:</h4>
+            <div id="adminServicesList" class="grid-3" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- إضافة وتعديل المشاريع -->
+        <div class="card">
+            <h3>🏗️ إضافة مشروع جديد لمعرض الأعمال</h3>
+            <div class="form-grid" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان المشروع</label>
+                    <input type="text" id="projectTitle" class="form-control" placeholder="مثال: مشروع إيبوكسي فلل - عمان">
+                </div>
+                <div class="form-group">
+                    <label>رابط صورة المشروع (Image URL)</label>
+                    <input type="text" id="projectImgUrl" class="form-control" placeholder="https://...رابط الصورة">
+                </div>
             </div>
             <div class="form-group">
-                <label>ملاحظات الورشة</label>
-                <textarea id="mEditWorkshopNotes" class="form-control"></textarea>
+                <label>تفاصيل المشروع</label>
+                <input type="text" id="projectDesc" class="form-control" placeholder="نوع العمل، المساحة، التفاصيل...">
             </div>
+            <button class="btn btn-navy" onclick="addProject()">+ إضافة المشروع لمعرض الأعمال</button>
+
+            <h4 style="margin-top: 20px; color: #60a5fa;">المشاريع الحالية:</h4>
+            <div id="adminProjectsList" class="grid-3" style="margin-top: 10px;"></div>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button type="button" class="btn btn-success" style="flex:1;" onclick="saveClientModalChanges()">حفظ التعديلات</button>
-            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= مودال رفع مستند PDF عادي ================= -->
-<div id="uploadPdfModal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <h3 id="pdfModalTitle">📄 رفع مستند PDF</h3>
-        <input type="hidden" id="pdfModalDocId">
-        <input type="hidden" id="pdfModalType">
-
-        <div class="form-group" style="margin-top: 15px;">
-            <label>اختر ملف الـ PDF من جهازك</label>
-            <input type="file" id="pdfFileInput" accept="application/pdf" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>أو ضع رابط المستند المباشر</label>
-            <input type="url" id="pdfUrlInput" class="form-control" placeholder="https://...">
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button type="button" class="btn btn-primary" style="flex:1;" onclick="submitPdfUpload()">حفظ المستند</button>
-            <button type="button" class="btn btn-secondary" onclick="closePdfModal()">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= مودال إعداد وإنشاء عرض السعر (جديد) ================= -->
-<div id="quoteModal" class="modal-overlay hidden">
-    <div class="modal-content" style="max-width: 680px;">
-        <h3 style="color: #38bdf8; text-align: right;"><i class="bi bi-file-earmark-pdf me-1"></i> إعداد عرض سعر للعميل</h3>
-        <p class="subtitle" style="text-align: right;">تعبئة تفاصيل الخدمات للطباعة والتصدير كـ PDF بنفس الهوية البصرية</p>
-
-        <form id="quoteForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>اسم العميل</label>
-                    <input type="text" id="qCustName" class="form-control" readonly style="background-color: #252a34;">
-                </div>
-                <div class="form-group">
-                    <label>رقم الهاتف</label>
-                    <input type="text" id="qCustPhone" class="form-control" readonly style="background-color: #252a34;">
-                </div>
-                <div class="form-group">
-                    <label>الموقع / العنوان</label>
-                    <input type="text" id="qCustLocation" class="form-control" readonly style="background-color: #252a34;">
-                </div>
-                <div class="form-group">
-                    <label>اسم الخدمة الرئيسي</label>
-                    <input type="text" id="qServiceName" class="form-control" placeholder="مثال: جلي وتلميع رخام">
-                </div>
-            </div>
-
-            <hr style="border-color: #374151; margin: 15px 0;">
-
-            <!-- إضافة أسطر تفاصيل العمل -->
-            <div class="form-group">
-                <label>تفاصيل ونطاق العمل (الوصف)</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="qDescInput" class="form-control" placeholder="مثال: الطابق الأرضي والطابق الأول / ساحات خارجية">
-                    <button class="btn btn-primary" type="button" onclick="addQuoteDescItem()">+ إضافة</button>
-                </div>
-                <ul id="qDescList" style="list-style: none; padding: 0;"></ul>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>مدة العمل المتوقعة</label>
-                    <input type="text" id="qWorkDuration" class="form-control" placeholder="مثال: من 3 - 4 أيام">
-                </div>
-                <div class="form-group">
-                    <label>المبلغ الإجمالي المطلـوب (دينار)</label>
-                    <input type="number" id="qTotalAmount" class="form-control" placeholder="350">
-                </div>
-            </div>
-
-            <hr style="border-color: #374151; margin: 15px 0;">
-
-            <!-- إضافة الشروط وأحكام الدفع -->
-            <div class="form-group">
-                <label>الشروط وأحكام الدفع</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <input type="text" id="qTermInput" class="form-control" placeholder="مثال: دفعة عند الانتهاء من نصف العمل والباقي عند الانتهاء">
-                    <button class="btn btn-primary" type="button" onclick="addQuoteTermItem()">+ إضافة</button>
-                </div>
-                <ul id="qTermsList" style="list-style: none; padding: 0;"></ul>
-            </div>
-        </form>
-
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button type="button" class="btn btn-success" style="flex:1;" onclick="generateAndPrintQuote()"><i class="bi bi-printer me-1"></i> معاينة وطباعة PDF</button>
-            <button type="button" class="btn btn-secondary" onclick="closeQuoteModal()">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= قالب الطباعة المخصص لـ PDF (عرض السعر الرسمي) ================= -->
-<div id="quotation-template">
-    <div class="quote-header">
-        <div>
-            <h2 style="color: #1e365d; font-weight: 800; margin: 0;">مؤسسة الرؤيا المتقدمة</h2>
-            <p style="color: #64748b; margin: 0; font-size: 13px;">لأعمال الأرضيات والجلي والصيانة العامة</p>
-        </div>
-        <div style="text-align: center;">
-            <div class="quote-title-badge">عرض سعر</div>
-        </div>
-        <div style="text-align: left;">
-            <p style="margin: 0; font-weight: bold; font-size: 14px; color: #1e365d;">📞 0782066652</p>
-            <p style="margin: 0; color: #64748b; font-size: 13px;">📍 عمان - الياسمين</p>
-        </div>
     </div>
 
-    <!-- معلومات العميل -->
-    <div class="client-info-box">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <div><strong>الإسم :</strong> <span id="pdfCustName"></span></div>
-            <div><strong>التاريخ :</strong> <span id="pdfDate"></span></div>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-            <div><strong>الهاتف :</strong> <span id="pdfCustPhone"></span></div>
-            <div><strong>الموقع :</strong> <span id="pdfCustLocation"></span></div>
-        </div>
+    <!-- قسم المعاينات -->
+    <div id="sec-inspections" class="card hidden">
+        <h3>📝 قسم إدارة المعاينات والمواعيد الداخلي</h3>
+        <p style="color: var(--text-gray); margin-top: 10px;">السجلات الداخليّة للورش والمواعيد والمحاسبة.</p>
     </div>
 
-    <!-- جدول الخدمة وتفاصيل العمل -->
-    <table class="quote-table">
-        <thead>
-            <tr>
-                <th style="width: 35%;">الخدمة المطلوبة</th>
-                <th style="width: 65%;">تفاصيل ونطاق العمل (الوصف)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="font-weight: bold; text-align: center; vertical-align: middle; font-size: 16px; color: #1e365d;" id="pdfServiceName"></td>
-                <td>
-                    <ul id="pdfDescList" style="padding-right: 20px; margin: 0;"></ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- ملخص المدة والمبلغ -->
-    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-        <div style="flex: 1;" class="summary-card">
-            <span style="font-size: 12px; color: #64748b; display: block;">مدة العمل المتوقعة:</span>
-            <strong id="pdfDuration" style="font-size: 15px; color: #0f172a;"></strong>
-        </div>
-        <div style="flex: 1; background-color: #e0f2fe; border-right-color: #0284c7;" class="summary-card">
-            <span style="font-size: 12px; color: #0369a1; display: block;">المبلغ الإجمالي المطلـوب:</span>
-            <strong id="pdfAmount" style="font-size: 18px; color: #1e365d;"></strong>
-        </div>
-    </div>
-
-    <!-- الشروط وأحكام الدفع -->
-    <div class="terms-box">
-        <h5 style="font-weight: bold; margin-bottom: 8px; color: #0f172a;">📌 الشروط وأحكام الدفع:</h5>
-        <ul id="pdfTermsList" style="padding-right: 20px; margin: 0; font-size: 13px;"></ul>
-    </div>
-
-    <!-- التذييل السفلي شريط الخدمات -->
-    <div class="quote-footer">
-        جلي بلاط &nbsp;|&nbsp; عزل مائي &nbsp;|&nbsp; إيبوكسي &nbsp;|&nbsp; تيرازو
-    </div>
 </div>
 
 <script>
-    const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
-
     // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
@@ -720,828 +278,212 @@
         projectId: "roya-app-29932",
         storageBucket: "roya-app-29932.firebasestorage.app",
         messagingSenderId: "612295279079",
-        appId: "1:612295279079:web:e5d7b02f686e2eb23ebd42",
-        measurementId: "G-XZRYEDLBFS"
+        appId: "1:612295279079:web:e5d7b02f686e2eb23ebd42"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const storage = firebase.storage();
 
-    // App State Variables
-    let currentUserData = null;
-    let currentMainDept = 'polishing'; 
-    let currentSubDept = 'inspections';
+    let clickCount = 0;
 
-    // Quote Dynamic Arrays
-    let qDescItems = [];
-    let qTermItems = [];
-
-    const todayStr = new Date().toISOString().split('T')[0];
-    const currentMonthStr = todayStr.substring(0, 7);
-
-    // Auth Listener
-    auth.onAuthStateChanged(async (user) => {
-        if (user) {
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('mainDashboard').classList.remove('hidden');
-
-            try {
-                const userDocRef = db.collection('users').doc(user.uid);
-                const doc = await userDocRef.get();
-                
-                const isAdminEmail = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-
-                if (doc.exists) {
-                    currentUserData = doc.data();
-                    if (isAdminEmail && currentUserData.role !== 'admin') {
-                        currentUserData.role = 'admin';
-                        currentUserData.departments = ['polishing', 'cleaning', 'dryclean'];
-                        await userDocRef.update({ role: 'admin', departments: ['polishing', 'cleaning', 'dryclean'] });
-                    }
-                } else {
-                    currentUserData = {
-                        name: user.displayName || user.email.split('@')[0],
-                        email: user.email,
-                        role: isAdminEmail ? 'admin' : 'employee',
-                        departments: isAdminEmail ? ['polishing', 'cleaning', 'dryclean'] : []
-                    };
-                    await userDocRef.set(currentUserData);
+    // الدخول الخفي عند الضغط 3 مرات على الشعار أو العنوان
+    const triggerElements = [document.getElementById('logoClickTarget'), document.getElementById('mainCompanyLogo')];
+    triggerElements.forEach(el => {
+        if(el) {
+            el.addEventListener('click', () => {
+                clickCount++;
+                if (clickCount >= 3) {
+                    openSecretLogin();
+                    clickCount = 0;
                 }
-
-                document.getElementById('userName').textContent = currentUserData.name || user.email;
-                document.getElementById('userRoleBadge').textContent = currentUserData.role === 'admin' ? 'مدير النظام' : 'موظف';
-
-                setupMainPermissions();
-            } catch (err) {
-                console.error("Firestore Init Error:", err);
-                alert("خطأ في الربط مع قواعد البيانات: " + err.message);
-            }
-        } else {
-            document.getElementById('authSection').classList.remove('hidden');
-            document.getElementById('mainDashboard').classList.add('hidden');
+                setTimeout(() => { clickCount = 0; }, 2000);
+            });
         }
     });
 
-    // Permission Setup
-    function setupMainPermissions() {
-        const role = currentUserData ? currentUserData.role : 'employee';
-        const depts = (currentUserData && currentUserData.departments) ? currentUserData.departments : [];
-
-        ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
-            document.getElementById('mTab-' + d).classList.add('hidden');
-        });
-
-        if (role === 'admin') {
-            ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
-                document.getElementById('mTab-' + d).classList.remove('hidden');
-            });
-            switchMainDept('polishing');
-            loadAdminUsersList();
+    function openSecretLogin() {
+        if (auth.currentUser) {
+            document.getElementById('publicProfileView').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
         } else {
-            let firstDept = null;
-            if (depts.includes('polishing')) { document.getElementById('mTab-polishing').classList.remove('hidden'); if(!firstDept) firstDept = 'polishing'; }
-            if (depts.includes('cleaning')) { document.getElementById('mTab-cleaning').classList.remove('hidden'); if(!firstDept) firstDept = 'cleaning'; }
-            if (depts.includes('dryclean')) { document.getElementById('mTab-dryclean').classList.remove('hidden'); if(!firstDept) firstDept = 'dryclean'; }
-
-            if (firstDept) {
-                document.getElementById('deptContainer').classList.remove('hidden');
-                document.getElementById('sec-pending').classList.add('hidden');
-                switchMainDept(firstDept);
-            } else {
-                document.getElementById('deptContainer').classList.add('hidden');
-                document.getElementById('sec-pending').classList.remove('hidden');
-            }
+            document.getElementById('authSection').classList.remove('hidden');
         }
     }
 
-    // Switch Main Department
-    function switchMainDept(dept) {
-        currentMainDept = dept;
-        document.querySelectorAll('#mainDeptTabs .main-nav-btn').forEach(btn => btn.classList.remove('active'));
-        if (document.getElementById('mTab-' + dept)) document.getElementById('mTab-' + dept).classList.add('active');
-
-        if (dept === 'admin') {
-            document.getElementById('deptContainer').classList.add('hidden');
-            document.getElementById('sec-admin').classList.remove('hidden');
-            loadAdminUsersList();
-        } else {
-            document.getElementById('sec-admin').classList.add('hidden');
-            document.getElementById('deptContainer').classList.remove('hidden');
-            
-            if (dept === 'cleaning') {
-                document.getElementById('sTab-subscriptions').classList.remove('hidden');
-            } else {
-                document.getElementById('sTab-subscriptions').classList.add('hidden');
-                if (currentSubDept === 'subscriptions') currentSubDept = 'inspections';
-            }
-
-            const titles = {
-                'polishing': '✨ قسم جلي البلاط',
-                'cleaning': '🧹 قسم النظافة العامة',
-                'dryclean': '🛋️ قسم الدراي كلين'
-            };
-            document.getElementById('inspDeptTitle').textContent = `📝 نموذج معاينة جديد - ${titles[dept]}`;
-            
-            document.getElementById('inspDate').value = todayStr;
-            document.getElementById('appFilterDate').value = todayStr;
-            document.getElementById('subNextDate').value = todayStr;
-            document.getElementById('accDate').value = todayStr;
-            document.getElementById('accMonthFilter').value = currentMonthStr;
-
-            switchSubDept(currentSubDept);
-        }
-    }
-
-    // Switch Sub Department
-    function switchSubDept(sub) {
-        currentSubDept = sub;
-        document.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
-        if (document.getElementById('sTab-' + sub)) document.getElementById('sTab-' + sub).classList.add('active');
-
-        ['inspections', 'appointments', 'subscriptions', 'accounting'].forEach(s => {
-            document.getElementById('subSec-' + s).classList.add('hidden');
-        });
-        document.getElementById('subSec-' + sub).classList.remove('hidden');
-
-        if (sub === 'inspections') loadInspectionsList();
-        if (sub === 'appointments') loadAppointmentsForSelectedDate();
-        if (sub === 'subscriptions') loadSubscriptionsList();
-        if (sub === 'accounting') loadAccountingData();
-    }
-
-    function getClientsCollection() { return `clients_${currentMainDept}`; }
-    function getSubscriptionsCollection() { return `subscriptions_cleaning`; }
-    function getAccountingCollection() { return `accounting_${currentMainDept}`; }
-
-    // ================= 1. قسم المعاينات (عميل جديد) =================
-    async function handleSaveInspection(e) {
-        e.preventDefault();
-        const data = {
-            dept: currentMainDept,
-            type: 'inspection',
-            name: document.getElementById('inspName').value.trim(),
-            phone: document.getElementById('inspPhone').value.trim(),
-            locText: document.getElementById('inspLocText').value.trim(),
-            locUrl: document.getElementById('inspLocUrl').value.trim(),
-            date: document.getElementById('inspDate').value || todayStr,
-            notes: document.getElementById('inspNotes').value.trim(),
-            amount: 0,
-            area: 0,
-            workshopNotes: '',
-            priceOfferUrl: '',
-            invoiceUrl: '',
-            status: 'معاينة مجدولة',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        try {
-            await db.collection(getClientsCollection()).add(data);
-            alert('تم حفظ المعاينة بنجاح!');
-            e.target.reset();
-            document.getElementById('inspDate').value = todayStr;
-            loadInspectionsList();
-        } catch (err) {
-            alert('حدث خطأ أثناء الحفظ: ' + err.message);
-        }
-    }
-
-    async function loadInspectionsList() {
-        const tbody = document.getElementById('inspectionsTableBody');
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري تحميل المعاينات...</td></tr>';
-        
-        try {
-            const snap = await db.collection(getClientsCollection())
-                .where('type', '==', 'inspection')
-                .get();
-
-            tbody.innerHTML = '';
-            snap.forEach(doc => {
-                const c = doc.data();
-                const id = doc.id;
-                
-                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-info" style="padding: 3px 8px;">📍 الخريطة</a>` : '-';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${c.name || 'بدون اسم'}</strong></td>
-                        <td>${c.phone || '-'}</td>
-                        <td>${c.locText || '-'}</td>
-                        <td>${locBtn}</td>
-                        <td>${c.date || '-'}</td>
-                        <td>${c.notes || '-'}</td>
-                        <td>
-                            <button class="btn btn-primary" style="padding:3px 8px;" onclick="openQuoteModal('${c.name || ''}', '${c.phone || ''}', '${c.locText || ''}', '${c.notes || 'جلي وتلميع رخام'}')">📄 عرض سعر</button>
-                            <button class="btn btn-primary" style="padding:3px 8px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
-                            <button class="btn btn-success" style="padding:3px 8px;" onclick="confirmToWorkshop('${id}')">✅ تأكيد ورشة</button>
-                            <button class="btn btn-danger" style="padding:3px 8px;" onclick="deleteClientDoc('${id}')">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            if (snap.empty) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد معاينات مسجلة حالياً</td></tr>';
-            }
-        } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
-        }
-    }
-
-    async function confirmToWorkshop(id) {
-        if (confirm('هل تريد تأكيد وتحويل هذا العميل إلى قسم المواعيد والورش؟')) {
-            try {
-                await db.collection(getClientsCollection()).doc(id).update({
-                    type: 'workshop',
-                    status: 'قيد التنفيذ'
-                });
-                alert('تم تحويل العميل إلى الورش بنجاح!');
-                loadInspectionsList();
-            } catch (err) {
-                alert('خطأ أثناء التأكيد: ' + err.message);
-            }
-        }
-    }
-
-    async function deleteClientDoc(id) {
-        if (confirm('هل أنت تأكد من حذف هذا السجل بشكل نهائي؟')) {
-            await db.collection(getClientsCollection()).doc(id).delete();
-            if (currentSubDept === 'inspections') loadInspectionsList();
-            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
-        }
-    }
-
-    // ================= 2. قسم المواعيد والورش =================
-    function setAppDateToToday() {
-        document.getElementById('appFilterDate').value = todayStr;
-        loadAppointmentsForSelectedDate();
-    }
-
-    async function loadAppointmentsForSelectedDate() {
-        const selectedDate = document.getElementById('appFilterDate').value || todayStr;
-        
-        const inspTbody = document.getElementById('dayInspectionsTableBody');
-        const workTbody = document.getElementById('dayWorkshopsTableBody');
-        
-        inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري التحميل...</td></tr>';
-        workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري التحميل...</td></tr>';
-
-        try {
-            const snap = await db.collection(getClientsCollection())
-                .where('date', '==', selectedDate)
-                .get();
-
-            let inspCount = 0;
-            let workCount = 0;
-
-            inspTbody.innerHTML = '';
-            workTbody.innerHTML = '';
-
-            snap.forEach(doc => {
-                const c = doc.data();
-                const id = doc.id;
-                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-info" style="padding: 2px 6px;">📍 رابط</a>` : '-';
-
-                if (c.type === 'inspection') {
-                    inspCount++;
-                    inspTbody.innerHTML += `
-                        <tr>
-                            <td><strong>${c.name || 'بدون اسم'}</strong></td>
-                            <td>${c.phone || '-'}</td>
-                            <td>${c.locText || '-'}</td>
-                            <td>${locBtn}</td>
-                            <td>${c.notes || '-'}</td>
-                            <td>
-                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openQuoteModal('${c.name || ''}', '${c.phone || ''}', '${c.locText || ''}', '${c.notes || 'جلي وتلميع رخام'}')">📄 عرض سعر</button>
-                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">تعديل</button>
-                                <button class="btn btn-success" style="padding:2px 6px;" onclick="confirmToWorkshop('${id}')">تأكيد ورشة</button>
-                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">حذف</button>
-                            </td>
-                        </tr>
-                    `;
-                } else if (c.type === 'workshop') {
-                    workCount++;
-                    
-                    const priceOfferBtn = `<button class="btn btn-primary" style="padding:2px 6px;" onclick="openQuoteModal('${c.name || ''}', '${c.phone || ''}', '${c.locText || ''}', '${c.workshopNotes || 'جلي وتلميع رخام'}')">📄 طباعة عرض سعر</button>`;
-
-                    const invoiceBtn = c.invoiceUrl 
-                        ? `<a href="${c.invoiceUrl}" target="_blank" class="btn btn-success" style="padding:2px 6px;">👁️ فتح الفاتورة</a>` 
-                        : `<button class="btn btn-secondary" style="padding:2px 6px;" onclick="openPdfModal('${id}', 'invoice')">📤 رفع فاتورة</button>`;
-
-                    const isDone = c.status === 'منتهية';
-
-                    workTbody.innerHTML += `
-                        <tr>
-                            <td><strong>${c.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${c.phone || ''}</small></td>
-                            <td>${c.locText || '-'} <br>${locBtn}</td>
-                            <td><strong>${c.amount || 0} د.أ</strong> <br><small>${c.area || 0} م²</small></td>
-                            <td>${c.workshopNotes || '-'}</td>
-                            <td>${priceOfferBtn}</td>
-                            <td>${invoiceBtn}</td>
-                            <td><span class="badge ${isDone ? 'badge-done' : 'badge-workshop'}">${c.status || 'قيد التنفيذ'}</span></td>
-                            <td>
-                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
-                                <button class="btn btn-secondary" style="padding:2px 6px;" onclick="toggleWorkshopStatus('${id}', '${isDone ? 'قيد التنفيذ' : 'منتهية'}')">${isDone ? 'إعادة لتنفيذ' : '✔ إنجاز'}</button>
-                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">🗑️</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-
-            document.getElementById('daySummaryPill').textContent = `[ عدد الورش: ${workCount} | عدد المعاينات: ${inspCount} ]`;
-
-            if (inspCount === 0) inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات مجدولة لهذا اليوم</td></tr>';
-            if (workCount === 0) workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا توجد ورش مؤكدة لهذا اليوم</td></tr>';
-
-        } catch (err) {
-            console.error(err);
-            inspTbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
-        }
-    }
-
-    async function toggleWorkshopStatus(id, newStatus) {
-        await db.collection(getClientsCollection()).doc(id).update({ status: newStatus });
-        loadAppointmentsForSelectedDate();
-    }
-
-    // Modal Edit Functions
-    async function openEditModal(id) {
-        document.getElementById('editModalDocId').value = id;
-        const doc = await db.collection(getClientsCollection()).doc(id).get();
-        if (doc.exists) {
-            const c = doc.data();
-            document.getElementById('mEditName').value = c.name || '';
-            document.getElementById('mEditPhone').value = c.phone || '';
-            document.getElementById('mEditLocText').value = c.locText || '';
-            document.getElementById('mEditLocUrl').value = c.locUrl || '';
-            document.getElementById('mEditDate').value = c.date || todayStr;
-            document.getElementById('mEditNotes').value = c.notes || '';
-            
-            document.getElementById('mEditAmount').value = c.amount || '';
-            document.getElementById('mEditArea').value = c.area || '';
-            document.getElementById('mEditWorkshopNotes').value = c.workshopNotes || '';
-
-            document.getElementById('editClientModal').classList.remove('hidden');
-        }
-    }
-
-    function closeEditModal() {
-        document.getElementById('editClientModal').classList.add('hidden');
-    }
-
-    async function saveClientModalChanges() {
-        const id = document.getElementById('editModalDocId').value;
-        const updates = {
-            name: document.getElementById('mEditName').value.trim(),
-            phone: document.getElementById('mEditPhone').value.trim(),
-            locText: document.getElementById('mEditLocText').value.trim(),
-            locUrl: document.getElementById('mEditLocUrl').value.trim(),
-            date: document.getElementById('mEditDate').value,
-            notes: document.getElementById('mEditNotes').value.trim(),
-            amount: parseFloat(document.getElementById('mEditAmount').value) || 0,
-            area: parseFloat(document.getElementById('mEditArea').value) || 0,
-            workshopNotes: document.getElementById('mEditWorkshopNotes').value.trim()
-        };
-
-        try {
-            await db.collection(getClientsCollection()).doc(id).update(updates);
-            alert('تم حفظ التعديلات بنجاح!');
-            closeEditModal();
-            if (currentSubDept === 'inspections') loadInspectionsList();
-            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
-        } catch (err) { alert('خطأ في الحفظ: ' + err.message); }
-    }
-
-    // ================= دوال إنشاء وطباعة عرض السعر (جديد) =================
-    function openQuoteModal(name, phone, location, service) {
-        document.getElementById('qCustName').value = name || '';
-        document.getElementById('qCustPhone').value = phone || '';
-        document.getElementById('qCustLocation').value = location || '';
-        document.getElementById('qServiceName').value = service || 'جلي وتلميع رخام أرضيات';
-
-        qDescItems = ["الطابق الأرضي والطابق الأول", "ساحات خارجية", "3 شواحط درج + بسطتين"];
-        qTermItems = ["دفعة عند الانتهاء من نصف العمل والباقي عند الانتهاء"];
-        document.getElementById('qWorkDuration').value = "من 3 - 4 أيام";
-        document.getElementById('qTotalAmount').value = "350";
-
-        renderQuoteLists();
-        document.getElementById('quoteModal').classList.remove('hidden');
-    }
-
-    function closeQuoteModal() {
-        document.getElementById('quoteModal').classList.add('hidden');
-    }
-
-    function addQuoteDescItem() {
-        const val = document.getElementById('qDescInput').value.trim();
-        if(val) { qDescItems.push(val); document.getElementById('qDescInput').value = ''; renderQuoteLists(); }
-    }
-
-    function addQuoteTermItem() {
-        const val = document.getElementById('qTermInput').value.trim();
-        if(val) { qTermItems.push(val); document.getElementById('qTermInput').value = ''; renderQuoteLists(); }
-    }
-
-    function removeQuoteDesc(i) { qDescItems.splice(i, 1); renderQuoteLists(); }
-    function removeQuoteTerm(i) { qTermItems.splice(i, 1); renderQuoteLists(); }
-
-    function renderQuoteLists() {
-        document.getElementById('qDescList').innerHTML = qDescItems.map((item, i) => 
-            `<li style="background:#252a34; padding:6px 10px; margin-bottom:5px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">${item} <span style="color:#ef4444; cursor:pointer;" onclick="removeQuoteDesc(${i})">✖</span></li>`
-        ).join('');
-
-        document.getElementById('qTermsList').innerHTML = qTermItems.map((item, i) => 
-            `<li style="background:#252a34; padding:6px 10px; margin-bottom:5px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">${item} <span style="color:#ef4444; cursor:pointer;" onclick="removeQuoteTerm(${i})">✖</span></li>`
-        ).join('');
-    }
-
-    function generateAndPrintQuote() {
-        document.getElementById('pdfCustName').innerText = document.getElementById('qCustName').value;
-        document.getElementById('pdfCustPhone').innerText = document.getElementById('qCustPhone').value;
-        document.getElementById('pdfCustLocation').innerText = document.getElementById('qCustLocation').value;
-        document.getElementById('pdfServiceName').innerText = document.getElementById('qServiceName').value;
-        document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('ar-JO');
-        
-        document.getElementById('pdfDuration').innerText = document.getElementById('qWorkDuration').value;
-        document.getElementById('pdfAmount').innerText = (document.getElementById('qTotalAmount').value || '0') + " دينار أردني";
-
-        document.getElementById('pdfDescList').innerHTML = qDescItems.map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
-        document.getElementById('pdfTermsList').innerHTML = qTermItems.map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
-
-        window.print();
-    }
-
-    // Modal PDF Upload Functions
-    function openPdfModal(id, type) {
-        document.getElementById('pdfModalDocId').value = id;
-        document.getElementById('pdfModalType').value = type;
-        document.getElementById('pdfModalTitle').textContent = type === 'priceOffer' ? '📄 رفع عرض سعر (PDF)' : '🧾 رفع فاتورة عميل (PDF)';
-        document.getElementById('pdfFileInput').value = '';
-        document.getElementById('pdfUrlInput').value = '';
-        document.getElementById('uploadPdfModal').classList.remove('hidden');
-    }
-
-    function closePdfModal() {
-        document.getElementById('uploadPdfModal').classList.add('hidden');
-    }
-
-    async function submitPdfUpload() {
-        const id = document.getElementById('pdfModalDocId').value;
-        const type = document.getElementById('pdfModalType').value;
-        const fileInput = document.getElementById('pdfFileInput');
-        const urlInput = document.getElementById('pdfUrlInput').value.trim();
-
-        let finalUrl = urlInput;
-
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const storageRef = storage.ref(`documents/${currentMainDept}/${Date.now()}_${file.name}`);
-            
-            try {
-                alert('جاري رفع ملف الـ PDF إلى التخزين السحابي...');
-                const snap = await storageRef.put(file);
-                finalUrl = await snap.ref.getDownloadURL();
-            } catch (err) {
-                alert('حدث خطأ أثناء رفع الملف السحابي: ' + err.message + '\nإذا لم تتفعل خوادم التخزين، يمكنك وضع رابط مباشر للمستند.');
-            }
-        }
-
-        if (!finalUrl) {
-            alert('يرجى اختيار ملف PDF أو وضع رابط مباشر للمستند');
-            return;
-        }
-
-        const updateData = {};
-        if (type === 'priceOffer') updateData.priceOfferUrl = finalUrl;
-        if (type === 'invoice') updateData.invoiceUrl = finalUrl;
-
-        try {
-            await db.collection(getClientsCollection()).doc(id).update(updateData);
-            alert('تم حفظ المستند وربطه بالطلب بنجاح!');
-            closePdfModal();
-            loadAppointmentsForSelectedDate();
-        } catch (err) { alert('خطأ أثناء حفظ الرابط: ' + err.message); }
-    }
-
-    // ================= 3. قسم الاشتراكات الشهرية (النظافة العامة) =================
-    async function handleSaveSubscription(e) {
-        e.preventDefault();
-        const data = {
-            name: document.getElementById('subName').value.trim(),
-            phone: document.getElementById('subPhone').value.trim(),
-            locText: document.getElementById('subLocText').value.trim(),
-            locUrl: document.getElementById('subLocUrl').value.trim(),
-            visitDay: document.getElementById('subVisitDay').value,
-            nextVisitDate: document.getElementById('subNextDate').value || todayStr,
-            amount: parseFloat(document.getElementById('subAmount').value) || 0,
-            paymentStatus: 'لم يتم التحصيل',
-            paidMonth: currentMonthStr,
-            lastVisitDate: '',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        try {
-            await db.collection(getSubscriptionsCollection()).add(data);
-            alert('تم إضافة مشترك جديد بنجاح!');
-            e.target.reset();
-            document.getElementById('subNextDate').value = todayStr;
-            loadSubscriptionsList();
-        } catch (err) {
-            alert('خطأ أثناء الحفظ: ' + err.message);
-        }
-    }
-
-    async function loadSubscriptionsList() {
-        const tbody = document.getElementById('subscriptionsTableBody');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري تحميل قائمة الاشتراكات...</td></tr>';
-
-        try {
-            const snap = await db.collection(getSubscriptionsCollection()).get();
-            tbody.innerHTML = '';
-
-            snap.forEach(doc => {
-                const sub = doc.data();
-                const id = doc.id;
-
-                const locBtn = sub.locUrl ? `<a href="${sub.locUrl}" target="_blank" class="btn btn-info" style="padding: 2px 6px;">📍 رابط</a>` : '-';
-                const isPaid = sub.paymentStatus === 'تم التحصيل' && sub.paidMonth === currentMonthStr;
-
-                const payBadge = isPaid 
-                    ? `<span class="badge badge-done">💳 تم تحصيل شهر (${sub.paidMonth || currentMonthStr})</span>` 
-                    : `<span class="badge badge-debit">❌ لم يتم التحصيل (${currentMonthStr})</span>`;
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${sub.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${sub.phone || ''}</small></td>
-                        <td>${sub.locText || '-'} <br>${locBtn}</td>
-                        <td><span class="badge badge-pending">${sub.visitDay || 'غير محدد'}</span></td>
-                        <td><strong>${sub.nextVisitDate || '-'}</strong></td>
-                        <td><strong>${sub.amount || 0} د.أ</strong></td>
-                        <td>${payBadge}</td>
-                        <td>
-                            <button class="btn btn-success" style="padding:4px 8px;" onclick="markWeeklyVisitDone('${id}', '${sub.nextVisitDate}')">✔ تمت زيارة اليوم</button>
-                        </td>
-                        <td>
-                            <button class="btn ${isPaid ? 'btn-secondary' : 'btn-primary'}" style="padding:3px 6px;" onclick="toggleSubscriptionPayment('${id}', '${isPaid ? 'لم يتم التحصيل' : 'تم التحصيل'}')">
-                                ${isPaid ? 'إعادة لم يتم الدفع' : '💳 تحصيل الاشتراك'}
-                            </button>
-                            <button class="btn btn-danger" style="padding:3px 6px;" onclick="deleteSubscription('${id}')">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            if (snap.empty) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا يوجد مشتركين في هذا القسم حالياً</td></tr>';
-            }
-        } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
-        }
-    }
-
-    async function markWeeklyVisitDone(id, currentDateStr) {
-        let baseDate = currentDateStr ? new Date(currentDateStr) : new Date();
-        if (isNaN(baseDate.getTime())) baseDate = new Date();
-
-        baseDate.setDate(baseDate.getDate() + 7);
-        const nextWeekStr = baseDate.toISOString().split('T')[0];
-
-        try {
-            await db.collection(getSubscriptionsCollection()).doc(id).update({
-                lastVisitDate: todayStr,
-                nextVisitDate: nextWeekStr
-            });
-            alert(`تم تأكيد زيارة اليوم بنجاح!\nتمت جدولة الزيارة القادمة أوتوماتيكياً بتاريخ: ${nextWeekStr}`);
-            loadSubscriptionsList();
-        } catch (err) {
-            alert('حدث خطأ في الجدولة الآلية: ' + err.message);
-        }
-    }
-
-    async function toggleSubscriptionPayment(id, newStatus) {
-        try {
-            await db.collection(getSubscriptionsCollection()).doc(id).update({
-                paymentStatus: newStatus,
-                paidMonth: currentMonthStr
-            });
-            alert(`تم تحديث حالة تحصيل الاشتراك إلى: ${newStatus}`);
-            loadSubscriptionsList();
-        } catch (err) {
-            alert('خطأ في تحديث التحصيل: ' + err.message);
-        }
-    }
-
-    async function deleteSubscription(id) {
-        if (confirm('هل تأكد حذف اشتراك هذا العميل؟')) {
-            await db.collection(getSubscriptionsCollection()).doc(id).delete();
-            loadSubscriptionsList();
-        }
-    }
-
-    // ================= 4. قسم المحاسبة (دفتر الأستاذ) =================
-    async function handleSaveAccountingEntry(e) {
-        e.preventDefault();
-        const desc = document.getElementById('accDesc').value.trim();
-        const type = document.getElementById('accType').value;
-        const amount = parseFloat(document.getElementById('accAmount').value);
-        const date = document.getElementById('accDate').value || todayStr;
-        const notes = document.getElementById('accNotes').value.trim();
-
-        try {
-            await db.collection(getAccountingCollection()).add({
-                dept: currentMainDept,
-                desc, type, amount, date, notes,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert('تم تسجيل الحركة المالية بنجاح!');
-            e.target.reset();
-            document.getElementById('accDate').value = todayStr;
-            loadAccountingData();
-        } catch (err) { alert('خطأ في التسجيل: ' + err.message); }
-    }
-
-    async function loadAccountingData() {
-        const monthFilter = document.getElementById('accMonthFilter').value || currentMonthStr;
-        const tbody = document.getElementById('accountingTableBody');
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل دفتر الأستاذ...</td></tr>';
-
-        try {
-            const snap = await db.collection(getAccountingCollection()).get();
-            
-            let totalCredit = 0;
-            let totalDebit = 0;
-
-            tbody.innerHTML = '';
-            
-            snap.forEach(doc => {
-                const acc = doc.data();
-                const id = doc.id;
-
-                if (acc.date && acc.date.startsWith(monthFilter)) {
-                    if (acc.type === 'credit') totalCredit += (acc.amount || 0);
-                    if (acc.type === 'debit') totalDebit += (acc.amount || 0);
-
-                    const typeBadge = acc.type === 'credit' 
-                        ? '<span class="badge badge-credit">له (إيراد)</span>' 
-                        : '<span class="badge badge-debit">عليه (مصروف)</span>';
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${acc.date || '-'}</td>
-                            <td><strong>${acc.desc || '-'}</strong></td>
-                            <td>${typeBadge}</td>
-                            <td><strong>${acc.amount || 0} د.أ</strong></td>
-                            <td>${acc.notes || '-'}</td>
-                            <td>
-                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteAccDoc('${id}')">حذف</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-
-            document.getElementById('accTotalCredit').textContent = totalCredit.toFixed(2) + ' د.أ';
-            document.getElementById('accTotalDebit').textContent = totalDebit.toFixed(2) + ' د.أ';
-            const net = totalCredit - totalDebit;
-            document.getElementById('accNetBalance').textContent = net.toFixed(2) + ' د.أ';
-
-            if (tbody.innerHTML === '') {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد حركات مالية مسجلة لشهر ${monthFilter}</td></tr>`;
-            }
-        } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
-        }
-    }
-
-    async function deleteAccDoc(id) {
-        if (confirm('هل تأكد حذف هذه الحركة المالية؟')) {
-            await db.collection(getAccountingCollection()).doc(id).delete();
-            loadAccountingData();
-        }
-    }
-
-    // ================= 5. لوحة الأدمن (إدارة الموظفين) =================
-    async function loadAdminUsersList() {
-        const tbody = document.getElementById('adminUsersTableBody');
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل القائمة...</td></tr>';
-
-        try {
-            const snap = await db.collection('users').get();
-            tbody.innerHTML = '';
-
-            snap.forEach(doc => {
-                const u = doc.data();
-                const uid = doc.id;
-                const depts = u.departments || [];
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${u.name || 'بدون اسم'}</strong></td>
-                        <td>${u.email}</td>
-                        <td>
-                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                                <label><input type="checkbox" id="adm_p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> ✨ جلي البلاط</label>
-                                <label><input type="checkbox" id="adm_c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> 🧹 النظافة العامة</label>
-                                <label><input type="checkbox" id="adm_d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> 🛋️ الدراي كلين</label>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-success" style="padding:4px 8px;" onclick="saveUserDeptPermissions('${uid}')">حفظ</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
-        }
-    }
-
-    async function saveUserDeptPermissions(uid) {
-        const depts = [];
-        if (document.getElementById(`adm_p_${uid}`).checked) depts.push('polishing');
-        if (document.getElementById(`adm_c_${uid}`).checked) depts.push('cleaning');
-        if (document.getElementById(`adm_d_${uid}`).checked) depts.push('dryclean');
-
-        try {
-            await db.collection('users').doc(uid).update({ departments: depts });
-            alert('تم إسناد الصلاحيات للموظف بنجاح!');
-        } catch (err) { alert('خطأ بالحفظ: ' + err.message); }
-    }
-
-    // ================= المصادقة والدخول =================
-    function switchAuthTab(tab) {
-        showAlert('');
-        if (tab === 'login') {
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('loginTabBtn').classList.add('active');
-            document.getElementById('registerTabBtn').classList.remove('active');
-        } else {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
-            document.getElementById('loginTabBtn').classList.remove('active');
-            document.getElementById('registerTabBtn').classList.add('active');
-        }
+    function closeSecretLogin() { document.getElementById('authSection').classList.add('hidden'); }
+    function showPublicProfile() {
+        document.getElementById('mainDashboard').classList.add('hidden');
+        document.getElementById('publicProfileView').classList.remove('hidden');
     }
 
     async function handleLogin() {
-        showAlert('جاري الدخول...', false);
         const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-
-        if (!email || !password) { showAlert('يرجى تعبئة البريد وكلمة المرور'); return; }
-
+        const pass = document.getElementById('loginPassword').value;
         try {
-            await auth.signInWithEmailAndPassword(email, password);
-        } catch (err) { showAlert(translateError(err.code, err.message)); }
+            await auth.signInWithEmailAndPassword(email, pass);
+            closeSecretLogin();
+            document.getElementById('publicProfileView').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+        } catch (err) { alert('بيانات الدخول غير صحيحة'); }
     }
 
-    async function handleRegister() {
-        showAlert('جاري إنشاء الحساب...', false);
-        const name = document.getElementById('registerName').value.trim();
-        const email = document.getElementById('registerEmail').value.trim();
-        const password = document.getElementById('registerPassword').value;
+    function handleLogout() { auth.signOut().then(() => showPublicProfile()); }
 
-        if (!email || !password) { showAlert('يرجى تعبئة البريد وكلمة المرور'); return; }
+    function switchControlTab(tab) {
+        document.getElementById('sec-content').classList.toggle('hidden', tab !== 'content');
+        document.getElementById('sec-inspections').classList.toggle('hidden', tab !== 'inspections');
+        document.getElementById('mTab-content').classList.toggle('active', tab === 'content');
+        document.getElementById('mTab-inspections').classList.toggle('active', tab === 'inspections');
+    }
 
-        try {
-            const cred = await auth.createUserWithEmailAndPassword(email, password);
-            const isAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+    window.onload = function() {
+        loadGeneralInfo();
+        loadServices();
+        loadProjects();
+    };
 
-            await db.collection('users').doc(cred.user.uid).set({
-                name: name || email.split('@')[0],
-                email: email,
-                role: isAdmin ? 'admin' : 'employee',
-                departments: isAdmin ? ['polishing', 'cleaning', 'dryclean'] : []
+    function loadGeneralInfo() {
+        db.collection('settings').doc('profile_info').get().then(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                if(data.logoUrl) {
+                    document.getElementById('mainCompanyLogo').src = data.logoUrl;
+                    document.getElementById('editLogoUrl').value = data.logoUrl;
+                }
+                if(data.aboutUs) {
+                    document.getElementById('aboutUsText').textContent = data.aboutUs;
+                    document.getElementById('editAboutUs').value = data.aboutUs;
+                }
+                if(data.estYear) {
+                    document.getElementById('establishedYearTag').textContent = data.estYear;
+                    document.getElementById('editEstYear').value = data.estYear;
+                }
+                if(data.phone) {
+                    document.getElementById('phoneCallBtn').href = 'tel:' + data.phone;
+                    document.getElementById('phoneCallBtn').innerHTML = `<i class="bi bi-telephone-fill"></i> إتصال مباشر: ${data.phone}`;
+                    document.getElementById('editPhone').value = data.phone;
+                }
+            }
+        });
+    }
+
+    function saveGeneralInfo() {
+        const logo = document.getElementById('editLogoUrl').value.trim();
+        const about = document.getElementById('editAboutUs').value;
+        const est = document.getElementById('editEstYear').value;
+        const phone = document.getElementById('editPhone').value;
+
+        db.collection('settings').doc('profile_info').set({
+            logoUrl: logo,
+            aboutUs: about,
+            estYear: est,
+            phone: phone
+        }, { merge: true }).then(() => {
+            alert('تم حفظ الشعار والمعلومات بنجاح!');
+            loadGeneralInfo();
+        });
+    }
+
+    function addService() {
+        const title = document.getElementById('serviceTitle').value;
+        const desc = document.getElementById('serviceDesc').value;
+        if (!title) return alert('يرجى إدخال عنوان الخدمة');
+
+        db.collection('services').add({
+            title: title,
+            desc: desc,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            document.getElementById('serviceTitle').value = '';
+            document.getElementById('serviceDesc').value = '';
+            loadServices();
+        });
+    }
+
+    function loadServices() {
+        db.collection('services').orderBy('createdAt', 'desc').get().then(snapshot => {
+            let publicHtml = '';
+            let adminHtml = '';
+
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                publicHtml += `
+                    <div class="service-card">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <h3>${item.title}</h3>
+                        <p>${item.desc || ''}</p>
+                    </div>
+                `;
+                adminHtml += `
+                    <div class="service-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.desc || ''}</p>
+                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('services', '${doc.id}')">حذف</button>
+                    </div>
+                `;
             });
 
-            showAlert('تم إنشاء الحساب بنجاح!', false);
-        } catch (err) { showAlert(translateError(err.code, err.message)); }
+            if (publicHtml) document.getElementById('publicServicesContainer').innerHTML = publicHtml;
+            document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات مضافة.</p>';
+        });
     }
 
-    function handleLogout() {
-        auth.signOut().then(() => location.reload());
+    function addProject() {
+        const title = document.getElementById('projectTitle').value;
+        const img = document.getElementById('projectImgUrl').value;
+        const desc = document.getElementById('projectDesc').value;
+
+        if (!title) return alert('يرجى إدخال عنوان المشروع');
+
+        db.collection('projects').add({
+            title: title,
+            imgUrl: img || 'https://via.placeholder.com/400x250?text=صورة+المشروع',
+            desc: desc,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            document.getElementById('projectTitle').value = '';
+            document.getElementById('projectImgUrl').value = '';
+            document.getElementById('projectDesc').value = '';
+            loadProjects();
+        });
     }
 
-    function showAlert(msg, isError = true) {
-        const box = document.getElementById('alertBox');
-        if (!msg) { box.classList.add('hidden'); return; }
-        box.textContent = msg;
-        box.classList.remove('hidden');
-        box.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
+    function loadProjects() {
+        db.collection('projects').orderBy('createdAt', 'desc').get().then(snapshot => {
+            let publicHtml = '';
+            let adminHtml = '';
+
+            snapshot.forEach(doc => {
+                const item = doc.data();
+                publicHtml += `
+                    <div class="project-card">
+                        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <h3>${item.title}</h3>
+                        <p>${item.desc || ''}</p>
+                    </div>
+                `;
+                adminHtml += `
+                    <div class="project-card">
+                        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <h3>${item.title}</h3>
+                        <p>${item.desc || ''}</p>
+                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف المشروع</button>
+                    </div>
+                `;
+            });
+
+            document.getElementById('publicProjectsContainer').innerHTML = publicHtml || '<p style="text-align:center; grid-column: 1/-1; color: var(--text-gray);">لا توجد مشاريع مضافة حالياً.</p>';
+            document.getElementById('adminProjectsList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد مشاريع مضافة.</p>';
+        });
     }
 
-    function translateError(code, defaultMsg) {
-        switch (code) {
-            case 'auth/email-already-in-use': return 'البريد الإلكتروني مستخدم بالفعل.';
-            case 'auth/invalid-email': return 'البريد الإلكتروني غير صالح.';
-            case 'auth/weak-password': return 'كلمة المرور ضعيفة (6 خانات على الأقل).';
-            case 'auth/user-not-found':
-            case 'auth/wrong-password':
-            case 'auth/invalid-credential': return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-            default: return 'خطأ: ' + (defaultMsg || code);
+    function deleteDoc(col, id) {
+        if (confirm('هل أنت تأكد من الحذف؟')) {
+            db.collection(col).doc(id).delete().then(() => {
+                if (col === 'services') loadServices();
+                if (col === 'projects') loadProjects();
+            });
         }
     }
 </script>

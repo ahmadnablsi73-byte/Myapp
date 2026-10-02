@@ -3,72 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد</title>
+    <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للأرضيات والخدمات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
-        body { background-color: #121418; color: #ffffff; min-height: 100vh; padding: 20px; }
+        body { background-color: #121418; color: #ffffff; min-height: 100vh; padding: 15px; }
         
-        .container { max-width: 1000px; margin: 0 auto; }
-        .card { background-color: #1e2229; border-radius: 16px; padding: 24px; border: 1px solid #2d333f; margin-bottom: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .card { background-color: #1e2229; border-radius: 16px; padding: 20px; border: 1px solid #2d333f; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         
-        h1, h2, h3 { color: #ffffff; text-align: center; margin-bottom: 12px; }
+        h1, h2, h3, h4 { color: #ffffff; text-align: center; margin-bottom: 10px; }
         .subtitle { font-size: 13px; color: #9ca3af; text-align: center; margin-bottom: 20px; }
 
-        .nav-tabs { display: flex; gap: 8px; background-color: #121418; padding: 6px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
-        .nav-btn { flex: 1; min-width: 120px; padding: 12px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; }
-        .nav-btn.active { background-color: #e28743; color: #ffffff; }
+        /* Main Nav Tabs */
+        .main-nav { display: flex; gap: 8px; background-color: #121418; padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid #2d333f; }
+        .main-nav-btn { flex: 1; min-width: 140px; padding: 12px 10px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; }
+        .main-nav-btn.active { background-color: #e28743; color: #ffffff; }
 
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        /* Sub Nav Tabs */
+        .sub-nav { display: flex; gap: 6px; background-color: #181c23; padding: 5px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; border: 1px solid #282f3d; }
+        .sub-nav-btn { flex: 1; min-width: 110px; padding: 10px 8px; background: none; border: none; color: #9ca3af; font-weight: bold; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 13px; }
+        .sub-nav-btn.active { background-color: #2d3748; color: #38bdf8; border: 1px solid #38bdf8; }
+
+        /* Forms Grid */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
-        label { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 10px 12px; background-color: #121418; border: 1px solid #374151; border-radius: 8px; color: #fff; outline: none; }
-        .submit-btn { width: 100%; padding: 12px; background-color: #e28743; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-        .submit-btn:hover { background-color: #c97232; }
+        label { display: block; font-size: 12px; color: #d1d5db; margin-bottom: 5px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 12px; background-color: #121418; border: 1px solid #374151; border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
+        .form-control:focus { border-color: #e28743; }
+        textarea.form-control { resize: vertical; min-height: 70px; }
 
+        /* Buttons */
+        .btn { padding: 8px 14px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; }
+        .btn-primary { background-color: #e28743; color: #fff; }
+        .btn-primary:hover { background-color: #c97232; }
+        .btn-success { background-color: #10b981; color: #fff; }
+        .btn-success:hover { background-color: #059669; }
+        .btn-danger { background-color: #ef4444; color: #fff; }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-info { background-color: #0284c7; color: #fff; }
+        .btn-info:hover { background-color: #0369a1; }
+        .btn-secondary { background-color: #4b5563; color: #fff; }
+        .btn-block { width: 100%; padding: 12px; font-size: 14px; }
+
+        /* Utility */
         .hidden { display: none !important; }
-        .user-bar { display: flex; justify-content: space-between; align-items: center; background: #252a34; padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; }
-        .logout-btn { background: #dc2626; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+        .user-bar { display: flex; justify-content: space-between; align-items: center; background: #252a34; padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; }
+        
+        /* Tables */
+        .table-responsive { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 650px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid #2d333f; font-size: 13px; vertical-align: middle; }
+        th { background-color: #121418; color: #e28743; font-weight: 700; }
+        tr:hover { background-color: #1a1e26; }
 
-        .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: right; min-width: 600px; }
-        th, td { padding: 12px; border-bottom: 1px solid #2d333f; font-size: 13px; }
-        th { background-color: #121418; color: #e28743; }
-        .badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        /* Badges */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
         .badge-pending { background: #f59e0b; color: #000; }
+        .badge-workshop { background: #3b82f6; color: #fff; }
         .badge-done { background: #10b981; color: #fff; }
+        .badge-debit { background: #ef4444; color: #fff; }
+        .badge-credit { background: #10b981; color: #fff; }
 
-        .checkbox-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .checkbox-group label { margin: 0; font-size: 12px; cursor: pointer; }
-        .save-user-btn { background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-        .delete-btn { background: #ef4444; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        /* Summary Bar for Appointments */
+        .day-summary-bar { display: flex; justify-content: space-between; align-items: center; background: #121418; padding: 12px 16px; border-radius: 10px; border: 1px solid #2d333f; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .summary-pill { background: #252a34; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; color: #e28743; border: 1px solid #374151; }
 
-        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; display: none; text-align: center; word-break: break-word; }
+        /* Accounting Summary Cards */
+        .accounting-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .acc-card { background: #121418; padding: 15px; border-radius: 10px; border: 1px solid #2d333f; text-align: center; }
+        .acc-card .val { font-size: 20px; font-weight: bold; margin-top: 5px; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+        .modal-content { background: #1e2229; border-radius: 14px; padding: 20px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; border: 1px solid #374151; }
+
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; }
         .alert-error { background-color: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; }
         .alert-success { background-color: #064e3b; color: #6ee7b7; border: 1px solid #047857; }
     </style>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- شاشة الدخول والتسجيل -->
+    <!-- شاشة تسجيل الدخول -->
     <div id="authSection" class="card" style="max-width: 420px; margin: 40px auto;">
         <h1>مؤسسة الرؤيا المتقدمة</h1>
-        <p class="subtitle">النظام السحابي الموحد للأرضيات والخدمات</p>
+        <p class="subtitle">النظام الموحد للخدمات والمستندات السحابية</p>
 
-        <div class="nav-tabs">
-            <button type="button" class="nav-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">دخول</button>
-            <button type="button" class="nav-btn" id="registerTabBtn" onclick="switchAuthTab('register')">حساب جديد</button>
+        <div class="main-nav">
+            <button type="button" class="main-nav-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">تسجيل دخول</button>
+            <button type="button" class="main-nav-btn" id="registerTabBtn" onclick="switchAuthTab('register')">حساب جديد</button>
         </div>
 
-        <div id="alertBox" class="alert"></div>
+        <div id="alertBox" class="alert hidden"></div>
 
-        <!-- نموذج تسجيل الدخول -->
         <div id="loginForm">
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
@@ -78,14 +114,13 @@
                 <label>كلمة المرور</label>
                 <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
             </div>
-            <button type="button" class="submit-btn" onclick="handleLogin()">تسجيل الدخول</button>
+            <button type="button" class="btn btn-primary btn-block" onclick="handleLogin()">دخول للنظام</button>
         </div>
 
-        <!-- نموذج إنشاء حساب -->
         <div id="registerForm" class="hidden">
             <div class="form-group">
                 <label>الاسم الكامل</label>
-                <input type="text" id="registerName" class="form-control" placeholder="أدخل اسمك">
+                <input type="text" id="registerName" class="form-control" placeholder="اسم الموظف">
             </div>
             <div class="form-group">
                 <label>البريد الإلكتروني</label>
@@ -95,220 +130,345 @@
                 <label>كلمة المرور</label>
                 <input type="password" id="registerPassword" class="form-control" placeholder="••••••••">
             </div>
-            <button type="button" class="submit-btn" onclick="handleRegister()">إنشاء حساب جديد</button>
+            <button type="button" class="btn btn-primary btn-block" onclick="handleRegister()">إنشاء حساب</button>
         </div>
     </div>
 
     <!-- الشاشة الرئيسية بعد تسجيل الدخول -->
     <div id="mainDashboard" class="hidden">
+        
+        <!-- الشريط العلوي للمستخدم -->
         <div class="user-bar">
             <div>
                 <strong id="userName">المستخدم</strong>
-                <span id="userRoleBadge" style="font-size: 11px; background: #e28743; color: #fff; padding: 2px 8px; border-radius: 4px; margin-right: 6px;">مستعمل</span>
+                <span id="userRoleBadge" class="badge badge-pending" style="margin-right: 8px;">مستعمل</span>
             </div>
-            <button class="logout-btn" onclick="handleLogout()">خروج</button>
+            <button class="btn btn-danger" onclick="handleLogout()">تسجيل الخروج</button>
         </div>
 
-        <!-- شريط التبويبات الرئيسي -->
-        <div class="nav-tabs" id="departmentTabs">
-            <button class="nav-btn hidden" id="tab-polishing" onclick="showDept('polishing')">✨ قسم الجلي</button>
-            <button class="nav-btn hidden" id="tab-cleaning" onclick="showDept('cleaning')">🧹 قسم النظافة</button>
-            <button class="nav-btn hidden" id="tab-dryclean" onclick="showDept('dryclean')">🛋️ قسم الدراي كلين</button>
-            <button class="nav-btn hidden" id="tab-admin" onclick="showDept('admin')">👑 لوحة الأدمن</button>
+        <!-- الأقسام الرئيسية للموقع -->
+        <div class="main-nav" id="mainDeptTabs">
+            <button class="main-nav-btn hidden" id="mTab-polishing" onclick="switchMainDept('polishing')">✨ جلي البلاط</button>
+            <button class="main-nav-btn hidden" id="mTab-cleaning" onclick="switchMainDept('cleaning')">🧹 النظافة العامة</button>
+            <button class="main-nav-btn hidden" id="mTab-dryclean" onclick="switchMainDept('dryclean')">🛋️ الدراي كلين</button>
+            <button class="main-nav-btn hidden" id="mTab-admin" onclick="switchMainDept('admin')">👑 لوحة الأدمن</button>
         </div>
 
-        <!-- رسالة الانتظار للحسابات الجديدة -->
+        <!-- رسالة الانتظار عند عدم تفعيل الصلاحيات -->
         <div id="sec-pending" class="card hidden">
-            <h2>⏳ بانتظار تفعيل الصلاحيات</h2>
-            <p style="text-align: center; color: #9ca3af; margin-top: 10px;">
-                تم تسجيل دخولك بنجاح. يرجى التواصل مع إدارة المؤسسة لتحديد الأقسام المسموح لك بالدخول إليها.
-            </p>
+            <h2>⏳ بانتظار تحديد الصلاحيات</h2>
+            <p class="subtitle" style="margin-top: 10px;">تم تسجيل دخولك بنجاح. يرجى من مدير النظام تحديد الأقسام المسموح لك بالعمل عليها.</p>
         </div>
 
-        <!-- 1. قسم جلي وتلميع الرخام -->
-        <div id="sec-polishing" class="card hidden">
-            <h2>✨ قسم جلي وتلميع الرخام والأرضيات</h2>
-            <p class="subtitle">إدارة طلبات ومشاريع الجلي، الكريستال، والإيبوكسي</p>
+        <!-- ================= غلاف الأقسام الرئيسية الثلاثة ================= -->
+        <div id="deptContainer" class="hidden">
+            
+            <!-- الأقسام الفرعية التابعة للقسم الرئيسي المحدد -->
+            <div class="sub-nav">
+                <button class="sub-nav-btn active" id="sTab-inspections" onclick="switchSubDept('inspections')">📝 عميل جديد (معاينات)</button>
+                <button class="sub-nav-btn" id="sTab-appointments" onclick="switchSubDept('appointments')">📅 المواعيد والورش</button>
+                <button class="sub-nav-btn" id="sTab-accounting" onclick="switchSubDept('accounting')">💰 المحاسبة (دفتر الأستاذ)</button>
+            </div>
 
-            <form onsubmit="addPolishingOrder(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>اسم العميل / المشروع</label>
-                        <input type="text" id="pClient" class="form-control" required placeholder="مثال: موقع عبدون">
+            <!-- 1. قسم عميل جديد (المعاينات) -->
+            <div id="subSec-inspections" class="card">
+                <h3 id="inspDeptTitle">📝 نموذج إدخال معاينة جديدة</h3>
+                <p class="subtitle">جميع الحقول اختيارية ويمكن الحفظ دون تعبئة كافة الحقول</p>
+
+                <form onsubmit="handleSaveInspection(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>اسم العميل</label>
+                            <input type="text" id="inspName" class="form-control" placeholder="اسم العميل">
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الهاتف</label>
+                            <input type="text" id="inspPhone" class="form-control" placeholder="07XXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label>موقع العميل النصي</label>
+                            <input type="text" id="inspLocText" class="form-control" placeholder="المنطقة، الشارع، المعالم القريبة">
+                        </div>
+                        <div class="form-group">
+                            <label>رابط اللوكيشن (الخريطة)</label>
+                            <input type="url" id="inspLocUrl" class="form-control" placeholder="https://maps.google.com/?q=...">
+                        </div>
+                        <div class="form-group">
+                            <label>التاريخ المخطط</label>
+                            <input type="date" id="inspDate" class="form-control">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>ملاحظات المعاينة</label>
+                            <textarea id="inspNotes" class="form-control" placeholder="أي تفاصيل أو متطلبات خاصة..."></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" id="pPhone" class="form-control" required placeholder="07XXXXXXXX">
+                    <button type="submit" class="btn btn-primary btn-block">+ حفظ المعاينة في السجل</button>
+                </form>
+
+                <hr style="border: 0; border-top: 1px solid #2d333f; margin: 25px 0;">
+
+                <h3>📋 قائمة المعاينات (سجل المعاينات)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم العميل</th>
+                                <th>رقم الهاتف</th>
+                                <th>العنوان النصي</th>
+                                <th>اللوكيشن</th>
+                                <th>التاريخ</th>
+                                <th>ملاحظات</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inspectionsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. قسم المواعيد والورش -->
+            <div id="subSec-appointments" class="card hidden">
+                <h3>📅 المواعيد والورش المؤكدة</h3>
+                <p class="subtitle">عرض وإدارة المواعيد بنظام يومي مستقل</p>
+
+                <!-- الشريط العلوي للتاريخ والملخص -->
+                <div class="day-summary-bar">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="margin:0;">تاريخ اليوم:</label>
+                        <input type="date" id="appFilterDate" class="form-control" style="width: auto;" onchange="loadAppointmentsForSelectedDate()">
+                        <button type="button" class="btn btn-secondary" onclick="setAppDateToToday()">اليوم</button>
                     </div>
-                    <div class="form-group">
-                        <label>نوع الأرضية والخدمة</label>
-                        <select id="pType" class="form-control">
-                            <option value="رخام - جلي وتلميع بالكريستال">رخام - جلي وتلميع بالكريستال</option>
-                            <option value="موزاييك / تراتزو">موزاييك / تراتزو</option>
-                            <option value="خرسانة - معالجة وسيلر">خرسانة - معالجة وسيلر</option>
-                            <option value="إيبوكسي أرضيات">إيبوكسي أرضيات</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>المساحة (م²)</label>
-                        <input type="number" id="pArea" class="form-control" required placeholder="120">
-                    </div>
-                    <div class="form-group">
-                        <label>السعر / م² (د.أ)</label>
-                        <input type="number" step="0.1" id="pPrice" class="form-control" required placeholder="2.5">
+                    <div id="daySummaryPill" class="summary-pill">
+                        [ عدد الورش: 0 | عدد المعاينات: 0 ]
                     </div>
                 </div>
-                <button type="submit" class="submit-btn">+ إضافة مشروع جلي جديد</button>
-            </form>
 
-            <h3 style="margin-top: 25px; text-align: right;">قائمة مشاريع الجلي</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>العميل</th>
-                            <th>الهاتف</th>
-                            <th>الخدمة</th>
-                            <th>المساحة</th>
-                            <th>الإجمالي</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="polishingTableBody">
-                    </tbody>
-                </table>
+                <!-- قائمة المعاينات المجدولة لهذا اليوم -->
+                <h4 style="text-align: right; color: #f59e0b; margin-top: 15px;">🔍 المعاينات المجدولة لهذا اليوم</h4>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>العميل</th>
+                                <th>الهاتف</th>
+                                <th>الموقع</th>
+                                <th>الخريطة</th>
+                                <th>الملاحظات</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dayInspectionsTableBody"></tbody>
+                    </table>
+                </div>
+
+                <br><hr style="border: 0; border-top: 1px solid #2d333f;"><br>
+
+                <!-- قائمة الورش المؤكدة لهذا اليوم -->
+                <h4 style="text-align: right; color: #10b981;">🛠️ الورش المؤكدة لهذا اليوم</h4>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>العميل والهاتف</th>
+                                <th>الموقع</th>
+                                <th>المبلغ / المساحة</th>
+                                <th>ملاحظات الورشة</th>
+                                <th>عرض السعر (PDF)</th>
+                                <th>الفاتورة (PDF)</th>
+                                <th>الحالة</th>
+                                <th>إجراءات الإدارة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dayWorkshopsTableBody"></tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <!-- 2. قسم النظافة العامة -->
-        <div id="sec-cleaning" class="card hidden">
-            <h2>🧹 قسم النظافة العامة</h2>
-            <p class="subtitle">إدارة ورشات تنظيف المباني والفلل بعد الإنشاء</p>
+            <!-- 3. قسم المحاسبة (دفتر الأستاذ) -->
+            <div id="subSec-accounting" class="card hidden">
+                <h3>💰 قسم المحاسبة (دفتر الأستاذ المالي)</h3>
+                <p class="subtitle">تسجيل وتتبع حركة الحسابات والأرشفة الشهرية</p>
 
-            <form onsubmit="addCleaningOrder(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>اسم العميل</label>
-                        <input type="text" id="cClient" class="form-control" required placeholder="اسم العميل">
+                <!-- فلتر أرشفة الشهر -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #121418; padding: 10px 15px; border-radius: 8px;">
+                    <span style="font-size: 13px; font-weight: bold;">📅 تصفح الشهر المالي:</span>
+                    <input type="month" id="accMonthFilter" class="form-control" style="width: 180px;" onchange="loadAccountingData()">
+                </div>
+
+                <!-- كروت مجاميع الحسابات -->
+                <div class="accounting-summary">
+                    <div class="acc-card">
+                        <span style="color: #10b981; font-size: 12px; font-weight: bold;">مجموع له (إيرادات)</span>
+                        <div class="val" style="color: #10b981;" id="accTotalCredit">0.00 د.أ</div>
                     </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" id="cPhone" class="form-control" required placeholder="07XXXXXXXX">
+                    <div class="acc-card">
+                        <span style="color: #ef4444; font-size: 12px; font-weight: bold;">مجموع عليه (مصاريف)</span>
+                        <div class="val" style="color: #ef4444;" id="accTotalDebit">0.00 د.أ</div>
                     </div>
-                    <div class="form-group">
-                        <label>نوع الموقع</label>
-                        <select id="cType" class="form-control">
-                            <option value="تنظيف شقة بعد الإنشاء">تنظيف شقة بعد الإنشاء</option>
-                            <option value="تنظيف فيلا كاملة">تنظيف فيلا كاملة</option>
-                            <option value="تنظيف واجهات ومحلات">تنظيف واجهات ومحلات</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>تاريخ الموعد</label>
-                        <input type="date" id="cDate" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>قيمة العقد (د.أ)</label>
-                        <input type="number" id="cCost" class="form-control" required placeholder="150">
+                    <div class="acc-card">
+                        <span style="color: #38bdf8; font-size: 12px; font-weight: bold;">الرصيد الصافي</span>
+                        <div class="val" style="color: #38bdf8;" id="accNetBalance">0.00 د.أ</div>
                     </div>
                 </div>
-                <button type="submit" class="submit-btn">+ إضافة موعد تنظيف</button>
-            </form>
 
-            <h3 style="margin-top: 25px; text-align: right;">قائمة مواعيد النظافة</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>العميل</th>
-                            <th>الهاتف</th>
-                            <th>النوع</th>
-                            <th>الموعد</th>
-                            <th>القيمة</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cleaningTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                <!-- نموذج إضافة حركة مالية -->
+                <form onsubmit="handleSaveAccountingEntry(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>البيان / الوصف</label>
+                            <input type="text" id="accDesc" class="form-control" required placeholder="مثال: دفعة من عميل / شراء مواد">
+                        </div>
+                        <div class="form-group">
+                            <label>نوع الحركة</label>
+                            <select id="accType" class="form-control" required>
+                                <option value="credit">له (إيراد / مدخول)</option>
+                                <option value="debit">عليه (مصروف / دفعة للخارج)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>المبلغ (د.أ)</label>
+                            <input type="number" step="0.01" id="accAmount" class="form-control" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>التاريخ</label>
+                            <input type="date" id="accDate" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>ملاحظات إضافية</label>
+                            <input type="text" id="accNotes" class="form-control" placeholder="ملاحظات الحساب...">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">+ تسجيل حركة مالية</button>
+                </form>
 
-        <!-- 3. قسم الدراي كلين -->
-        <div id="sec-dryclean" class="card hidden">
-            <h2>🛋️ قسم الدراي كلين للأثاث</h2>
-            <p class="subtitle">تنظيف وتطهير الكنب، السجاد، والموكيت في الموقع</p>
+                <hr style="border: 0; border-top: 1px solid #2d333f; margin: 25px 0;">
 
-            <form onsubmit="addDrycleanOrder(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>اسم العميل</label>
-                        <input type="text" id="dClient" class="form-control" required placeholder="اسم العميل">
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="text" id="dPhone" class="form-control" required placeholder="07XXXXXXXX">
-                    </div>
-                    <div class="form-group">
-                        <label>العنصر / العناصر</label>
-                        <input type="text" id="dItem" class="form-control" required placeholder="طقم كنب + 2 سجاد">
-                    </div>
-                    <div class="form-group">
-                        <label>التكلفة الإجمالية (د.أ)</label>
-                        <input type="number" id="dCost" class="form-control" required placeholder="45">
-                    </div>
+                <h3>📊 جدول الحركات المالية للأستاذ</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>البيان / الوصف</th>
+                                <th>النوع</th>
+                                <th>المبلغ</th>
+                                <th>ملاحظات</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountingTableBody"></tbody>
+                    </table>
                 </div>
-                <button type="submit" class="submit-btn">+ إضافة طلب دراي كلين</button>
-            </form>
-
-            <h3 style="margin-top: 25px; text-align: right;">طلبات الدراي كلين</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>العميل</th>
-                            <th>الهاتف</th>
-                            <th>العناصر</th>
-                            <th>التكلفة</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="drycleanTableBody">
-                    </tbody>
-                </table>
             </div>
+
         </div>
 
-        <!-- 4. لوحة تحكم الأدمن -->
+        <!-- 4. لوحة الأدمن (إدارة الموظفين) -->
         <div id="sec-admin" class="card hidden">
-            <h2>👑 إدارة الموظفين والصلاحيات</h2>
-            <p class="subtitle">حدد الأقسام المسموح لكل موظف رؤيتها والعمل عليها</p>
+            <h2>👑 لوحة تحكم الأدمن والصلاحيات</h2>
+            <p class="subtitle">تحديد الأقسام المسموح لكل موظف الدخول إليها</p>
 
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>الموظف</th>
+                            <th>اسم الموظف</th>
                             <th>البريد الإلكتروني</th>
                             <th>الأقسام المسموحة</th>
-                            <th>إجراء</th>
+                            <th>حفظ</th>
                         </tr>
                     </thead>
-                    <tbody id="usersTableBody">
-                    </tbody>
+                    <tbody id="adminUsersTableBody"></tbody>
                 </table>
             </div>
         </div>
+
     </div>
 
 </div>
 
+<!-- ================= مودال تعديل بيانات العميل / الورشة ================= -->
+<div id="editClientModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3>✏️ تعديل بيانات العميل / الورشة</h3>
+        <input type="hidden" id="editModalDocId">
+        
+        <div class="form-group">
+            <label>اسم العميل</label>
+            <input type="text" id="mEditName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>رقم الهاتف</label>
+            <input type="text" id="mEditPhone" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>الموقع النصي</label>
+            <input type="text" id="mEditLocText" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>رابط اللوكيشن</label>
+            <input type="url" id="mEditLocUrl" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>التاريخ</label>
+            <input type="date" id="mEditDate" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>ملاحظات المعاينة الأصلية</label>
+            <textarea id="mEditNotes" class="form-control"></textarea>
+        </div>
+
+        <div id="modalWorkshopFields" style="border-top: 1px dashed #374151; padding-top: 10px; margin-top: 10px;">
+            <h4 style="color: #10b981; text-align: right; margin-bottom: 8px;">حقول الورشة</h4>
+            <div class="form-group">
+                <label>المبلغ الإجمالي (د.أ)</label>
+                <input type="number" step="0.1" id="mEditAmount" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>المساحة (م²)</label>
+                <input type="number" step="0.1" id="mEditArea" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>ملاحظات الورشة</label>
+                <textarea id="mEditWorkshopNotes" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" class="btn btn-success" style="flex:1;" onclick="saveClientModalChanges()">حفظ التعديلات</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= مودال رفع مستند PDF (عرض سعر / فاتورة) ================= -->
+<div id="uploadPdfModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3 id="pdfModalTitle">📄 رفع مستند PDF</h3>
+        <input type="hidden" id="pdfModalDocId">
+        <input type="hidden" id="pdfModalType"> <!-- 'priceOffer' or 'invoice' -->
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label>اختر ملف الـ PDF من جهازك</label>
+            <input type="file" id="pdfFileInput" accept="application/pdf" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>أو ضع رابط المستند المباشر</label>
+            <input type="url" id="pdfUrlInput" class="form-control" placeholder="https://...">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" class="btn btn-primary" style="flex:1;" onclick="submitPdfUpload()">حفظ وحفظ المستند</button>
+            <button type="button" class="btn btn-secondary" onclick="closePdfModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
     const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
 
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
         authDomain: "roya-app-29932.firebaseapp.com",
@@ -322,9 +482,17 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
+    // App State Variables
     let currentUserData = null;
+    let currentMainDept = 'polishing'; // 'polishing', 'cleaning', 'dryclean', 'admin'
+    let currentSubDept = 'inspections'; // 'inspections', 'appointments', 'accounting'
 
+    // Today Date YYYY-MM-DD
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // Auth Listener
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             document.getElementById('authSection').classList.add('hidden');
@@ -340,18 +508,15 @@
                     currentUserData = doc.data();
                     if (isAdminEmail && currentUserData.role !== 'admin') {
                         currentUserData.role = 'admin';
-                        currentUserData.departments = ['cleaning', 'polishing', 'dryclean'];
-                        await userDocRef.update({
-                            role: 'admin',
-                            departments: ['cleaning', 'polishing', 'dryclean']
-                        });
+                        currentUserData.departments = ['polishing', 'cleaning', 'dryclean'];
+                        await userDocRef.update({ role: 'admin', departments: ['polishing', 'cleaning', 'dryclean'] });
                     }
                 } else {
                     currentUserData = {
                         name: user.displayName || user.email.split('@')[0],
                         email: user.email,
                         role: isAdminEmail ? 'admin' : 'employee',
-                        departments: isAdminEmail ? ['cleaning', 'polishing', 'dryclean'] : []
+                        departments: isAdminEmail ? ['polishing', 'cleaning', 'dryclean'] : []
                     };
                     await userDocRef.set(currentUserData);
                 }
@@ -359,10 +524,10 @@
                 document.getElementById('userName').textContent = currentUserData.name || user.email;
                 document.getElementById('userRoleBadge').textContent = currentUserData.role === 'admin' ? 'مدير النظام' : 'موظف';
 
-                setupPermissions();
+                setupMainPermissions();
             } catch (err) {
-                console.error("Firestore Error:", err);
-                alert("خطأ في الاتصال بالبيانات: " + err.message);
+                console.error("Firestore Init Error:", err);
+                alert("خطأ في الربط مع قواعد البيانات: " + err.message);
             }
         } else {
             document.getElementById('authSection').classList.remove('hidden');
@@ -370,278 +535,513 @@
         }
     });
 
-    function hideAllSections() {
-        document.getElementById('sec-pending').classList.add('hidden');
-        document.getElementById('sec-cleaning').classList.add('hidden');
-        document.getElementById('sec-polishing').classList.add('hidden');
-        document.getElementById('sec-dryclean').classList.add('hidden');
-        document.getElementById('sec-admin').classList.add('hidden');
-    }
-
-    function setupPermissions() {
+    // Permission Setup
+    function setupMainPermissions() {
         const role = currentUserData ? currentUserData.role : 'employee';
         const depts = (currentUserData && currentUserData.departments) ? currentUserData.departments : [];
 
-        document.getElementById('tab-cleaning').classList.add('hidden');
-        document.getElementById('tab-polishing').classList.add('hidden');
-        document.getElementById('tab-dryclean').classList.add('hidden');
-        document.getElementById('tab-admin').classList.add('hidden');
-
-        hideAllSections();
+        ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
+            document.getElementById('mTab-' + d).classList.add('hidden');
+        });
 
         if (role === 'admin') {
-            document.getElementById('tab-polishing').classList.remove('hidden');
-            document.getElementById('tab-cleaning').classList.remove('hidden');
-            document.getElementById('tab-dryclean').classList.remove('hidden');
-            document.getElementById('tab-admin').classList.remove('hidden');
-            showDept('polishing');
-            loadUsersForAdmin();
+            ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
+                document.getElementById('mTab-' + d).classList.remove('hidden');
+            });
+            switchMainDept('polishing');
+            loadAdminUsersList();
         } else {
-            let activeCount = 0;
-            if (depts.includes('polishing')) {
-                document.getElementById('tab-polishing').classList.remove('hidden');
-                if (activeCount === 0) showDept('polishing');
-                activeCount++;
-            }
-            if (depts.includes('cleaning')) {
-                document.getElementById('tab-cleaning').classList.remove('hidden');
-                if (activeCount === 0) showDept('cleaning');
-                activeCount++;
-            }
-            if (depts.includes('dryclean')) {
-                document.getElementById('tab-dryclean').classList.remove('hidden');
-                if (activeCount === 0) showDept('dryclean');
-                activeCount++;
-            }
+            let firstDept = null;
+            if (depts.includes('polishing')) { document.getElementById('mTab-polishing').classList.remove('hidden'); if(!firstDept) firstDept = 'polishing'; }
+            if (depts.includes('cleaning')) { document.getElementById('mTab-cleaning').classList.remove('hidden'); if(!firstDept) firstDept = 'cleaning'; }
+            if (depts.includes('dryclean')) { document.getElementById('mTab-dryclean').classList.remove('hidden'); if(!firstDept) firstDept = 'dryclean'; }
 
-            if (activeCount === 0) {
+            if (firstDept) {
+                document.getElementById('deptContainer').classList.remove('hidden');
+                document.getElementById('sec-pending').classList.add('hidden');
+                switchMainDept(firstDept);
+            } else {
+                document.getElementById('deptContainer').classList.add('hidden');
                 document.getElementById('sec-pending').classList.remove('hidden');
             }
         }
     }
 
-    function showDept(deptName) {
-        document.querySelectorAll('#departmentTabs .nav-btn').forEach(btn => btn.classList.remove('active'));
-        hideAllSections();
+    // Switch Main Department
+    function switchMainDept(dept) {
+        currentMainDept = dept;
+        document.querySelectorAll('#mainDeptTabs .main-nav-btn').forEach(btn => btn.classList.remove('active'));
+        if (document.getElementById('mTab-' + dept)) document.getElementById('mTab-' + dept).classList.add('active');
 
-        if (document.getElementById('tab-' + deptName)) {
-            document.getElementById('tab-' + deptName).classList.add('active');
-        }
-        if (document.getElementById('sec-' + deptName)) {
-            document.getElementById('sec-' + deptName).classList.remove('hidden');
-        }
+        if (dept === 'admin') {
+            document.getElementById('deptContainer').classList.add('hidden');
+            document.getElementById('sec-admin').classList.remove('hidden');
+            loadAdminUsersList();
+        } else {
+            document.getElementById('sec-admin').classList.add('hidden');
+            document.getElementById('deptContainer').classList.remove('hidden');
+            
+            // Set Titles according to Department
+            const titles = {
+                'polishing': '✨ قسم جلي البلاط',
+                'cleaning': '🧹 قسم النظافة العامة',
+                'dryclean': '🛋️ قسم الدراي كلين'
+            };
+            document.getElementById('inspDeptTitle').textContent = `📝 نموذج معاينة جديد - ${titles[dept]}`;
+            
+            // Initialize dates
+            document.getElementById('inspDate').value = todayStr;
+            document.getElementById('appFilterDate').value = todayStr;
+            document.getElementById('accDate').value = todayStr;
+            document.getElementById('accMonthFilter').value = todayStr.substring(0, 7);
 
-        if (deptName === 'polishing') loadPolishingOrders();
-        if (deptName === 'cleaning') loadCleaningOrders();
-        if (deptName === 'dryclean') loadDrycleanOrders();
-    }
-
-    // --- 1. عمليات قسم الجلي ---
-    async function addPolishingOrder(e) {
-        e.preventDefault();
-        const client = document.getElementById('pClient').value;
-        const phone = document.getElementById('pPhone').value;
-        const type = document.getElementById('pType').value;
-        const area = parseFloat(document.getElementById('pArea').value);
-        const price = parseFloat(document.getElementById('pPrice').value);
-        const total = area * price;
-
-        try {
-            await db.collection('polishing_orders').add({
-                client, phone, type, area, price, total, status: 'قيد التنفيذ', createdAt: new Date()
-            });
-            alert('تم إضافة مشروع الجلي بنجاح!');
-            e.target.reset();
-            loadPolishingOrders();
-        } catch (err) { alert('خطأ في الإضافة: ' + err.message); }
-    }
-
-    async function loadPolishingOrders() {
-        const tbody = document.getElementById('polishingTableBody');
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري تحميل البيانات...</td></tr>';
-        try {
-            const snap = await db.collection('polishing_orders').orderBy('createdAt', 'desc').get();
-            tbody.innerHTML = '';
-            snap.forEach(doc => {
-                const o = doc.data();
-                const id = doc.id;
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${o.client}</strong></td>
-                        <td>${o.phone}</td>
-                        <td>${o.type}</td>
-                        <td>${o.area} م²</td>
-                        <td><strong>${o.total} د.أ</strong></td>
-                        <td><span class="badge ${o.status === 'مكتمل' ? 'badge-done' : 'badge-pending'}">${o.status}</span></td>
-                        <td>
-                            <button class="save-user-btn" onclick="toggleOrderStatus('polishing_orders', '${id}', '${o.status === 'مكتمل' ? 'قيد التنفيذ' : 'مكتمل'}')">تغيير الحالة</button>
-                            <button class="delete-btn" onclick="deleteOrder('polishing_orders', '${id}', loadPolishingOrders)">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            if (snap.empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد طلبات جلي حالياً</td></tr>';
-        } catch (err) { tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
-    }
-
-    // --- 2. عمليات قسم النظافة ---
-    async function addCleaningOrder(e) {
-        e.preventDefault();
-        const client = document.getElementById('cClient').value;
-        const phone = document.getElementById('cPhone').value;
-        const type = document.getElementById('cType').value;
-        const date = document.getElementById('cDate').value;
-        const cost = parseFloat(document.getElementById('cCost').value);
-
-        try {
-            await db.collection('cleaning_orders').add({
-                client, phone, type, date, cost, status: 'مجدول', createdAt: new Date()
-            });
-            alert('تم إضافة موعد النظافة بنجاح!');
-            e.target.reset();
-            loadCleaningOrders();
-        } catch (err) { alert('خطأ في الإضافة: ' + err.message); }
-    }
-
-    async function loadCleaningOrders() {
-        const tbody = document.getElementById('cleaningTableBody');
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري تحميل البيانات...</td></tr>';
-        try {
-            const snap = await db.collection('cleaning_orders').orderBy('createdAt', 'desc').get();
-            tbody.innerHTML = '';
-            snap.forEach(doc => {
-                const o = doc.data();
-                const id = doc.id;
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${o.client}</strong></td>
-                        <td>${o.phone}</td>
-                        <td>${o.type}</td>
-                        <td>${o.date}</td>
-                        <td><strong>${o.cost} د.أ</strong></td>
-                        <td><span class="badge ${o.status === 'مكتمل' ? 'badge-done' : 'badge-pending'}">${o.status}</span></td>
-                        <td>
-                            <button class="save-user-btn" onclick="toggleOrderStatus('cleaning_orders', '${id}', '${o.status === 'مكتمل' ? 'مجدول' : 'مكتمل'}')">تغيير الحالة</button>
-                            <button class="delete-btn" onclick="deleteOrder('cleaning_orders', '${id}', loadCleaningOrders)">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            if (snap.empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد مواعيد نظافة حالياً</td></tr>';
-        } catch (err) { tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
-    }
-
-    // --- 3. عمليات قسم الدراي كلين ---
-    async function addDrycleanOrder(e) {
-        e.preventDefault();
-        const client = document.getElementById('dClient').value;
-        const phone = document.getElementById('dPhone').value;
-        const item = document.getElementById('dItem').value;
-        const cost = parseFloat(document.getElementById('dCost').value);
-
-        try {
-            await db.collection('dryclean_orders').add({
-                client, phone, item, cost, status: 'قيد التنفيذ', createdAt: new Date()
-            });
-            alert('تم إضافة طلب الدراي كلين بنجاح!');
-            e.target.reset();
-            loadDrycleanOrders();
-        } catch (err) { alert('خطأ في الإضافة: ' + err.message); }
-    }
-
-    async function loadDrycleanOrders() {
-        const tbody = document.getElementById('drycleanTableBody');
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل البيانات...</td></tr>';
-        try {
-            const snap = await db.collection('dryclean_orders').orderBy('createdAt', 'desc').get();
-            tbody.innerHTML = '';
-            snap.forEach(doc => {
-                const o = doc.data();
-                const id = doc.id;
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${o.client}</strong></td>
-                        <td>${o.phone}</td>
-                        <td>${o.item}</td>
-                        <td><strong>${o.cost} د.أ</strong></td>
-                        <td><span class="badge ${o.status === 'مكتمل' ? 'badge-done' : 'badge-pending'}">${o.status}</span></td>
-                        <td>
-                            <button class="save-user-btn" onclick="toggleOrderStatus('dryclean_orders', '${id}', '${o.status === 'مكتمل' ? 'قيد التنفيذ' : 'مكتمل'}')">تغيير الحالة</button>
-                            <button class="delete-btn" onclick="deleteOrder('dryclean_orders', '${id}', loadDrycleanOrders)">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            if (snap.empty) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد طلبات دراي كلين حالياً</td></tr>';
-        } catch (err) { tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
-    }
-
-    // --- وظائف مساعدة عامة ---
-    async function toggleOrderStatus(coll, id, newStatus) {
-        await db.collection(coll).doc(id).update({ status: newStatus });
-        if (coll === 'polishing_orders') loadPolishingOrders();
-        if (coll === 'cleaning_orders') loadCleaningOrders();
-        if (coll === 'dryclean_orders') loadDrycleanOrders();
-    }
-
-    async function deleteOrder(coll, id, refreshFn) {
-        if (confirm('هل أنت تأكد من رغبتك بحذف هذا الطلب؟')) {
-            await db.collection(coll).doc(id).delete();
-            refreshFn();
+            switchSubDept(currentSubDept);
         }
     }
 
-    // --- 4. لوحة الأدمن ---
-    async function loadUsersForAdmin() {
-        const tbody = document.getElementById('usersTableBody');
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل الموظفين...</td></tr>';
+    // Switch Sub Department
+    function switchSubDept(sub) {
+        currentSubDept = sub;
+        document.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+        if (document.getElementById('sTab-' + sub)) document.getElementById('sTab-' + sub).classList.add('active');
+
+        ['inspections', 'appointments', 'accounting'].forEach(s => {
+            document.getElementById('subSec-' + s).classList.add('hidden');
+        });
+        document.getElementById('subSec-' + sub).classList.remove('hidden');
+
+        if (sub === 'inspections') loadInspectionsList();
+        if (sub === 'appointments') loadAppointmentsForSelectedDate();
+        if (sub === 'accounting') loadAccountingData();
+    }
+
+    // Helper: Collection Names
+    function getClientsCollection() { return `clients_${currentMainDept}`; }
+    function getAccountingCollection() { return `accounting_${currentMainDept}`; }
+
+    // ================= 1. قسم المعاينات (عميل جديد) =================
+    async function handleSaveInspection(e) {
+        e.preventDefault();
+        const data = {
+            dept: currentMainDept,
+            type: 'inspection', // 'inspection' or 'workshop'
+            name: document.getElementById('inspName').value.trim(),
+            phone: document.getElementById('inspPhone').value.trim(),
+            locText: document.getElementById('inspLocText').value.trim(),
+            locUrl: document.getElementById('inspLocUrl').value.trim(),
+            date: document.getElementById('inspDate').value || todayStr,
+            notes: document.getElementById('inspNotes').value.trim(),
+            amount: 0,
+            area: 0,
+            workshopNotes: '',
+            priceOfferUrl: '',
+            invoiceUrl: '',
+            status: 'معاينة مجدولة',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await db.collection(getClientsCollection()).add(data);
+            alert('تم حفظ المعاينة بنجاح!');
+            e.target.reset();
+            document.getElementById('inspDate').value = todayStr;
+            loadInspectionsList();
+        } catch (err) {
+            alert('حدث خطأ أثناء الحفظ: ' + err.message);
+        }
+    }
+
+    async function loadInspectionsList() {
+        const tbody = document.getElementById('inspectionsTableBody');
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري تحميل المعاينات...</td></tr>';
         
         try {
-            const snapshot = await db.collection('users').get();
+            const snap = await db.collection(getClientsCollection())
+                .where('type', '==', 'inspection')
+                .get();
+
+            tbody.innerHTML = '';
+            snap.forEach(doc => {
+                const c = doc.data();
+                const id = doc.id;
+                
+                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-info" style="padding: 3px 8px;">📍 الخريطة</a>` : '-';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                        <td>${c.phone || '-'}</td>
+                        <td>${c.locText || '-'}</td>
+                        <td>${locBtn}</td>
+                        <td>${c.date || '-'}</td>
+                        <td>${c.notes || '-'}</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding:3px 8px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
+                            <button class="btn btn-success" style="padding:3px 8px;" onclick="confirmToWorkshop('${id}')">✅ تأكيد ورشة</button>
+                            <button class="btn btn-danger" style="padding:3px 8px;" onclick="deleteClientDoc('${id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (snap.empty) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد معاينات مسجلة حالياً</td></tr>';
+            }
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
+        }
+    }
+
+    async function confirmToWorkshop(id) {
+        if (confirm('هل تريد تأكيد وتحويل هذا العميل إلى قسم المواعيد والورش؟')) {
+            try {
+                await db.collection(getClientsCollection()).doc(id).update({
+                    type: 'workshop',
+                    status: 'قيد التنفيذ'
+                });
+                alert('تم تحويل العميل إلى الورش بنجاح!');
+                loadInspectionsList();
+            } catch (err) {
+                alert('خطأ أثناء التأكيد: ' + err.message);
+            }
+        }
+    }
+
+    async function deleteClientDoc(id) {
+        if (confirm('هل أنت تأكد من حذف هذا السجل بشكل نهائي؟')) {
+            await db.collection(getClientsCollection()).doc(id).delete();
+            if (currentSubDept === 'inspections') loadInspectionsList();
+            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
+        }
+    }
+
+    // ================= 2. قسم المواعيد والورش =================
+    function setAppDateToToday() {
+        document.getElementById('appFilterDate').value = todayStr;
+        loadAppointmentsForSelectedDate();
+    }
+
+    async function loadAppointmentsForSelectedDate() {
+        const selectedDate = document.getElementById('appFilterDate').value || todayStr;
+        
+        const inspTbody = document.getElementById('dayInspectionsTableBody');
+        const workTbody = document.getElementById('dayWorkshopsTableBody');
+        
+        inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري التحميل...</td></tr>';
+        workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري التحميل...</td></tr>';
+
+        try {
+            const snap = await db.collection(getClientsCollection())
+                .where('date', '==', selectedDate)
+                .get();
+
+            let inspCount = 0;
+            let workCount = 0;
+
+            inspTbody.innerHTML = '';
+            workTbody.innerHTML = '';
+
+            snap.forEach(doc => {
+                const c = doc.data();
+                const id = doc.id;
+                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-info" style="padding: 2px 6px;">📍 رابط</a>` : '-';
+
+                if (c.type === 'inspection') {
+                    inspCount++;
+                    inspTbody.innerHTML += `
+                        <tr>
+                            <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                            <td>${c.phone || '-'}</td>
+                            <td>${c.locText || '-'}</td>
+                            <td>${locBtn}</td>
+                            <td>${c.notes || '-'}</td>
+                            <td>
+                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">تعديل</button>
+                                <button class="btn btn-success" style="padding:2px 6px;" onclick="confirmToWorkshop('${id}')">تأكيد ورشة</button>
+                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                } else if (c.type === 'workshop') {
+                    workCount++;
+                    
+                    const priceOfferBtn = c.priceOfferUrl 
+                        ? `<a href="${c.priceOfferUrl}" target="_blank" class="btn btn-info" style="padding:2px 6px;">👁️ فتح المعاينة</a>` 
+                        : `<button class="btn btn-secondary" style="padding:2px 6px;" onclick="openPdfModal('${id}', 'priceOffer')">📤 رفع عرض سعر</button>`;
+
+                    const invoiceBtn = c.invoiceUrl 
+                        ? `<a href="${c.invoiceUrl}" target="_blank" class="btn btn-success" style="padding:2px 6px;">👁️ فتح الفاتورة</a>` 
+                        : `<button class="btn btn-secondary" style="padding:2px 6px;" onclick="openPdfModal('${id}', 'invoice')">📤 رفع فاتورة</button>`;
+
+                    const isDone = c.status === 'منتهية';
+
+                    workTbody.innerHTML += `
+                        <tr>
+                            <td><strong>${c.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${c.phone || ''}</small></td>
+                            <td>${c.locText || '-'} <br>${locBtn}</td>
+                            <td><strong>${c.amount || 0} د.أ</strong> <br><small>${c.area || 0} م²</small></td>
+                            <td>${c.workshopNotes || '-'}</td>
+                            <td>${priceOfferBtn}</td>
+                            <td>${invoiceBtn}</td>
+                            <td><span class="badge ${isDone ? 'badge-done' : 'badge-workshop'}">${c.status || 'قيد التنفيذ'}</span></td>
+                            <td>
+                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
+                                <button class="btn btn-secondary" style="padding:2px 6px;" onclick="toggleWorkshopStatus('${id}', '${isDone ? 'قيد التنفيذ' : 'منتهية'}')">${isDone ? 'إعادة لتنفيذ' : '✔ إنجاز'}</button>
+                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('daySummaryPill').textContent = `[ عدد الورش: ${workCount} | عدد المعاينات: ${inspCount} ]`;
+
+            if (inspCount === 0) inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات مجدولة لهذا اليوم</td></tr>';
+            if (workCount === 0) workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا توجد ورش مؤكدة لهذا اليوم</td></tr>';
+
+        } catch (err) {
+            console.error(err);
+            inspTbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
+        }
+    }
+
+    async function toggleWorkshopStatus(id, newStatus) {
+        await db.collection(getClientsCollection()).doc(id).update({ status: newStatus });
+        loadAppointmentsForSelectedDate();
+    }
+
+    // Modal Edit Functions
+    async function openEditModal(id) {
+        document.getElementById('editModalDocId').value = id;
+        const doc = await db.collection(getClientsCollection()).doc(id).get();
+        if (doc.exists) {
+            const c = doc.data();
+            document.getElementById('mEditName').value = c.name || '';
+            document.getElementById('mEditPhone').value = c.phone || '';
+            document.getElementById('mEditLocText').value = c.locText || '';
+            document.getElementById('mEditLocUrl').value = c.locUrl || '';
+            document.getElementById('mEditDate').value = c.date || todayStr;
+            document.getElementById('mEditNotes').value = c.notes || '';
+            
+            document.getElementById('mEditAmount').value = c.amount || '';
+            document.getElementById('mEditArea').value = c.area || '';
+            document.getElementById('mEditWorkshopNotes').value = c.workshopNotes || '';
+
+            document.getElementById('editClientModal').classList.remove('hidden');
+        }
+    }
+
+    function closeEditModal() {
+        document.getElementById('editClientModal').classList.add('hidden');
+    }
+
+    async function saveClientModalChanges() {
+        const id = document.getElementById('editModalDocId').value;
+        const updates = {
+            name: document.getElementById('mEditName').value.trim(),
+            phone: document.getElementById('mEditPhone').value.trim(),
+            locText: document.getElementById('mEditLocText').value.trim(),
+            locUrl: document.getElementById('mEditLocUrl').value.trim(),
+            date: document.getElementById('mEditDate').value,
+            notes: document.getElementById('mEditNotes').value.trim(),
+            amount: parseFloat(document.getElementById('mEditAmount').value) || 0,
+            area: parseFloat(document.getElementById('mEditArea').value) || 0,
+            workshopNotes: document.getElementById('mEditWorkshopNotes').value.trim()
+        };
+
+        try {
+            await db.collection(getClientsCollection()).doc(id).update(updates);
+            alert('تم حفظ التعديلات بنجاح!');
+            closeEditModal();
+            if (currentSubDept === 'inspections') loadInspectionsList();
+            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
+        } catch (err) { alert('خطأ في الحفظ: ' + err.message); }
+    }
+
+    // Modal PDF Upload Functions
+    function openPdfModal(id, type) {
+        document.getElementById('pdfModalDocId').value = id;
+        document.getElementById('pdfModalType').value = type;
+        document.getElementById('pdfModalTitle').textContent = type === 'priceOffer' ? '📄 رفع عرض سعر (PDF)' : '🧾 رفع فاتورة عميل (PDF)';
+        document.getElementById('pdfFileInput').value = '';
+        document.getElementById('pdfUrlInput').value = '';
+        document.getElementById('uploadPdfModal').classList.remove('hidden');
+    }
+
+    function closePdfModal() {
+        document.getElementById('uploadPdfModal').classList.add('hidden');
+    }
+
+    async function submitPdfUpload() {
+        const id = document.getElementById('pdfModalDocId').value;
+        const type = document.getElementById('pdfModalType').value;
+        const fileInput = document.getElementById('pdfFileInput');
+        const urlInput = document.getElementById('pdfUrlInput').value.trim();
+
+        let finalUrl = urlInput;
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const storageRef = storage.ref(`documents/${currentMainDept}/${Date.now()}_${file.name}`);
+            
+            try {
+                alert('جاري رفع ملف ה-PDF إلى التخزين السحابي...');
+                const snap = await storageRef.put(file);
+                finalUrl = await snap.ref.getDownloadURL();
+            } catch (err) {
+                alert('حدث خطأ أثناء رفع الملف: ' + err.message + '\nسيتم استخدام الرابط المباشر إن وجد.');
+            }
+        }
+
+        if (!finalUrl) {
+            alert('يرجى إما اختيار ملف PDF أو وضع رابط مباشر للمستند');
+            return;
+        }
+
+        const updateData = {};
+        if (type === 'priceOffer') updateData.priceOfferUrl = finalUrl;
+        if (type === 'invoice') updateData.invoiceUrl = finalUrl;
+
+        try {
+            await db.collection(getClientsCollection()).doc(id).update(updateData);
+            alert('تم ربط المستند بالطلب بنجاح!');
+            closePdfModal();
+            loadAppointmentsForSelectedDate();
+        } catch (err) { alert('خطأ أثناء حفظ الرابط: ' + err.message); }
+    }
+
+    // ================= 3. قسم المحاسبة (دفتر الأستاذ) =================
+    async function handleSaveAccountingEntry(e) {
+        e.preventDefault();
+        const desc = document.getElementById('accDesc').value.trim();
+        const type = document.getElementById('accType').value;
+        const amount = parseFloat(document.getElementById('accAmount').value);
+        const date = document.getElementById('accDate').value || todayStr;
+        const notes = document.getElementById('accNotes').value.trim();
+
+        try {
+            await db.collection(getAccountingCollection()).add({
+                dept: currentMainDept,
+                desc, type, amount, date, notes,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('تم تسجيل الحركة المالية بنجاح!');
+            e.target.reset();
+            document.getElementById('accDate').value = todayStr;
+            loadAccountingData();
+        } catch (err) { alert('خطأ في التسجيل: ' + err.message); }
+    }
+
+    async function loadAccountingData() {
+        const monthFilter = document.getElementById('accMonthFilter').value || todayStr.substring(0, 7);
+        const tbody = document.getElementById('accountingTableBody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل دفتر الأستاذ...</td></tr>';
+
+        try {
+            const snap = await db.collection(getAccountingCollection()).get();
+            
+            let totalCredit = 0; // له
+            let totalDebit = 0;  // عليه
+
+            tbody.innerHTML = '';
+            
+            snap.forEach(doc => {
+                const acc = doc.data();
+                const id = doc.id;
+
+                // Archive Monthly Filter
+                if (acc.date && acc.date.startsWith(monthFilter)) {
+                    if (acc.type === 'credit') totalCredit += (acc.amount || 0);
+                    if (acc.type === 'debit') totalDebit += (acc.amount || 0);
+
+                    const typeBadge = acc.type === 'credit' 
+                        ? '<span class="badge badge-credit">له (إيراد)</span>' 
+                        : '<span class="badge badge-debit">عليه (مصروف)</span>';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${acc.date || '-'}</td>
+                            <td><strong>${acc.desc || '-'}</strong></td>
+                            <td>${typeBadge}</td>
+                            <td><strong>${acc.amount || 0} د.أ</strong></td>
+                            <td>${acc.notes || '-'}</td>
+                            <td>
+                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteAccDoc('${id}')">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('accTotalCredit').textContent = totalCredit.toFixed(2) + ' د.أ';
+            document.getElementById('accTotalDebit').textContent = totalDebit.toFixed(2) + ' د.أ';
+            const net = totalCredit - totalDebit;
+            document.getElementById('accNetBalance').textContent = net.toFixed(2) + ' د.أ';
+
+            if (tbody.innerHTML === '') {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد حركات مالية مسجلة لشهر ${monthFilter}</td></tr>`;
+            }
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
+        }
+    }
+
+    async function deleteAccDoc(id) {
+        if (confirm('هل تأكد حذف هذه الحركة المالية؟')) {
+            await db.collection(getAccountingCollection()).doc(id).delete();
+            loadAccountingData();
+        }
+    }
+
+    // ================= 4. لوحة الأدمن (إدارة الموظفين) =================
+    async function loadAdminUsersList() {
+        const tbody = document.getElementById('adminUsersTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل القائمة...</td></tr>';
+
+        try {
+            const snap = await db.collection('users').get();
             tbody.innerHTML = '';
 
-            snapshot.forEach(doc => {
+            snap.forEach(doc => {
                 const u = doc.data();
                 const uid = doc.id;
                 const depts = u.departments || [];
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${u.name || 'بدون اسم'}</strong></td>
-                    <td>${u.email}</td>
-                    <td>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" id="p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> جلي وتلميع</label>
-                            <label><input type="checkbox" id="c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> نظافة عامة</label>
-                            <label><input type="checkbox" id="d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> دراي كلين</label>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="save-user-btn" onclick="saveUserPermissions('${uid}')">حفظ</button>
-                    </td>
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${u.name || 'بدون اسم'}</strong></td>
+                        <td>${u.email}</td>
+                        <td>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <label><input type="checkbox" id="adm_p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> ✨ جلي البلاط</label>
+                                <label><input type="checkbox" id="adm_c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> 🧹 النظافة العامة</label>
+                                <label><input type="checkbox" id="adm_d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> 🛋️ الدراي كلين</label>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" style="padding:4px 8px;" onclick="saveUserDeptPermissions('${uid}')">حفظ</button>
+                        </td>
+                    </tr>
                 `;
-                tbody.appendChild(tr);
             });
-        } catch (e) {
-            tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">خطأ في تحميل البيانات: ${e.message}</td></tr>`;
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
         }
     }
 
-    async function saveUserPermissions(uid) {
+    async function saveUserDeptPermissions(uid) {
         const depts = [];
-        if (document.getElementById(`p_${uid}`).checked) depts.push('polishing');
-        if (document.getElementById(`c_${uid}`).checked) depts.push('cleaning');
-        if (document.getElementById(`d_${uid}`).checked) depts.push('dryclean');
+        if (document.getElementById(`adm_p_${uid}`).checked) depts.push('polishing');
+        if (document.getElementById(`adm_c_${uid}`).checked) depts.push('cleaning');
+        if (document.getElementById(`adm_d_${uid}`).checked) depts.push('dryclean');
 
         try {
             await db.collection('users').doc(uid).update({ departments: depts });
-            alert('تم حفظ صلاحيات الموظف بنجاح!');
-        } catch (e) {
-            alert('حدث خطأ أثناء الحفظ: ' + e.message);
-        }
+            alert('تم إسناد الصلاحيات للموظف بنجاح!');
+        } catch (err) { alert('خطأ بالحفظ: ' + err.message); }
     }
 
-    // --- مصادقة الحسابات ---
+    // ================= المصادقة والدخول =================
     function switchAuthTab(tab) {
         showAlert('');
         if (tab === 'login') {
@@ -657,6 +1057,18 @@
         }
     }
 
+    async function handleLogin() {
+        showAlert('جاري الدخول...', false);
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) { showAlert('يرجى تعبئة البريد وكلمة المرور'); return; }
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+        } catch (err) { showAlert(translateError(err.code, err.message)); }
+    }
+
     async function handleRegister() {
         showAlert('جاري إنشاء الحساب...', false);
         const name = document.getElementById('registerName').value.trim();
@@ -666,30 +1078,17 @@
         if (!email || !password) { showAlert('يرجى تعبئة البريد وكلمة المرور'); return; }
 
         try {
-            const userCred = await auth.createUserWithEmailAndPassword(email, password);
-            const user = userCred.user;
-            const isAdminEmail = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-            
-            await db.collection('users').doc(user.uid).set({
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            const isAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+
+            await db.collection('users').doc(cred.user.uid).set({
                 name: name || email.split('@')[0],
                 email: email,
-                role: isAdminEmail ? 'admin' : 'employee',
-                departments: isAdminEmail ? ['cleaning', 'polishing', 'dryclean'] : []
+                role: isAdmin ? 'admin' : 'employee',
+                departments: isAdmin ? ['polishing', 'cleaning', 'dryclean'] : []
             });
 
             showAlert('تم إنشاء الحساب بنجاح!', false);
-        } catch (err) { showAlert(translateError(err.code, err.message)); }
-    }
-
-    async function handleLogin() {
-        showAlert('جاري تسجيل الدخول...', false);
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-
-        if (!email || !password) { showAlert('يرجى كتابة البريد الإلكتروني وكلمة المرور'); return; }
-
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
         } catch (err) { showAlert(translateError(err.code, err.message)); }
     }
 
@@ -699,9 +1098,9 @@
 
     function showAlert(msg, isError = true) {
         const box = document.getElementById('alertBox');
-        if (!msg) { box.style.display = 'none'; return; }
+        if (!msg) { box.classList.add('hidden'); return; }
         box.textContent = msg;
-        box.style.display = 'block';
+        box.classList.remove('hidden');
         box.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
     }
 
@@ -713,7 +1112,6 @@
             case 'auth/user-not-found':
             case 'auth/wrong-password':
             case 'auth/invalid-credential': return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-            case 'auth/unauthorized-domain': return 'هذا النطاق غير مصرح له في Firebase!';
             default: return 'خطأ: ' + (defaultMsg || code);
         }
     }

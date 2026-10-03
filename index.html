@@ -4,42 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مؤسسة الرؤيا المتقدمة - النظام الموحد للخدمات والمستندات</title>
-    <!-- خط Tajawal وأيقونات Bootstrap -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
         :root {
-            --bg-dark: #0b0d10;             /* أسود عميق */
-            --card-dark: #141720;           /* رمادي معدني داكن */
-            --card-lighter: #1d2230;        /* رمادي خرساني مائل للكحلي */
-            --border-dark: #2a3142;         /* حد معدني */
-            --primary-blue: #3b82f6;        /* أزرق معدني لامع */
-            --primary-navy: #25406b;        /* كحلي اللوجو المعتمد */
-            --navy-hover: #32558c;          /* كحلي للتفاعل */
-            --text-light: #f3f4f6;          /* أوف وايت */
-            --text-gray: #9ca3af;           /* رمادي للنصوص */
-            --success-green: #10b981;       /* أخضر نجاح */
-            --warning-amber: #f59e0b;       /* أصفر تنبيه */
+            --bg-dark: #0b0d10;
+            --card-dark: #141720;
+            --card-lighter: #1d2230;
+            --border-dark: #2a3142;
+            --primary-blue: #38bdf8;
+            --primary-navy: #1e365d;
+            --navy-hover: #2a4c82;
+            --text-light: #f3f4f6;
+            --text-gray: #9ca3af;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
         .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
 
-        /* 1. البروفايل العام للشركة (Public Profile) */
+        /* البروفايل العام للشركة */
         .public-header { 
             background: linear-gradient(180deg, #141720 0%, #0b0d10 100%); 
             padding: 40px 20px 30px; 
             text-align: center; 
             border-bottom: 2px solid var(--primary-navy); 
-            box-shadow: 0 4px 20px rgba(37, 64, 107, 0.25);
+            box-shadow: 0 4px 20px rgba(30, 54, 93, 0.4);
         }
         .company-logo {
             max-width: 160px;
             height: auto;
             margin-bottom: 15px;
-            filter: drop-shadow(0px 6px 15px rgba(59, 130, 246, 0.3));
+            filter: drop-shadow(0px 6px 15px rgba(56, 189, 248, 0.3));
             cursor: pointer;
             transition: transform 0.3s ease;
         }
@@ -52,65 +52,110 @@
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 20px; }
         
         .service-card, .project-card { background: var(--card-dark); border: 1px solid var(--border-dark); padding: 20px; border-radius: 12px; text-align: center; transition: 0.3s; position: relative; }
-        .service-card:hover, .project-card:hover { border-color: var(--primary-blue); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15); }
+        .service-card:hover, .project-card:hover { border-color: var(--primary-blue); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.15); }
         .service-card i { font-size: 32px; color: var(--primary-blue); margin-bottom: 10px; display: block; }
         .service-card h3, .project-card h3 { font-size: 18px; margin-bottom: 8px; color: #60a5fa; }
         .service-card p, .project-card p { font-size: 13px; color: var(--text-gray); line-height: 1.6; }
         .project-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-dark); }
         .public-footer { background: #07080a; padding: 25px 20px; text-align: center; border-top: 1px solid var(--border-dark); font-size: 13px; color: var(--text-gray); margin-top: 40px; }
 
-        /* 2. لوحة التحكم والنظام الداخلي */
+        /* لوحة التحكم والسيستم الداخلي */
         .card { background-color: var(--card-dark); border-radius: 16px; padding: 20px; border: 1px solid var(--border-dark); margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .user-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-lighter); padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-dark); flex-wrap: wrap; gap: 10px; }
         
-        .nav-tabs, .sub-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
-        .nav-btn, .sub-nav-btn { flex: 1; min-width: 120px; padding: 10px 8px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 13px; text-align: center; }
-        .nav-btn.active, .sub-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
+        .main-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
+        .main-nav-btn { flex: 1; min-width: 130px; padding: 12px 10px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 14px; text-align: center; }
+        .main-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
 
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .sub-nav { display: flex; gap: 6px; background-color: #181c23; padding: 5px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; border: 1px solid var(--border-dark); }
+        .sub-nav-btn { flex: 1; min-width: 110px; padding: 10px 8px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 6px; transition: 0.3s; font-size: 13px; white-space: nowrap; text-align: center; }
+        .sub-nav-btn.active { background-color: var(--primary-navy); color: var(--primary-blue); border: 1px solid var(--primary-blue); }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; color: var(--text-light); margin-bottom: 5px; font-weight: 500; }
         .form-control { width: 100%; padding: 10px 12px; background-color: var(--bg-dark); border: 1px solid var(--border-dark); border-radius: 8px; color: #fff; outline: none; font-size: 13px; }
         .form-control:focus { border-color: var(--primary-blue); }
-        
-        .btn { padding: 9px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+        textarea.form-control { resize: vertical; min-height: 70px; }
+
+        .btn { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
         .btn-navy { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
         .btn-navy:hover { background-color: var(--navy-hover); }
+        .btn-primary { background-color: #0284c7; color: #fff; }
+        .btn-primary:hover { background-color: #0369a1; }
+        .btn-success { background-color: var(--success-green); color: #fff; }
+        .btn-success:hover { background-color: #059669; }
+        .btn-warning { background-color: var(--warning-amber); color: #000; }
+        .btn-danger { background-color: var(--danger-red); color: #fff; }
+        .btn-danger:hover { background-color: #dc2626; }
         .btn-outline { background: transparent; color: var(--text-light); border: 1px solid var(--border-dark); }
         .btn-outline:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
-        .btn-success { background-color: var(--success-green); color: #fff; }
-        .btn-warning { background-color: var(--warning-amber); color: #000; }
-        .btn-danger { background-color: #ef4444; color: #fff; }
+        .btn-secondary { background-color: #4b5563; color: #fff; }
+        .btn-block { width: 100%; padding: 12px; font-size: 14px; }
 
-        .table-responsive { overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--border-dark); }
-        th { background-color: var(--card-lighter); color: #60a5fa; }
+        .table-responsive { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; min-width: 700px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid var(--border-dark); font-size: 13px; vertical-align: middle; }
+        th { background-color: var(--bg-dark); color: var(--primary-blue); font-weight: 700; }
+        tr:hover { background-color: #1a1e26; }
 
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
-        .badge-pending { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f6; }
-        .badge-done { background: #10b98122; color: #10b981; border: 1px solid #10b981; }
+        .badge-pending { background: #f59e0b; color: #000; }
+        .badge-workshop { background: #3b82f6; color: #fff; }
+        .badge-done { background: #10b981; color: #fff; }
+        .badge-debit { background: #ef4444; color: #fff; }
+        .badge-credit { background: #10b981; color: #fff; }
 
-        .stat-card { background: var(--card-lighter); border: 1px solid var(--border-dark); padding: 15px; border-radius: 12px; text-align: center; }
-        .stat-card .val { font-size: 20px; font-weight: bold; color: #60a5fa; margin-top: 5px; }
+        .day-summary-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-dark); padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-dark); margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .summary-pill { background: #252a34; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; color: var(--primary-blue); border: 1px solid var(--border-dark); }
 
-        .hidden { display: none !important; }
+        .accounting-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .acc-card { background: var(--bg-dark); padding: 15px; border-radius: 10px; border: 1px solid var(--border-dark); text-align: center; }
+        .acc-card .val { font-size: 20px; font-weight: bold; margin-top: 5px; }
+
         .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; border: 1px solid var(--border-dark); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-dark); }
+        .hidden { display: none !important; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; }
+        .alert-error { background-color: #450a0a; color: #fca5a5; border: 1px solid #7f1d1d; }
+        .alert-success { background-color: #064e3b; color: #6ee7b7; border: 1px solid #047857; }
 
-        /* 3. تنسيقات الطباعة */
+        /* -------------------------------------------------- */
+        /*  الهوية البصرية الرسمية لعرض السعر والفواتير A4     */
+        /* -------------------------------------------------- */
+        #quotation-template {
+            display: none;
+            background: #ffffff !important;
+            color: #000000 !important;
+            padding: 30px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
         @media print {
             body * { visibility: hidden; }
-            #printableArea, #printableArea * { visibility: visible; }
-            #printableArea { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; padding: 20px; }
-            .no-print { display: none !important; }
-            table { border: 1px solid #000 !important; }
-            th, td { border: 1px solid #000 !important; color: #000 !important; }
-            th { background-color: #f2f2f2 !important; }
+            #quotation-template, #quotation-template * { visibility: visible; }
+            #quotation-template {
+                display: block !important;
+                position: absolute;
+                left: 0; top: 0;
+                width: 100%;
+                padding: 10mm;
+            }
+            @page { size: A4; margin: 0; }
         }
+
+        .quote-header { border-bottom: 3px solid #1e365d; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .quote-title-badge { background-color: #1e365d; color: #fff; padding: 6px 20px; font-size: 18px; font-weight: bold; border-radius: 4px; }
+        .client-info-box { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; color: #1e293b; font-size: 14px; }
+        .quote-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .quote-table th { background-color: #1e365d; color: #ffffff; padding: 10px; text-align: center; font-size: 14px; }
+        .quote-table td { border: 1px solid #cbd5e1; padding: 10px; vertical-align: top; font-size: 13px; color: #0f172a; }
+        .summary-card { background-color: #f1f5f9; border-right: 4px solid #1e365d; padding: 12px; border-radius: 4px; color: #0f172a; margin-bottom: 15px; }
+        .terms-box { border: 1px dashed #94a3b8; border-radius: 6px; padding: 12px 16px; background-color: #fafafa; color: #334155; margin-bottom: 25px; }
+        .quote-footer { background-color: #1e365d; color: #ffffff; padding: 10px; font-size: 13px; text-align: center; border-radius: 4px; font-weight: bold; }
     </style>
 
-    <!-- Firebase SDKs Compat -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -120,9 +165,9 @@
 <!-- 1. البروفايل العام للشركة -->
 <div id="publicProfileView">
     <header class="public-header">
-        <img id="mainCompanyLogo" src="https://via.placeholder.com/160x160/141720/3b82f6?text=ADVANTAGE+VISION" alt="مؤسسة الرؤيا المتقدمة" class="company-logo" title="انقر 3 مرات للدخول الخفي">
+        <img id="mainCompanyLogo" src="https://via.placeholder.com/160x160/141720/38bdf8?text=ROYA+VISION" alt="مؤسسة الرؤيا المتقدمة" class="company-logo" title="انقر 3 مرات للدخول الخفي">
         <h1 id="logoClickTarget" style="cursor: pointer;">مؤسسة الرؤيا المتقدمة</h1>
-        <p id="headerSubtitle">لأعمال الأرضيات الخرسانية، جلي وتلميع الرخام، والإيبوكسي والصيانة</p>
+        <p id="headerSubtitle">لأعمال الأرضيات الخرسانية، جلي وتلميع الرخام، والإيبوكسي والصيانة العامة</p>
         
         <div class="contact-btns">
             <a href="tel:0782066652" id="phoneCallBtn" class="btn btn-navy"><i class="bi bi-telephone-fill"></i> إتصال مباشر: 0782066652</a>
@@ -131,7 +176,6 @@
     </header>
 
     <div class="container">
-        <!-- من نحن -->
         <section class="hero-section">
             <h2 style="color: #60a5fa; margin-bottom: 12px;">من نحن</h2>
             <p id="aboutUsText" style="color: var(--text-gray); line-height: 1.8; max-width: 850px; margin: 0 auto; font-size: 15px;">
@@ -140,14 +184,12 @@
             <div id="establishedYearTag" style="margin-top: 15px; font-weight: bold; color: var(--primary-blue); font-size: 14px;">تأسست عام 2020</div>
         </section>
 
-        <!-- الخدمات -->
         <h2 style="text-align: center; margin-top: 35px; color: var(--text-light);">🛠 خدماتنا</h2>
         <div class="grid-3" id="publicServicesContainer">
-            <div class="service-card"><i class="bi bi-gem"></i><h3>جلي وتلميع الرخام</h3><p>معالجة وجلي الرخام بالألماس الكريستالي ومواد الحماية.</p></div>
-            <div class="service-card"><i class="bi bi-layers-half"></i><h3>أرضيات الإيبوكسي والتيرتزو</h3><p>تطبيق إيبوكسي الورش والمستودعات والتيرتزو الديكوري.</p></div>
+            <div class="service-card"><i class="bi bi-gem"></i><h3>جلي وتلميع الرخام</h3><p>معالجة وجلي الرخام بالألماس الكريستالي ومواد الحماية المستوردة.</p></div>
+            <div class="service-card"><i class="bi bi-layers-half"></i><h3>أرضيات الإيبوكسي والتيرازو</h3><p>تطبيق إيبوكسي الورش والمستودعات والتيرازو الديكوري عالي المتانة.</p></div>
         </div>
 
-        <!-- معرض المشاريع -->
         <h2 style="text-align: center; margin-top: 45px; color: var(--text-light);">🏗️ مشاريعنا وأعمالنا</h2>
         <div class="grid-3" id="publicProjectsContainer">
             <p style="text-align: center; grid-column: 1/-1; color: var(--text-gray);">جاري تحميل المشاريع...</p>
@@ -163,69 +205,109 @@
     </footer>
 </div>
 
-<!-- 2. نافذة تسجيل الدخول الخفية -->
+<!-- 2. نافذة تسجيل الدخول والخروج -->
 <div id="authSection" class="modal-overlay hidden">
-    <div class="modal-content">
-        <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 الدخول إلى النظام الداخلي</h2>
-        <div class="form-group">
-            <label>البريد الإلكتروني</label>
-            <input type="email" id="loginEmail" class="form-control" placeholder="name@domain.com">
+    <div class="modal-content" style="max-width: 420px;">
+        <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 لوحة التحكم والنظام الداخلي</h2>
+        <div class="main-nav" style="margin-bottom: 15px;">
+            <button type="button" class="main-nav-btn active" id="loginTabBtn" onclick="switchAuthTab('login')">تسجيل دخول</button>
+            <button type="button" class="main-nav-btn" id="registerTabBtn" onclick="switchAuthTab('register')">حساب جديد</button>
         </div>
-        <div class="form-group">
-            <label>كلمة المرور</label>
-            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
+        <div id="alertBox" class="alert hidden"></div>
+
+        <div id="loginForm">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="loginEmail" class="form-control" placeholder="name@domain.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button type="button" class="btn btn-navy" style="flex:1;" onclick="handleLogin()">دخول للنظام</button>
+                <button type="button" class="btn btn-outline" onclick="closeSecretLogin()">إلغاء</button>
+            </div>
         </div>
-        <div style="display: flex; gap: 8px; margin-top: 15px;">
-            <button type="button" class="btn btn-navy" style="flex:1;" onclick="handleLogin()">دخول</button>
-            <button type="button" class="btn btn-outline" onclick="closeSecretLogin()">إلغاء</button>
+
+        <div id="registerForm" class="hidden">
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="registerName" class="form-control" placeholder="اسم الموظف">
+            </div>
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="registerEmail" class="form-control" placeholder="name@domain.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="registerPassword" class="form-control" placeholder="••••••••">
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button type="button" class="btn btn-navy" style="flex:1;" onclick="handleRegister()">إنشاء الحساب</button>
+                <button type="button" class="btn btn-outline" onclick="closeSecretLogin()">إلغاء</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 3. لوحة التحكم والنظام الداخلي الكامل -->
+<!-- 3. لوحة التحكم والسيستم الداخلي المتكامل -->
 <div id="mainDashboard" class="container hidden" style="padding-top: 20px;">
     
     <div class="user-bar">
         <div>
-            مرحباً: <strong id="userName" style="color: #60a5fa;">المدير العام</strong>
-            <span id="adminBadge" class="badge badge-done hidden" style="margin-right: 8px;">ADMIN</span>
+            مرحباً: <strong id="userName" style="color: #60a5fa;">المستخدم</strong>
+            <span id="userRoleBadge" class="badge badge-pending" style="margin-right: 8px;">موظف</span>
         </div>
         <div>
-            <button class="btn btn-outline" onclick="showPublicProfile()"><i class="bi bi-globe"></i> معاينة البروفايل العام</button>
-            <button class="btn btn-danger" onclick="handleLogout()"><i class="bi bi-box-arrow-right"></i> خروج</button>
+            <button class="btn btn-outline" onclick="showPublicProfile()"><i class="bi bi-globe"></i> البروفايل العام</button>
+            <button class="btn btn-danger" onclick="handleLogout()"><i class="bi bi-box-arrow-right"></i> تسجيل الخروج</button>
         </div>
     </div>
 
-    <div class="nav-tabs">
-        <button class="nav-btn active" id="tab-polishing" onclick="switchMainTab('polishing')">✨ جلي وتلميع الرخام الإيبوكسي</button>
-        <button class="nav-btn" id="tab-cleaning" onclick="switchMainTab('cleaning')">🧹 النظافة العامة</button>
-        <button class="nav-btn" id="tab-dryclean" onclick="switchMainTab('dryclean')">🛋️ الدراي كلين</button>
-        <button class="nav-btn" id="tab-identity" onclick="switchMainTab('identity')">🖼️ إدارة البروفايل والهوية</button>
-        <button class="nav-btn hidden" id="tab-admin" onclick="switchMainTab('admin')">👑 إدارة الموظفين</button>
+    <!-- التنقل بين الأقسام الرئيسية -->
+    <div class="main-nav" id="mainDeptTabs">
+        <button class="main-nav-btn active" id="mTab-polishing" onclick="switchMainDept('polishing')">✨ جلي البلاط والرخام</button>
+        <button class="main-nav-btn" id="mTab-cleaning" onclick="switchMainDept('cleaning')">🧹 النظافة العامة</button>
+        <button class="main-nav-btn" id="mTab-dryclean" onclick="switchMainDept('dryclean')">🛋️ الدراي كلين</button>
+        <button class="main-nav-btn" id="mTab-identity" onclick="switchMainDept('identity')">🖼️ إدارة البروفايل والهوية</button>
+        <button class="main-nav-btn hidden" id="mTab-admin" onclick="switchMainDept('admin')">👑 لوحة الأدمن</button>
     </div>
 
-    <div class="sub-nav" id="functionalNav">
-        <button class="sub-nav-btn active" id="sub-inspections" onclick="switchSubTab('inspections')">📝 المعاينات (عميل جديد)</button>
-        <button class="sub-nav-btn" id="sub-jobs" onclick="switchSubTab('jobs')">📅 الورش والمواعيد</button>
-        <button class="sub-nav-btn hidden" id="sub-subscriptions" onclick="switchSubTab('subscriptions')">🔄 الاشتراكات الشهرية</button>
-        <button class="sub-nav-btn" id="sub-accounting" onclick="switchSubTab('accounting')">💰 المحاسبة والمالية</button>
+    <!-- رسالة انتظار الصلاحيات للموظف الجديد -->
+    <div id="sec-pending" class="card hidden">
+        <h2>⏳ بانتظار تحديد الصلاحيات</h2>
+        <p class="subtitle" style="margin-top: 10px; color: var(--text-gray);">تم تسجيل دخولك بنجاح. يرجى من مدير النظام تحديد الأقسام المصرح لك بالعمل عليها.</p>
     </div>
 
-    <div id="functionalContent">
+    <!-- غلاف الأقسام التشغيلية -->
+    <div id="deptContainer">
+        <div class="sub-nav">
+            <button class="sub-nav-btn active" id="sTab-inspections" onclick="switchSubDept('inspections')">📝 عميل جديد (معاينات)</button>
+            <button class="sub-nav-btn" id="sTab-appointments" onclick="switchSubDept('appointments')">📅 المواعيد والورش</button>
+            <button class="sub-nav-btn hidden" id="sTab-subscriptions" onclick="switchSubDept('subscriptions')">🔄 الاشتراكات الشهرية</button>
+            <button class="sub-nav-btn" id="sTab-accounting" onclick="switchSubDept('accounting')">💰 المحاسبة (دفتر الأستاذ)</button>
+        </div>
 
-        <!-- المعاينات -->
-        <div id="sec-inspections" class="card">
-            <h3>📝 إدخال معاينة جديد</h3>
-            <div class="form-grid" style="margin-top: 15px;">
-                <div class="form-group"><label>اسم العميل</label><input type="text" id="inspName" class="form-control"></div>
-                <div class="form-group"><label>رقم الهاتف</label><input type="text" id="inspPhone" class="form-control"></div>
-                <div class="form-group"><label>الموقع / العنوان</label><input type="text" id="inspLocation" class="form-control"></div>
-                <div class="form-group"><label>تاريخ المعاينة</label><input type="date" id="inspDate" class="form-control"></div>
-            </div>
-            <div class="form-group"><label>ملاحظات المعاينة والتفاصيل</label><textarea id="inspNotes" class="form-control" rows="2"></textarea></div>
-            <button class="btn btn-navy" onclick="addInspection()">+ إضافة طلب معاينة</button>
+        <!-- أ. قسم المعاينات -->
+        <div id="subSec-inspections" class="card">
+            <h3 id="inspDeptTitle">📝 نموذج إدخال معاينة جديدة</h3>
+            <p class="subtitle" style="color: var(--text-gray); font-size: 13px; margin-bottom: 15px;">تسجيل طلبات المعاينة الميدانية وإمكانية تحويلها لورشة مؤكدة</p>
 
-            <h4 style="margin-top: 25px; color: #60a5fa;">قائمة المعاينات القادمة</h4>
+            <form onsubmit="handleSaveInspection(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>اسم العميل</label><input type="text" id="inspName" class="form-control" placeholder="اسم العميل"></div>
+                    <div class="form-group"><label>رقم الهاتف</label><input type="text" id="inspPhone" class="form-control" placeholder="07XXXXXXXX"></div>
+                    <div class="form-group"><label>العنوان النصي</label><input type="text" id="inspLocText" class="form-control" placeholder="المنطقة، الشارع"></div>
+                    <div class="form-group"><label>رابط اللوكيشن</label><input type="url" id="inspLocUrl" class="form-control" placeholder="https://maps.google.com/?q=..."></div>
+                    <div class="form-group"><label>تاريخ المعاينة</label><input type="date" id="inspDate" class="form-control"></div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>ملاحظات المعاينة</label><textarea id="inspNotes" class="form-control" placeholder="تفاصيل المعاينة والمساحة ونوع العمل..."></textarea></div>
+                </div>
+                <button type="submit" class="btn btn-navy btn-block">+ حفظ المعاينة في السجل</button>
+            </form>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
+            <h4 style="color: var(--primary-blue);">📋 قائمة المعاينات المسجلة</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -233,6 +315,7 @@
                             <th>العميل</th>
                             <th>الهاتف</th>
                             <th>الموقع</th>
+                            <th>اللوكيشن</th>
                             <th>التاريخ</th>
                             <th>الملاحظات</th>
                             <th>الإجراءات</th>
@@ -243,56 +326,87 @@
             </div>
         </div>
 
-        <!-- الورش -->
-        <div id="sec-jobs" class="card hidden">
-            <h3>📅 الورش والمواعيد المؤكدة</h3>
+        <!-- ب. قسم المواعيد والورش -->
+        <div id="subSec-appointments" class="card hidden">
+            <h3>📅 المواعيد والورش المؤكدة</h3>
+            <div class="day-summary-bar">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label style="margin:0;">تاريخ اليوم:</label>
+                    <input type="date" id="appFilterDate" class="form-control" style="width: auto;" onchange="loadAppointmentsForSelectedDate()">
+                    <button type="button" class="btn btn-secondary" onclick="setAppDateToToday()">اليوم</button>
+                </div>
+                <div id="daySummaryPill" class="summary-pill">[ عدد الورش: 0 | عدد المعاينات: 0 ]</div>
+            </div>
+
+            <h4 style="color: var(--warning-amber); margin-top: 15px;">🔍 المعاينات المجدولة لهذا اليوم</h4>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>العميل</th><th>الهاتف</th><th>الموقع</th><th>الخريطة</th><th>الملاحظات</th><th>إجراء</th></tr>
+                    </thead>
+                    <tbody id="dayInspectionsTableBody"></tbody>
+                </table>
+            </div>
+
+            <br><hr style="border: 0; border-top: 1px solid var(--border-dark);"><br>
+            <h4 style="color: var(--success-green);">🛠️ الورش المؤكدة لهذا اليوم</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>العميل</th>
-                            <th>الهاتف</th>
+                            <th>العميل والهاتف</th>
                             <th>الموقع</th>
-                            <th>التكلفة الإجمالية</th>
-                            <th>المبلغ المدفوع</th>
+                            <th>المبلغ / المساحة</th>
+                            <th>ملاحظات الورشة</th>
+                            <th>عرض السعر (PDF)</th>
+                            <th>أرشيف المستندات</th>
                             <th>الحالة</th>
-                            <th>الإجراءات</th>
+                            <th>إجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="jobsTableBody"></tbody>
+                    <tbody id="dayWorkshopsTableBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- الاشتراكات -->
-        <div id="sec-subscriptions" class="card hidden">
-            <h3>🔄 عقود والاشتراكات الشهرية (خاص بقطاع النظافة)</h3>
-            <div class="form-grid" style="margin-top: 15px;">
-                <div class="form-group"><label>اسم الشفرة / العميل</label><input type="text" id="subClientName" class="form-control"></div>
-                <div class="form-group"><label>القيمة الشهرية (JOD)</label><input type="number" id="subAmount" class="form-control"></div>
-                <div class="form-group"><label>يوم الزيارة الأسبوعي</label>
-                    <select id="subDay" class="form-control">
-                        <option value="السبت">السبت</option>
-                        <option value="الأحد">الأحد</option>
-                        <option value="الإثنين">الإثنين</option>
-                        <option value="الثلاثاء">الثلاثاء</option>
-                        <option value="الأربعاء">الأربعاء</option>
-                        <option value="الخميس">الخميس</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn btn-navy" onclick="addSubscription()">+ إضافة اشتراك جديد</button>
+        <!-- ج. قسم الاشتراكات الشهرية -->
+        <div id="subSec-subscriptions" class="card hidden">
+            <h3>🔄 الاشتراكات الشهرية (خاص بقطاع النظافة العامة)</h3>
+            <p class="subtitle" style="color: var(--text-gray); font-size: 13px; margin-bottom: 15px;">متابعة الزيارات الأسبوعية والتحصيل الشهري</p>
 
-            <h4 style="margin-top: 25px; color: #60a5fa;">الاشتراكات النشطة</h4>
+            <form onsubmit="handleSaveSubscription(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>اسم العميل / الشركة</label><input type="text" id="subName" class="form-control" required></div>
+                    <div class="form-group"><label>رقم الهاتف</label><input type="text" id="subPhone" class="form-control" placeholder="07XXXXXXXX"></div>
+                    <div class="form-group"><label>الموقع النصي</label><input type="text" id="subLocText" class="form-control"></div>
+                    <div class="form-group"><label>رابط اللوكيشن</label><input type="url" id="subLocUrl" class="form-control"></div>
+                    <div class="form-group">
+                        <label>يوم الزيارة الأسبوعي</label>
+                        <select id="subVisitDay" class="form-control" required>
+                            <option value="السبت">السبت</option><option value="الأحد">الأحد</option><option value="الاثنين">الاثنين</option>
+                            <option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option><option value="الجمعة">الجمعة</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>تاريخ أول زيارة قادمة</label><input type="date" id="subNextDate" class="form-control" required></div>
+                    <div class="form-group"><label>قيمة الاشتراك الشهري (د.أ)</label><input type="number" step="0.1" id="subAmount" class="form-control" required></div>
+                </div>
+                <button type="submit" class="btn btn-navy btn-block">+ إضافة مشترك جديد</button>
+            </form>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
+            <h4 style="color: var(--primary-blue);">📋 سجل المشتركين ومتابعة التحصيل</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>العميل</th>
-                            <th>القيمة الشهريّة</th>
-                            <th>اليوم المخصص</th>
-                            <th>تاريخ الزيارة القادمة</th>
-                            <th>الإجراءات</th>
+                            <th>العميل والهاتف</th>
+                            <th>الموقع</th>
+                            <th>يوم الزيارة</th>
+                            <th>الزيارة القادمة</th>
+                            <th>قيمة الاشتراك</th>
+                            <th>حالة التحصيل</th>
+                            <th>إجراء الزيارة</th>
+                            <th>إجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="subscriptionsTableBody"></tbody>
@@ -300,53 +414,64 @@
             </div>
         </div>
 
-        <!-- المحاسبة -->
-        <div id="sec-accounting" class="card hidden">
-            <h3>💰 دفتر الأستاذ والمحاسبة المالية</h3>
-            <div class="grid-3" style="margin-bottom: 20px;">
-                <div class="stat-card"><div>إجمالي الإيرادات</div><div class="val" id="statIncomes" style="color: #10b981;">0 JOD</div></div>
-                <div class="stat-card"><div>إجمالي المصاريف</div><div class="val" id="statExpenses" style="color: #ef4444;">0 JOD</div></div>
-                <div class="stat-card"><div>صافي الأرباح</div><div class="val" id="statNet">0 JOD</div></div>
+        <!-- د. قسم المحاسبة (دفتر الأستاذ) -->
+        <div id="subSec-accounting" class="card hidden">
+            <h3>💰 قسم المحاسبة (دفتر الأستاذ المالي)</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-dark); padding: 10px 15px; border-radius: 8px;">
+                <span style="font-size: 13px; font-weight: bold;">📅 تصفح الشهر المالي:</span>
+                <input type="month" id="accMonthFilter" class="form-control" style="width: 180px;" onchange="loadAccountingData()">
             </div>
 
-            <h4>تسجيل حركة مالية جديدة</h4>
-            <div class="form-grid" style="margin-top: 10px;">
-                <div class="form-group"><label>النوع</label>
-                    <select id="accType" class="form-control">
-                        <option value="income">إيراد (+)</option>
-                        <option value="expense">مصروف (-)</option>
-                    </select>
+            <div class="accounting-summary">
+                <div class="acc-card">
+                    <span style="color: #10b981; font-size: 12px; font-weight: bold;">مجموع له (إيرادات)</span>
+                    <div class="val" style="color: #10b981;" id="accTotalCredit">0.00 د.أ</div>
                 </div>
-                <div class="form-group"><label>المبلغ</label><input type="number" id="accAmount" class="form-control"></div>
-                <div class="form-group"><label>البيان / الوصف</label><input type="text" id="accDesc" class="form-control" placeholder="مثال: دفعة عميل / شراء مواد جلي"></div>
+                <div class="acc-card">
+                    <span style="color: #ef4444; font-size: 12px; font-weight: bold;">مجموع عليه (مصاريف)</span>
+                    <div class="val" style="color: #ef4444;" id="accTotalDebit">0.00 د.أ</div>
+                </div>
+                <div class="acc-card">
+                    <span style="color: #38bdf8; font-size: 12px; font-weight: bold;">الرصيد الصافي</span>
+                    <div class="val" style="color: #38bdf8;" id="accNetBalance">0.00 د.أ</div>
+                </div>
             </div>
-            <button class="btn btn-navy" onclick="addTransaction()">+ تسجيل الحركة</button>
 
-            <h4 style="margin-top: 25px; color: #60a5fa;">سجل الحركات المالية</h4>
+            <form onsubmit="handleSaveAccountingEntry(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>البيان / الوصف</label><input type="text" id="accDesc" class="form-control" required placeholder="مثال: دفعة عميل / شراء ماسات جلي"></div>
+                    <div class="form-group">
+                        <label>نوع الحركة</label>
+                        <select id="accType" class="form-control" required>
+                            <option value="credit">له (إيراد / مدخول)</option>
+                            <option value="debit">عليه (مصروف / دفعة للخارج)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>المبلغ (د.أ)</label><input type="number" step="0.01" id="accAmount" class="form-control" required></div>
+                    <div class="form-group"><label>التاريخ</label><input type="date" id="accDate" class="form-control" required></div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>ملاحظات إضافية</label><input type="text" id="accNotes" class="form-control"></div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">+ تسجيل حركة مالية</button>
+            </form>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-dark); margin: 25px 0;">
+            <h4 style="color: var(--primary-blue);">📊 جدول الحركات المالية للأستاذ</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr>
-                            <th>التاريخ</th>
-                            <th>النوع</th>
-                            <th>الوصف</th>
-                            <th>المبلغ</th>
-                            <th>إجراء</th>
-                        </tr>
+                        <tr><th>التاريخ</th><th>البيان / الوصف</th><th>النوع</th><th>المبلغ</th><th>ملاحظات</th><th>إجراء</th></tr>
                     </thead>
                     <tbody id="accountingTableBody"></tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
-    <!-- إدارة الهوية والبروفايل العام -->
+    <!-- 4. قسم إدارة الهوية والبروفايل العام -->
     <div id="sec-identity" class="card hidden">
         <h3>🎨 إدارة الهوية ومحتوى البروفايل العام</h3>
-        <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">
-            رفع الصور المباشر (Base64) يتيح لك حفظ اللوجو وصور المشاريع فوراً في قاعدة البيانات وسحبها آلياً دون الحاجة لروابط.
-        </p>
+        <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">رفع وتحديث صورة اللوجو وصور المشاريع مباشرة من هاتفك أو جهازك (تخزين مباشر Base64).</p>
+        
         <div class="form-grid">
             <div class="form-group" style="grid-column: 1 / -1;">
                 <label>رفع صورة اللوجو مباشرة من الجهاز (Logo File)</label>
@@ -357,10 +482,9 @@
             <div class="form-group"><label>رقم الهاتف المباشر</label><input type="text" id="editPhone" class="form-control"></div>
         </div>
         <div class="form-group"><label>نص (من نحن)</label><textarea id="editAboutUs" class="form-control" rows="3"></textarea></div>
-        <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ البيانات الأساسية</button>
+        <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ البيانات واللوجو</button>
 
-        <hr style="border-color: var(--border-dark); margin: 20px 0;">
-
+        <hr style="border-color: var(--border-dark); margin: 25px 0;">
         <h4>🛠 إضافة خدمة جديدة للواجهة العامة</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان الخدمة</label><input type="text" id="serviceTitle" class="form-control"></div>
@@ -369,9 +493,8 @@
         <button class="btn btn-navy" onclick="addService()">+ إضافة الخدمة</button>
         <div id="adminServicesList" class="grid-3" style="margin-top: 15px;"></div>
 
-        <hr style="border-color: var(--border-dark); margin: 20px 0;">
-
-        <h4>🏗️ إضافة مشروع لمعرض الأعمال (رفع صورة مباشرة)</h4>
+        <hr style="border-color: var(--border-dark); margin: 25px 0;">
+        <h4>🏗️ إضافة مشروع لمعرض الأعمال (رفع صورة مباشر)</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان المشروع</label><input type="text" id="projectTitle" class="form-control"></div>
             <div class="form-group"><label>رفع صورة المشروع مباشرة</label><input type="file" id="projectImgFileInput" accept="image/*" class="form-control"></div>
@@ -381,49 +504,109 @@
         <div id="adminProjectsList" class="grid-3" style="margin-top: 15px;"></div>
     </div>
 
-    <!-- لوحة الأدمن -->
+    <!-- 5. لوحة الأدمن (إدارة الموظفين والصلاحيات) -->
     <div id="sec-admin" class="card hidden">
-        <h3>👑 لوحة الأدمن وإدارة صلاحيات الموظفين</h3>
-        <p style="color: var(--text-gray); margin-bottom: 15px; font-size: 13px;">تخصيص صلاحيات الأقسام للبريد الإلكتروني المسجل.</p>
-        
-        <div class="form-grid">
-            <div class="form-group"><label>البريد الإلكتروني للموظف</label><input type="email" id="empEmail" class="form-control"></div>
-            <div class="form-group"><label>اسم الموظف</label><input type="text" id="empName" class="form-control"></div>
-        </div>
-        <div style="margin-bottom: 15px;">
-            <label style="margin-bottom: 8px;">صلاحيات الأقسام:</label>
-            <label><input type="checkbox" id="permPolishing" checked> ✨ جلي وتلميع الرخام</label> &nbsp;&nbsp;
-            <label><input type="checkbox" id="permCleaning" checked> 🧹 النظافة العامة</label> &nbsp;&nbsp;
-            <label><input type="checkbox" id="permDryclean" checked> 🛋 الدراي كلين</label>
-        </div>
-        <button class="btn btn-navy" onclick="saveUserPermissions()">💾 حفظ صلاحيات الموظف</button>
-
-        <h4 style="margin-top: 25px; color: #60a5fa;">قائمة الموظفين والصلاحيات</h4>
+        <h2>👑 لوحة تحكم الأدمن والصلاحيات</h2>
+        <p class="subtitle" style="color: var(--text-gray); font-size: 13px; margin-bottom: 20px;">تحديد الأقسام المسموح لكل موظف الدخول إليها والعمل عليها</p>
         <div class="table-responsive">
             <table>
                 <thead>
-                    <tr><th>اسم الموظف</th><th>البريد الإلكتروني</th><th>الصلاحيات</th></tr>
+                    <tr><th>اسم الموظف</th><th>البريد الإلكتروني</th><th>الأقسام المسموحة</th><th>حفظ</th></tr>
                 </thead>
-                <tbody id="employeesTableBody"></tbody>
+                <tbody id="adminUsersTableBody"></tbody>
             </table>
         </div>
     </div>
 
 </div>
 
-<!-- 4. نافذة أرشيف فواتير العميل -->
+<!-- ================= نافذة تعديل بيانات العميل / الورشة ================= -->
+<div id="editClientModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3>✏️ تعديل بيانات العميل / الورشة</h3>
+        <input type="hidden" id="editModalDocId">
+        <div class="form-group"><label>اسم العميل</label><input type="text" id="mEditName" class="form-control"></div>
+        <div class="form-group"><label>رقم الهاتف</label><input type="text" id="mEditPhone" class="form-control"></div>
+        <div class="form-group"><label>الموقع النصي</label><input type="text" id="mEditLocText" class="form-control"></div>
+        <div class="form-group"><label>رابط اللوكيشن</label><input type="url" id="mEditLocUrl" class="form-control"></div>
+        <div class="form-group"><label>التاريخ</label><input type="date" id="mEditDate" class="form-control"></div>
+        <div class="form-group"><label>ملاحظات المعاينة</label><textarea id="mEditNotes" class="form-control"></textarea></div>
+
+        <div id="modalWorkshopFields" style="border-top: 1px dashed var(--border-dark); padding-top: 10px; margin-top: 10px;">
+            <h4 style="color: var(--success-green); text-align: right; margin-bottom: 8px;">حقول الورشة</h4>
+            <div class="form-group"><label>المبلغ الإجمالي (د.أ)</label><input type="number" step="0.1" id="mEditAmount" class="form-control"></div>
+            <div class="form-group"><label>المساحة (م²)</label><input type="number" step="0.1" id="mEditArea" class="form-control"></div>
+            <div class="form-group"><label>ملاحظات الورشة</label><textarea id="mEditWorkshopNotes" class="form-control"></textarea></div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="button" class="btn btn-success" style="flex:1;" onclick="saveClientModalChanges()">حفظ التعديلات</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= نافذة إعداد عرض السعر الرسمي المتكامل ================= -->
+<div id="quoteModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 680px;">
+        <h3 style="color: var(--primary-blue); text-align: right;"><i class="bi bi-file-earmark-pdf me-1"></i> إعداد عرض سعر / فاتورة رسمية</h3>
+        <p class="subtitle" style="text-align: right; color: var(--text-gray); font-size: 13px;">الهوية البصرية الرسمية لمؤسسة الرؤيا المتقدمة</p>
+
+        <form id="quoteForm">
+            <div class="form-grid">
+                <div class="form-group"><label>نوع المستند</label>
+                    <select id="qDocType" class="form-control">
+                        <option value="عرض سعر">عرض سعر</option>
+                        <option value="فاتورة رسمية">فاتورة رسمية</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>اسم العميل</label><input type="text" id="qCustName" class="form-control" readonly style="background-color: #252a34;"></div>
+                <div class="form-group"><label>رقم الهاتف</label><input type="text" id="qCustPhone" class="form-control" readonly style="background-color: #252a34;"></div>
+                <div class="form-group"><label>الموقع / العنوان</label><input type="text" id="qCustLocation" class="form-control" readonly style="background-color: #252a34;"></div>
+                <div class="form-group" style="grid-column: 1 / -1;"><label>اسم الخدمة الرئيسي</label><input type="text" id="qServiceName" class="form-control" placeholder="مثال: جلي وتلميع رخام أرضيات وتطبيق مادة الحماية"></div>
+            </div>
+
+            <hr style="border-color: var(--border-dark); margin: 15px 0;">
+            <div class="form-group">
+                <label>تفاصيل ونطاق العمل (الوصف)</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="qDescInput" class="form-control" placeholder="أضف بند تفصيلي (مثال: الطابق الأرضي والدرج)...">
+                    <button class="btn btn-primary" type="button" onclick="addQuoteDescItem()">+ إضافة بند</button>
+                </div>
+                <ul id="qDescList" style="list-style: none; padding: 0;"></ul>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group"><label>مدة العمل المتوقعة</label><input type="text" id="qWorkDuration" class="form-control" placeholder="مثال: من 3 - 4 أيام عمل"></div>
+                <div class="form-group"><label>المبلغ الإجمالي المطلوب (دينار أردني)</label><input type="number" id="qTotalAmount" class="form-control" placeholder="350"></div>
+            </div>
+
+            <hr style="border-color: var(--border-dark); margin: 15px 0;">
+            <div class="form-group">
+                <label>الشروط وأحكام الدفع</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <input type="text" id="qTermInput" class="form-control" placeholder="أضف شرطاً (مثال: دفعة عند الانتهاء من نصف العمل والباقي عند التسليم)...">
+                    <button class="btn btn-primary" type="button" onclick="addQuoteTermItem()">+ إضافة شرط</button>
+                </div>
+                <ul id="qTermsList" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </form>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn btn-navy" style="flex:1;" onclick="saveQuoteToArchive()"><i class="bi bi-floppy"></i> حفظ في سجل الزبون</button>
+            <button type="button" class="btn btn-success" style="flex:1;" onclick="generateAndPrintQuote()"><i class="bi bi-printer"></i> معاينة وطباعة PDF</button>
+            <button type="button" class="btn btn-secondary" onclick="closeQuoteModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= نافذة استعراض أرشيف فواتير وعروض أسعار العميل ================= -->
 <div id="clientInvoicesModal" class="modal-overlay hidden">
     <div class="modal-content">
-        <h3 style="color: #60a5fa; margin-bottom: 12px;">📂 فواتير وعروض أسعار العميل: <span id="modalClientName" style="color: #fff;"></span></h3>
+        <h3 style="color: var(--primary-blue); margin-bottom: 12px;">📂 أرشيف مستندات العميل: <span id="modalClientArchiveName" style="color: #fff;"></span></h3>
         <div class="table-responsive">
             <table>
                 <thead>
-                    <tr>
-                        <th>نوع المستند</th>
-                        <th>التاريخ</th>
-                        <th>المبلغ</th>
-                        <th>معاينة/طباعة</th>
-                    </tr>
+                    <tr><th>النوع</th><th>التاريخ</th><th>المبلغ</th><th>الخدمة</th><th>معاينة/طباعة</th><th>حذف</th></tr>
                 </thead>
                 <tbody id="clientInvoicesTableBody"></tbody>
             </table>
@@ -432,76 +615,95 @@
     </div>
 </div>
 
-<!-- 5. قالب الطباعة A4 -->
-<div id="printableArea" class="hidden">
-    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
-        <h1 style="font-size: 24px; color: #000;">مؤسسة الرؤيا المتقدمة لأعمال الأرضيات والجلي</h1>
-        <p style="font-size: 14px; color: #333;">عمان - الأردن | هاتف: 0782066652</p>
-        <h2 id="printDocTitle" style="margin-top: 15px; text-decoration: underline;">عرض سعر / فاتورة</h2>
-    </div>
-    
-    <div class="no-print" style="background: #f0f4f8; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #cbd5e1;">
-        <label style="color: #000; font-weight: bold;">نوع المستند:</label>
-        <select id="invoiceDocType" class="form-control" style="width: auto; display: inline-block; margin-right: 10px; background: #fff; color: #000; border: 1px solid #ccc;" onchange="updatePrintTitle()">
-            <option value="فاتورة مالية">فاتورة مالية</option>
-            <option value="عرض سعر رسمى">عرض سعر رسمى</option>
-        </select>
+<!-- ================= قالب الطباعة الرسمي A4 (الهوية البصرية الأصلية) ================= -->
+<div id="quotation-template">
+    <div class="quote-header">
+        <div>
+            <h2 style="color: #1e365d; font-weight: 800; margin: 0;">مؤسسة الرؤيا المتقدمة</h2>
+            <p style="color: #64748b; margin: 0; font-size: 13px;">لأعمال الأرضيات والجلي والصيانة العامة</p>
+        </div>
+        <div style="text-align: center;">
+            <div class="quote-title-badge" id="pdfDocTypeBadge">عرض سعر</div>
+        </div>
+        <div style="text-align: left;">
+            <p style="margin: 0; font-weight: bold; font-size: 14px; color: #1e365d;">📞 0782066652</p>
+            <p style="margin: 0; color: #64748b; font-size: 13px;">📍 عمان - الياسمين</p>
+        </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px;">
-        <div><strong>اسم العميل:</strong> <span id="printClientName">-</span></div>
-        <div><strong>التاريخ:</strong> <span id="printDate">-</span></div>
+    <div class="client-info-box">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <div><strong>الإسم :</strong> <span id="pdfCustName"></span></div>
+            <div><strong>التاريخ :</strong> <span id="pdfDate"></span></div>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <div><strong>الهاتف :</strong> <span id="pdfCustPhone"></span></div>
+            <div><strong>الموقع :</strong> <span id="pdfCustLocation"></span></div>
+        </div>
     </div>
-    <table style="width: 100%; margin-bottom: 20px; border-collapse: collapse;">
+
+    <table class="quote-table">
         <thead>
             <tr>
-                <th style="border: 1px solid #000; padding: 8px; background: #eee;">البيان / الخدمة</th>
-                <th style="border: 1px solid #000; padding: 8px; background: #eee;">المبلغ</th>
+                <th style="width: 35%;">الخدمة المطلوبة</th>
+                <th style="width: 65%;">تفاصيل ونطاق العمل (الوصف)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td style="border: 1px solid #000; padding: 10px;">
-                    <input type="text" id="printServiceDescInput" class="no-print form-control" value="خدمات جلي وتلميع رخام وإيبوكسي وصيانة أرضيات" style="background: #fff; color: #000; border: 1px solid #ccc; width: 100%;">
-                    <span id="printServiceDescText" class="only-print">خدمات جلي وتلميع رخام وإيبوكسي وصيانة أرضيات</span>
-                </td>
-                <td style="border: 1px solid #000; padding: 10px;" id="printAmount">0 JOD</td>
+                <td style="font-weight: bold; text-align: center; vertical-align: middle; font-size: 15px; color: #1e365d;" id="pdfServiceName"></td>
+                <td><ul id="pdfDescList" style="padding-right: 20px; margin: 0;"></ul></td>
             </tr>
         </tbody>
     </table>
-    <div style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 14px;">
-        <div>توقيع وتختم المؤسسة: ____________</div>
-        <div>توقيع العميل: ____________</div>
+
+    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <div style="flex: 1;" class="summary-card">
+            <span style="font-size: 12px; color: #64748b; display: block;">مدة العمل المتوقعة:</span>
+            <strong id="pdfDuration" style="font-size: 15px; color: #0f172a;"></strong>
+        </div>
+        <div style="flex: 1; background-color: #e0f2fe; border-right-color: #0284c7;" class="summary-card">
+            <span style="font-size: 12px; color: #0369a1; display: block;">المبلغ الإجمالي المطلوب:</span>
+            <strong id="pdfAmount" style="font-size: 18px; color: #1e365d;"></strong>
+        </div>
     </div>
-    
-    <div style="margin-top: 30px; display: flex; gap: 10px;" class="no-print">
-        <button class="btn btn-success" onclick="saveInvoiceToClient()"><i class="bi bi-floppy"></i> حفظ في سجل الزبون</button>
-        <button class="btn btn-navy" onclick="triggerPrint()"><i class="bi bi-printer"></i> طباعة المستند الآن</button>
-        <button class="btn btn-outline" onclick="closePrintView()">إغلاق</button>
+
+    <div class="terms-box">
+        <h5 style="font-weight: bold; margin-bottom: 8px; color: #0f172a;">📌 الشروط وأحكام الدفع:</h5>
+        <ul id="pdfTermsList" style="padding-right: 20px; margin: 0; font-size: 13px;"></ul>
+    </div>
+
+    <div class="quote-footer">
+        جلي بلاط &nbsp;|&nbsp; عزل مائي &nbsp;|&nbsp; إيبوكسي &nbsp;|&nbsp; تيرازو
     </div>
 </div>
 
-<!-- Scripts Logic -->
 <script>
-    // Firebase Config (ثابت ومطابق دائماً لضمان عدم ضياع البيانات)
+    const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
+
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
         authDomain: "roya-app-29932.firebaseapp.com",
         projectId: "roya-app-29932",
         storageBucket: "roya-app-29932.firebasestorage.app",
         messagingSenderId: "612295279079",
-        appId: "1:612295279079:web:e5d7b02f686e2eb23ebd42"
+        appId: "1:612295279079:web:e5d7b02f686e2eb23ebd42",
+        measurementId: "G-XZRYEDLBFS"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
-    let currentMainDepartment = 'polishing';
-    let currentSubTab = 'inspections';
-    let currentUserPermissions = { polishing: true, cleaning: true, dryclean: true };
-    let currentActiveJob = null;
+    let currentUserData = null;
+    let currentMainDept = 'polishing'; 
+    let currentSubDept = 'inspections';
+
+    let qDescItems = [];
+    let qTermItems = [];
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const currentMonthStr = todayStr.substring(0, 7);
 
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
@@ -541,305 +743,641 @@
         document.getElementById('publicProfileView').classList.remove('hidden');
     }
 
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async (user) => {
         if (user) {
-            document.getElementById('userName').textContent = user.email;
-            if (user.email === ADMIN_EMAIL) {
-                document.getElementById('adminBadge').classList.remove('hidden');
-                document.getElementById('tab-admin').classList.remove('hidden');
-            } else {
-                document.getElementById('adminBadge').classList.add('hidden');
-                document.getElementById('tab-admin').classList.add('hidden');
-                loadUserPermissions(user.email);
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const doc = await userDocRef.get();
+                const isAdminEmail = (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+
+                if (doc.exists) {
+                    currentUserData = doc.data();
+                    if (isAdminEmail && currentUserData.role !== 'admin') {
+                        currentUserData.role = 'admin';
+                        currentUserData.departments = ['polishing', 'cleaning', 'dryclean'];
+                        await userDocRef.update({ role: 'admin', departments: ['polishing', 'cleaning', 'dryclean'] });
+                    }
+                } else {
+                    currentUserData = {
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        role: isAdminEmail ? 'admin' : 'employee',
+                        departments: isAdminEmail ? ['polishing', 'cleaning', 'dryclean'] : []
+                    };
+                    await userDocRef.set(currentUserData);
+                }
+
+                document.getElementById('userName').textContent = currentUserData.name || user.email;
+                document.getElementById('userRoleBadge').textContent = currentUserData.role === 'admin' ? 'مدير النظام' : 'موظف';
+                setupMainPermissions();
+            } catch (err) {
+                console.error("Firestore Init Error:", err);
             }
-            loadDepartmentData();
+        } else {
+            document.getElementById('mainDashboard').classList.add('hidden');
+            document.getElementById('publicProfileView').classList.remove('hidden');
         }
     });
 
-    async function handleLogin() {
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPassword').value;
-        try {
-            await auth.signInWithEmailAndPassword(email, pass);
-            closeSecretLogin();
-            document.getElementById('publicProfileView').classList.add('hidden');
-            document.getElementById('mainDashboard').classList.remove('hidden');
-        } catch (err) { alert('بيانات الدخول غير صحيحة'); }
+    function setupMainPermissions() {
+        const role = currentUserData ? currentUserData.role : 'employee';
+        const depts = (currentUserData && currentUserData.departments) ? currentUserData.departments : [];
+
+        ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
+            const btn = document.getElementById('mTab-' + d);
+            if (btn) btn.classList.add('hidden');
+        });
+
+        if (role === 'admin') {
+            ['polishing', 'cleaning', 'dryclean', 'admin'].forEach(d => {
+                const btn = document.getElementById('mTab-' + d);
+                if (btn) btn.classList.remove('hidden');
+            });
+            switchMainDept('polishing');
+        } else {
+            let firstDept = null;
+            if (depts.includes('polishing')) { document.getElementById('mTab-polishing').classList.remove('hidden'); if(!firstDept) firstDept = 'polishing'; }
+            if (depts.includes('cleaning')) { document.getElementById('mTab-cleaning').classList.remove('hidden'); if(!firstDept) firstDept = 'cleaning'; }
+            if (depts.includes('dryclean')) { document.getElementById('mTab-dryclean').classList.remove('hidden'); if(!firstDept) firstDept = 'dryclean'; }
+
+            if (firstDept) {
+                document.getElementById('deptContainer').classList.remove('hidden');
+                document.getElementById('sec-pending').classList.add('hidden');
+                switchMainDept(firstDept);
+            } else {
+                document.getElementById('deptContainer').classList.add('hidden');
+                document.getElementById('sec-pending').classList.remove('hidden');
+            }
+        }
     }
 
-    function handleLogout() {
-        auth.signOut().then(() => showPublicProfile());
-    }
-
-    function switchMainTab(dept) {
-        currentMainDepartment = dept;
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`tab-${dept}`)?.classList.add('active');
+    function switchMainDept(dept) {
+        currentMainDept = dept;
+        document.querySelectorAll('#mainDeptTabs .main-nav-btn').forEach(btn => btn.classList.remove('active'));
+        if (document.getElementById('mTab-' + dept)) document.getElementById('mTab-' + dept).classList.add('active');
 
         if (dept === 'identity') {
-            document.getElementById('functionalNav').classList.add('hidden');
-            document.getElementById('functionalContent').classList.add('hidden');
-            document.getElementById('sec-identity').classList.remove('hidden');
+            document.getElementById('deptContainer').classList.add('hidden');
             document.getElementById('sec-admin').classList.add('hidden');
+            document.getElementById('sec-identity').classList.remove('hidden');
             return;
         }
         if (dept === 'admin') {
-            document.getElementById('functionalNav').classList.add('hidden');
-            document.getElementById('functionalContent').classList.add('hidden');
+            document.getElementById('deptContainer').classList.add('hidden');
             document.getElementById('sec-identity').classList.add('hidden');
             document.getElementById('sec-admin').classList.remove('hidden');
-            loadEmployeesList();
+            loadAdminUsersList();
             return;
         }
 
-        document.getElementById('functionalNav').classList.remove('hidden');
-        document.getElementById('functionalContent').classList.remove('hidden');
         document.getElementById('sec-identity').classList.add('hidden');
         document.getElementById('sec-admin').classList.add('hidden');
+        document.getElementById('deptContainer').classList.remove('hidden');
 
         if (dept === 'cleaning') {
-            document.getElementById('sub-subscriptions').classList.remove('hidden');
+            document.getElementById('sTab-subscriptions').classList.remove('hidden');
         } else {
-            document.getElementById('sub-subscriptions').classList.add('hidden');
-            if(currentSubTab === 'subscriptions') switchSubTab('inspections');
+            document.getElementById('sTab-subscriptions').classList.add('hidden');
+            if (currentSubDept === 'subscriptions') currentSubDept = 'inspections';
         }
 
-        loadDepartmentData();
+        const titles = {
+            'polishing': '✨ قسم جلي البلاط والرخام',
+            'cleaning': '🧹 قسم النظافة العامة',
+            'dryclean': '🛋️ قسم الدراي كلين'
+        };
+        document.getElementById('inspDeptTitle').textContent = `📝 نموذج معاينة جديد - ${titles[dept]}`;
+
+        document.getElementById('inspDate').value = todayStr;
+        document.getElementById('appFilterDate').value = todayStr;
+        document.getElementById('subNextDate').value = todayStr;
+        document.getElementById('accDate').value = todayStr;
+        document.getElementById('accMonthFilter').value = currentMonthStr;
+
+        switchSubDept(currentSubDept);
     }
 
-    function switchSubTab(sub) {
-        currentSubTab = sub;
-        document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`sub-${sub}`)?.classList.add('active');
+    function switchSubDept(sub) {
+        currentSubDept = sub;
+        document.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+        if (document.getElementById('sTab-' + sub)) document.getElementById('sTab-' + sub).classList.add('active');
 
-        document.getElementById('sec-inspections').classList.toggle('hidden', sub !== 'inspections');
-        document.getElementById('sec-jobs').classList.toggle('hidden', sub !== 'jobs');
-        document.getElementById('sec-subscriptions').classList.toggle('hidden', sub !== 'subscriptions');
-        document.getElementById('sec-accounting').classList.toggle('hidden', sub !== 'accounting');
-
-        loadDepartmentData();
-    }
-
-    function loadDepartmentData() {
-        if (currentSubTab === 'inspections') loadInspections();
-        if (currentSubTab === 'jobs') loadJobs();
-        if (currentSubTab === 'subscriptions' && currentMainDepartment === 'cleaning') loadSubscriptions();
-        if (currentSubTab === 'accounting') loadAccounting();
-    }
-
-    // المعاينات
-    function addInspection() {
-        const name = document.getElementById('inspName').value;
-        const phone = document.getElementById('inspPhone').value;
-        const loc = document.getElementById('inspLocation').value;
-        const date = document.getElementById('inspDate').value;
-        const notes = document.getElementById('inspNotes').value;
-
-        if (!name) return alert('يرجى إدخال اسم العميل');
-
-        db.collection('inspections').add({
-            department: currentMainDepartment,
-            clientName: name,
-            phone: phone,
-            location: loc,
-            date: date,
-            notes: notes,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            document.getElementById('inspName').value = '';
-            document.getElementById('inspPhone').value = '';
-            document.getElementById('inspLocation').value = '';
-            document.getElementById('inspNotes').value = '';
-            loadInspections();
+        ['inspections', 'appointments', 'subscriptions', 'accounting'].forEach(s => {
+            document.getElementById('subSec-' + s).classList.add('hidden');
         });
+        document.getElementById('subSec-' + sub).classList.remove('hidden');
+
+        if (sub === 'inspections') loadInspectionsList();
+        if (sub === 'appointments') loadAppointmentsForSelectedDate();
+        if (sub === 'subscriptions') loadSubscriptionsList();
+        if (sub === 'accounting') loadAccountingData();
     }
 
-    function loadInspections() {
-        db.collection('inspections').where('department', '==', currentMainDepartment).get().then(snapshot => {
-            let html = '';
-            snapshot.forEach(doc => {
-                const item = doc.data();
-                html += `
+    function getClientsCollection() { return `clients_${currentMainDept}`; }
+    function getSubscriptionsCollection() { return `subscriptions_cleaning`; }
+    function getAccountingCollection() { return `accounting_${currentMainDept}`; }
+
+    /* 1. المعاينات */
+    async function handleSaveInspection(e) {
+        e.preventDefault();
+        const data = {
+            dept: currentMainDept,
+            type: 'inspection',
+            name: document.getElementById('inspName').value.trim(),
+            phone: document.getElementById('inspPhone').value.trim(),
+            locText: document.getElementById('inspLocText').value.trim(),
+            locUrl: document.getElementById('inspLocUrl').value.trim(),
+            date: document.getElementById('inspDate').value || todayStr,
+            notes: document.getElementById('inspNotes').value.trim(),
+            amount: 0,
+            area: 0,
+            workshopNotes: '',
+            status: 'معاينة مجدولة',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await db.collection(getClientsCollection()).add(data);
+            alert('تم حفظ المعاينة بنجاح!');
+            e.target.reset();
+            document.getElementById('inspDate').value = todayStr;
+            loadInspectionsList();
+        } catch (err) { alert('حدث خطأ أثناء الحفظ: ' + err.message); }
+    }
+
+    async function loadInspectionsList() {
+        const tbody = document.getElementById('inspectionsTableBody');
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري تحميل المعاينات...</td></tr>';
+        
+        try {
+            const snap = await db.collection(getClientsCollection()).where('type', '==', 'inspection').get();
+            tbody.innerHTML = '';
+            snap.forEach(doc => {
+                const c = doc.data();
+                const id = doc.id;
+                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-primary" style="padding: 2px 6px;">📍 خريطة</a>` : '-';
+                const safeName = (c.name || '').replace(/'/g, "\\'");
+                const safeLoc = (c.locText || '').replace(/'/g, "\\'");
+                const safeNotes = (c.notes || '').replace(/'/g, "\\'");
+
+                tbody.innerHTML += `
                     <tr>
-                        <td>${item.clientName}</td>
-                        <td>${item.phone || '-'}</td>
-                        <td>${item.location || '-'}</td>
-                        <td>${item.date || '-'}</td>
-                        <td>${item.notes || '-'}</td>
+                        <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                        <td>${c.phone || '-'}</td>
+                        <td>${c.locText || '-'}</td>
+                        <td>${locBtn}</td>
+                        <td>${c.date || '-'}</td>
+                        <td>${c.notes || '-'}</td>
                         <td>
-                            <button class="btn btn-success" onclick="convertToJob('${doc.id}')">تأكيد ورشة</button>
-                            <button class="btn btn-danger" onclick="deleteDoc('inspections', '${doc.id}')">حذف</button>
+                            <button class="btn btn-navy" style="padding:2px 6px;" onclick="openQuoteModal('${safeName}', '${c.phone || ''}', '${safeLoc}', '${safeNotes || 'جلي وتلميع رخام'}')">📄 عرض سعر</button>
+                            <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
+                            <button class="btn btn-success" style="padding:2px 6px;" onclick="confirmToWorkshop('${id}')">✅ تأكيد ورشة</button>
+                            <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">🗑️</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('inspectionsTableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات.</td></tr>';
-        });
+            if (snap.empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد معاينات مسجلة حالياً</td></tr>';
+        } catch (err) { tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
     }
 
-    function convertToJob(docId) {
-        db.collection('inspections').doc(docId).get().then(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                const cost = prompt('أدخل التكلفة الإجمالية للورشة (JOD):', '100');
-                if (cost !== null) {
-                    db.collection('jobs').add({
-                        department: currentMainDepartment,
-                        clientName: data.clientName,
-                        phone: data.phone,
-                        location: data.location,
-                        totalCost: parseFloat(cost) || 0,
-                        paidAmount: 0,
-                        status: 'pending',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }).then(() => {
-                        db.collection('inspections').doc(docId).delete();
-                        alert('تم تحويل العميل إلى ورشة مؤكدة بنجاح!');
-                        loadInspections();
-                    });
+    async function confirmToWorkshop(id) {
+        if (confirm('هل تريد تحويل هذا العميل إلى المواعيد والورش المؤكدة؟')) {
+            try {
+                await db.collection(getClientsCollection()).doc(id).update({ type: 'workshop', status: 'قيد التنفيذ' });
+                alert('تم تحويل العميل للورش بنجاح!');
+                loadInspectionsList();
+            } catch (err) { alert('خطأ: ' + err.message); }
+        }
+    }
+
+    async function deleteClientDoc(id) {
+        if (confirm('هل أنت متأكد من الحذف النهائي؟')) {
+            await db.collection(getClientsCollection()).doc(id).delete();
+            if (currentSubDept === 'inspections') loadInspectionsList();
+            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
+        }
+    }
+
+    /* 2. المواعيد والورش */
+    function setAppDateToToday() {
+        document.getElementById('appFilterDate').value = todayStr;
+        loadAppointmentsForSelectedDate();
+    }
+
+    async function loadAppointmentsForSelectedDate() {
+        const selectedDate = document.getElementById('appFilterDate').value || todayStr;
+        const inspTbody = document.getElementById('dayInspectionsTableBody');
+        const workTbody = document.getElementById('dayWorkshopsTableBody');
+        
+        inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري التحميل...</td></tr>';
+        workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري التحميل...</td></tr>';
+
+        try {
+            const snap = await db.collection(getClientsCollection()).where('date', '==', selectedDate).get();
+            let inspCount = 0;
+            let workCount = 0;
+            inspTbody.innerHTML = '';
+            workTbody.innerHTML = '';
+
+            snap.forEach(doc => {
+                const c = doc.data();
+                const id = doc.id;
+                const locBtn = c.locUrl ? `<a href="${c.locUrl}" target="_blank" class="btn btn-primary" style="padding: 2px 6px;">📍 رابط</a>` : '-';
+                const safeName = (c.name || '').replace(/'/g, "\\'");
+                const safeLoc = (c.locText || '').replace(/'/g, "\\'");
+                const safeWNotes = (c.workshopNotes || 'جلي وتلميع رخام').replace(/'/g, "\\'");
+
+                if (c.type === 'inspection') {
+                    inspCount++;
+                    inspTbody.innerHTML += `
+                        <tr>
+                            <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                            <td>${c.phone || '-'}</td>
+                            <td>${c.locText || '-'}</td>
+                            <td>${locBtn}</td>
+                            <td>${c.notes || '-'}</td>
+                            <td>
+                                <button class="btn btn-navy" style="padding:2px 6px;" onclick="openQuoteModal('${safeName}', '${c.phone || ''}', '${safeLoc}', '${safeWNotes}')">📄 عرض سعر</button>
+                                <button class="btn btn-success" style="padding:2px 6px;" onclick="confirmToWorkshop('${id}')">تأكيد ورشة</button>
+                            </td>
+                        </tr>
+                    `;
+                } else if (c.type === 'workshop') {
+                    workCount++;
+                    const isDone = c.status === 'منتهية';
+                    workTbody.innerHTML += `
+                        <tr>
+                            <td><strong>${c.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${c.phone || ''}</small></td>
+                            <td>${c.locText || '-'} <br>${locBtn}</td>
+                            <td><strong>${c.amount || 0} د.أ</strong> <br><small>${c.area || 0} م²</small></td>
+                            <td>${c.workshopNotes || '-'}</td>
+                            <td>
+                                <button class="btn btn-navy" style="padding:2px 6px;" onclick="openQuoteModal('${safeName}', '${c.phone || ''}', '${safeLoc}', '${safeWNotes}', '${c.amount || 0}')">📄 إعداد/طباعة</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline" style="padding:2px 6px;" onclick="viewClientInvoices('${safeName}')">📂 أرشيف العميل</button>
+                            </td>
+                            <td><span class="badge ${isDone ? 'badge-done' : 'badge-workshop'}">${c.status || 'قيد التنفيذ'}</span></td>
+                            <td>
+                                <button class="btn btn-primary" style="padding:2px 6px;" onclick="openEditModal('${id}')">✏️ تعديل</button>
+                                <button class="btn btn-secondary" style="padding:2px 6px;" onclick="toggleWorkshopStatus('${id}', '${isDone ? 'قيد التنفيذ' : 'منتهية'}')">${isDone ? 'إعادة' : '✔ إنجاز'}</button>
+                                <button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteClientDoc('${id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
                 }
-            }
-        });
+            });
+
+            document.getElementById('daySummaryPill').textContent = `[ عدد الورش: ${workCount} | عدد المعاينات: ${inspCount} ]`;
+            if (inspCount === 0) inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات مجدولة لهذا اليوم</td></tr>';
+            if (workCount === 0) workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا توجد ورش مؤكدة لهذا اليوم</td></tr>';
+        } catch (err) {
+            inspTbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
+        }
     }
 
-    // الورش
-    function loadJobs() {
-        db.collection('jobs').where('department', '==', currentMainDepartment).get().then(snapshot => {
-            let html = '';
-            snapshot.forEach(doc => {
-                const item = doc.data();
-                const safeName = item.clientName.replace(/'/g, "\\'");
-                html += `
+    async function toggleWorkshopStatus(id, newStatus) {
+        await db.collection(getClientsCollection()).doc(id).update({ status: newStatus });
+        loadAppointmentsForSelectedDate();
+    }
+
+    async function openEditModal(id) {
+        document.getElementById('editModalDocId').value = id;
+        const doc = await db.collection(getClientsCollection()).doc(id).get();
+        if (doc.exists) {
+            const c = doc.data();
+            document.getElementById('mEditName').value = c.name || '';
+            document.getElementById('mEditPhone').value = c.phone || '';
+            document.getElementById('mEditLocText').value = c.locText || '';
+            document.getElementById('mEditLocUrl').value = c.locUrl || '';
+            document.getElementById('mEditDate').value = c.date || todayStr;
+            document.getElementById('mEditNotes').value = c.notes || '';
+            document.getElementById('mEditAmount').value = c.amount || '';
+            document.getElementById('mEditArea').value = c.area || '';
+            document.getElementById('mEditWorkshopNotes').value = c.workshopNotes || '';
+            document.getElementById('editClientModal').classList.remove('hidden');
+        }
+    }
+    function closeEditModal() { document.getElementById('editClientModal').classList.add('hidden'); }
+
+    async function saveClientModalChanges() {
+        const id = document.getElementById('editModalDocId').value;
+        const updates = {
+            name: document.getElementById('mEditName').value.trim(),
+            phone: document.getElementById('mEditPhone').value.trim(),
+            locText: document.getElementById('mEditLocText').value.trim(),
+            locUrl: document.getElementById('mEditLocUrl').value.trim(),
+            date: document.getElementById('mEditDate').value,
+            notes: document.getElementById('mEditNotes').value.trim(),
+            amount: parseFloat(document.getElementById('mEditAmount').value) || 0,
+            area: parseFloat(document.getElementById('mEditArea').value) || 0,
+            workshopNotes: document.getElementById('mEditWorkshopNotes').value.trim()
+        };
+        try {
+            await db.collection(getClientsCollection()).doc(id).update(updates);
+            alert('تم حفظ التعديلات بنجاح!');
+            closeEditModal();
+            if (currentSubDept === 'inspections') loadInspectionsList();
+            if (currentSubDept === 'appointments') loadAppointmentsForSelectedDate();
+        } catch (err) { alert('خطأ: ' + err.message); }
+    }
+
+    /* 3. الاشتراكات الشهرية */
+    async function handleSaveSubscription(e) {
+        e.preventDefault();
+        const data = {
+            name: document.getElementById('subName').value.trim(),
+            phone: document.getElementById('subPhone').value.trim(),
+            locText: document.getElementById('subLocText').value.trim(),
+            locUrl: document.getElementById('subLocUrl').value.trim(),
+            visitDay: document.getElementById('subVisitDay').value,
+            nextVisitDate: document.getElementById('subNextDate').value || todayStr,
+            amount: parseFloat(document.getElementById('subAmount').value) || 0,
+            paymentStatus: 'لم يتم التحصيل',
+            paidMonth: currentMonthStr,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        try {
+            await db.collection(getSubscriptionsCollection()).add(data);
+            alert('تم إضافة المشترك بنجاح!');
+            e.target.reset();
+            document.getElementById('subNextDate').value = todayStr;
+            loadSubscriptionsList();
+        } catch (err) { alert('خطأ: ' + err.message); }
+    }
+
+    async function loadSubscriptionsList() {
+        const tbody = document.getElementById('subscriptionsTableBody');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري تحميل الاشتراكات...</td></tr>';
+        try {
+            const snap = await db.collection(getSubscriptionsCollection()).get();
+            tbody.innerHTML = '';
+            snap.forEach(doc => {
+                const sub = doc.data();
+                const id = doc.id;
+                const locBtn = sub.locUrl ? `<a href="${sub.locUrl}" target="_blank" class="btn btn-primary" style="padding: 2px 6px;">📍 رابط</a>` : '-';
+                const isPaid = sub.paymentStatus === 'تم التحصيل' && sub.paidMonth === currentMonthStr;
+                const payBadge = isPaid 
+                    ? `<span class="badge badge-done">💳 تم تحصيل (${sub.paidMonth})</span>` 
+                    : `<span class="badge badge-debit">❌ لم يتم التحصيل (${currentMonthStr})</span>`;
+
+                tbody.innerHTML += `
                     <tr>
-                        <td>${item.clientName}</td>
-                        <td>${item.phone || '-'}</td>
-                        <td>${item.location || '-'}</td>
-                        <td>${item.totalCost} JOD</td>
-                        <td>${item.paidAmount || 0} JOD</td>
-                        <td><span class="badge ${item.status === 'done' ? 'badge-done' : 'badge-pending'}">${item.status === 'done' ? 'منتهية' : 'قيد التنفيذ'}</span></td>
+                        <td><strong>${sub.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${sub.phone || ''}</small></td>
+                        <td>${sub.locText || '-'} <br>${locBtn}</td>
+                        <td><span class="badge badge-pending">${sub.visitDay || 'غير محدد'}</span></td>
+                        <td><strong>${sub.nextVisitDate || '-'}</strong></td>
+                        <td><strong>${sub.amount || 0} د.أ</strong></td>
+                        <td>${payBadge}</td>
+                        <td><button class="btn btn-success" style="padding:4px 8px;" onclick="markWeeklyVisitDone('${id}', '${sub.nextVisitDate}')">✔ تمت زيارة اليوم (+7 أيام)</button></td>
                         <td>
-                            <button class="btn btn-outline" onclick="openPrintModal('${safeName}', '${item.totalCost}')">🖨️ إصدار مستند</button>
-                            <button class="btn btn-navy" onclick="viewClientInvoices('${safeName}')">📂 فواتير الزبون</button>
-                            <button class="btn btn-warning" onclick="toggleJobStatus('${doc.id}', '${item.status}')">تغيير الحالة</button>
-                            <button class="btn btn-danger" onclick="deleteDoc('jobs', '${doc.id}')">حذف</button>
+                            <button class="btn ${isPaid ? 'btn-secondary' : 'btn-navy'}" style="padding:3px 6px;" onclick="toggleSubscriptionPayment('${id}', '${isPaid ? 'لم يتم التحصيل' : 'تم التحصيل'}')">
+                                ${isPaid ? 'إلغاء الدفع' : '💳 تحصيل'}
+                            </button>
+                            <button class="btn btn-danger" style="padding:3px 6px;" onclick="deleteSubscription('${id}')">🗑️</button>
                         </td>
                     </tr>
                 `;
             });
-            document.getElementById('jobsTableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;">لا توجد ورش.</td></tr>';
+            if (snap.empty) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا يوجد مشتركين مسجلين حالياً</td></tr>';
+        } catch (err) { tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
+    }
+
+    async function markWeeklyVisitDone(id, currentDateStr) {
+        let baseDate = currentDateStr ? new Date(currentDateStr) : new Date();
+        if (isNaN(baseDate.getTime())) baseDate = new Date();
+        baseDate.setDate(baseDate.getDate() + 7);
+        const nextWeekStr = baseDate.toISOString().split('T')[0];
+
+        try {
+            await db.collection(getSubscriptionsCollection()).doc(id).update({
+                lastVisitDate: todayStr,
+                nextVisitDate: nextWeekStr
+            });
+            alert(`تم تأكيد زيارة اليوم بنجاح!\nالزيارة القادمة تجدولت أوتوماتيكياً بتاريخ: ${nextWeekStr}`);
+            loadSubscriptionsList();
+        } catch (err) { alert('خطأ: ' + err.message); }
+    }
+
+    async function toggleSubscriptionPayment(id, newStatus) {
+        await db.collection(getSubscriptionsCollection()).doc(id).update({
+            paymentStatus: newStatus,
+            paidMonth: currentMonthStr
         });
+        loadSubscriptionsList();
     }
 
-    function toggleJobStatus(docId, currentStatus) {
-        const nextStatus = currentStatus === 'pending' ? 'done' : 'pending';
-        db.collection('jobs').doc(docId).update({ status: nextStatus }).then(() => loadJobs());
+    async function deleteSubscription(id) {
+        if (confirm('هل أنت متأكد من حذف اشتراك هذا العميل؟')) {
+            await db.collection(getSubscriptionsCollection()).doc(id).delete();
+            loadSubscriptionsList();
+        }
     }
 
-    // الاشتراكات
-    function addSubscription() {
-        const name = document.getElementById('subClientName').value;
-        const amount = parseFloat(document.getElementById('subAmount').value) || 0;
-        const day = document.getElementById('subDay').value;
+    /* 4. المحاسبة ودفتر الأستاذ */
+    async function handleSaveAccountingEntry(e) {
+        e.preventDefault();
+        try {
+            await db.collection(getAccountingCollection()).add({
+                dept: currentMainDept,
+                desc: document.getElementById('accDesc').value.trim(),
+                type: document.getElementById('accType').value,
+                amount: parseFloat(document.getElementById('accAmount').value) || 0,
+                date: document.getElementById('accDate').value || todayStr,
+                notes: document.getElementById('accNotes').value.trim(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('تم تسجيل الحركة بنجاح!');
+            e.target.reset();
+            document.getElementById('accDate').value = todayStr;
+            loadAccountingData();
+        } catch (err) { alert('خطأ: ' + err.message); }
+    }
 
-        if (!name) return alert('يرجى إدخال اسم العميل/الاشتراك');
+    async function loadAccountingData() {
+        const monthFilter = document.getElementById('accMonthFilter').value || currentMonthStr;
+        const tbody = document.getElementById('accountingTableBody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل دفتر الأستاذ...</td></tr>';
+        try {
+            const snap = await db.collection(getAccountingCollection()).get();
+            let totalCredit = 0;
+            let totalDebit = 0;
+            tbody.innerHTML = '';
 
-        db.collection('subscriptions').add({
-            clientName: name,
-            monthlyAmount: amount,
-            dayOfWeek: day,
-            nextVisit: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            snap.forEach(doc => {
+                const acc = doc.data();
+                const id = doc.id;
+                if (acc.date && acc.date.startsWith(monthFilter)) {
+                    if (acc.type === 'credit') totalCredit += (acc.amount || 0);
+                    if (acc.type === 'debit') totalDebit += (acc.amount || 0);
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${acc.date || '-'}</td>
+                            <td><strong>${acc.desc || '-'}</strong></td>
+                            <td><span class="badge ${acc.type === 'credit' ? 'badge-credit' : 'badge-debit'}">${acc.type === 'credit' ? 'له (إيراد)' : 'عليه (مصروف)'}</span></td>
+                            <td><strong>${acc.amount || 0} د.أ</strong></td>
+                            <td>${acc.notes || '-'}</td>
+                            <td><button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteAccDoc('${id}')">🗑️</button></td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('accTotalCredit').textContent = totalCredit.toFixed(2) + ' د.أ';
+            document.getElementById('accTotalDebit').textContent = totalDebit.toFixed(2) + ' د.أ';
+            const net = totalCredit - totalDebit;
+            document.getElementById('accNetBalance').textContent = net.toFixed(2) + ' د.أ';
+            if (tbody.innerHTML === '') tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد حركات مالية مسجلة لشهر ${monthFilter}</td></tr>`;
+        } catch (err) { tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
+    }
+
+    async function deleteAccDoc(id) {
+        if (confirm('حذف هذه الحركة المالية؟')) {
+            await db.collection(getAccountingCollection()).doc(id).delete();
+            loadAccountingData();
+        }
+    }
+
+    /* 5. الهوية البصرية وإعداد عروض الأسعار والفواتير والأرشيف */
+    function openQuoteModal(name, phone, location, service, amount = '') {
+        document.getElementById('qCustName').value = name || '';
+        document.getElementById('qCustPhone').value = phone || '';
+        document.getElementById('qCustLocation').value = location || '';
+        document.getElementById('qServiceName').value = service || 'جلي وتلميع رخام أرضيات وتطبيق مادة الحماية الكريستالية';
+        document.getElementById('qTotalAmount').value = amount || '350';
+        document.getElementById('qWorkDuration').value = "من 3 - 4 أيام عمل";
+
+        qDescItems = ["الطابق الأرضي كامل المساحة", "شواحط الدرج والبسطات", "معالجة الفواصل والتلميع بالكريستال"];
+        qTermItems = ["دفعة أولى 50% عند بدء العمل", "الرصيد المتبقي عند استلام العمل النهائي"];
+        renderQuoteLists();
+        document.getElementById('quoteModal').classList.remove('hidden');
+    }
+    function closeQuoteModal() { document.getElementById('quoteModal').classList.add('hidden'); }
+
+    function addQuoteDescItem() {
+        const val = document.getElementById('qDescInput').value.trim();
+        if(val) { qDescItems.push(val); document.getElementById('qDescInput').value = ''; renderQuoteLists(); }
+    }
+    function addQuoteTermItem() {
+        const val = document.getElementById('qTermInput').value.trim();
+        if(val) { qTermItems.push(val); document.getElementById('qTermInput').value = ''; renderQuoteLists(); }
+    }
+    function removeQuoteDesc(i) { qDescItems.splice(i, 1); renderQuoteLists(); }
+    function removeQuoteTerm(i) { qTermItems.splice(i, 1); renderQuoteLists(); }
+
+    function renderQuoteLists() {
+        document.getElementById('qDescList').innerHTML = qDescItems.map((item, i) => 
+            `<li style="background:#252a34; padding:6px 10px; margin-bottom:5px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">${item} <span style="color:#ef4444; cursor:pointer;" onclick="removeQuoteDesc(${i})">✖</span></li>`
+        ).join('');
+        document.getElementById('qTermsList').innerHTML = qTermItems.map((item, i) => 
+            `<li style="background:#252a34; padding:6px 10px; margin-bottom:5px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">${item} <span style="color:#ef4444; cursor:pointer;" onclick="removeQuoteTerm(${i})">✖</span></li>`
+        ).join('');
+    }
+
+    function generateAndPrintQuote() {
+        const docType = document.getElementById('qDocType').value;
+        document.getElementById('pdfDocTypeBadge').innerText = docType;
+        document.getElementById('pdfCustName').innerText = document.getElementById('qCustName').value;
+        document.getElementById('pdfCustPhone').innerText = document.getElementById('qCustPhone').value;
+        document.getElementById('pdfCustLocation').innerText = document.getElementById('qCustLocation').value;
+        document.getElementById('pdfServiceName').innerText = document.getElementById('qServiceName').value;
+        document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('ar-JO');
+        document.getElementById('pdfDuration').innerText = document.getElementById('qWorkDuration').value;
+        document.getElementById('pdfAmount').innerText = (document.getElementById('qTotalAmount').value || '0') + " دينار أردني";
+
+        document.getElementById('pdfDescList').innerHTML = qDescItems.map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
+        document.getElementById('pdfTermsList').innerHTML = qTermItems.map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('');
+
+        window.print();
+    }
+
+    async function saveQuoteToArchive() {
+        const custName = document.getElementById('qCustName').value.trim();
+        if(!custName) return alert('يرجى تحديد اسم العميل أولاً');
+
+        const docData = {
+            clientName: custName,
+            phone: document.getElementById('qCustPhone').value,
+            location: document.getElementById('qCustLocation').value,
+            docType: document.getElementById('qDocType').value,
+            serviceName: document.getElementById('qServiceName').value,
+            descItems: qDescItems,
+            workDuration: document.getElementById('qWorkDuration').value,
+            amount: parseFloat(document.getElementById('qTotalAmount').value) || 0,
+            terms: qTermItems,
+            date: todayStr,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            document.getElementById('subClientName').value = '';
-            document.getElementById('subAmount').value = '';
-            loadSubscriptions();
-        });
+        };
+
+        try {
+            await db.collection('client_invoices').add(docData);
+            alert(`تم حفظ المستند في سجل الزبون (${custName}) بنجاح!`);
+        } catch(err) { alert('خطأ في حفظ المستند: ' + err.message); }
     }
 
-    function loadSubscriptions() {
-        db.collection('subscriptions').get().then(snapshot => {
-            let html = '';
-            snapshot.forEach(doc => {
+    async function viewClientInvoices(clientName) {
+        document.getElementById('modalClientArchiveName').textContent = clientName;
+        document.getElementById('clientInvoicesModal').classList.remove('hidden');
+        const tbody = document.getElementById('clientInvoicesTableBody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري البحث عن المستندات...</td></tr>';
+
+        try {
+            const snap = await db.collection('client_invoices').where('clientName', '==', clientName).get();
+            tbody.innerHTML = '';
+            snap.forEach(doc => {
                 const item = doc.data();
-                html += `
+                const id = doc.id;
+                tbody.innerHTML += `
                     <tr>
-                        <td>${item.clientName}</td>
-                        <td>${item.monthlyAmount} JOD</td>
-                        <td>${item.dayOfWeek}</td>
-                        <td>${item.nextVisit || '-'}</td>
-                        <td>
-                            <button class="btn btn-success" onclick="completeVisit('${doc.id}', '${item.nextVisit}')">تأكيد الزيارة (+7 أيام)</button>
-                            <button class="btn btn-danger" onclick="deleteDoc('subscriptions', '${doc.id}')">إلغاء</button>
-                        </td>
+                        <td><span class="badge badge-done">${item.docType || 'عرض سعر'}</span></td>
+                        <td>${item.date || '-'}</td>
+                        <td><strong>${item.amount || 0} د.أ</strong></td>
+                        <td>${item.serviceName || '-'}</td>
+                        <td><button class="btn btn-navy" style="padding:2px 6px;" onclick="loadQuoteFromArchiveAndPrint('${id}')">🖨️ طباعة</button></td>
+                        <td><button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteInvoiceDoc('${id}', '${clientName}')">🗑️</button></td>
                     </tr>
                 `;
             });
-            document.getElementById('subscriptionsTableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">لا توجد اشتراكات.</td></tr>';
-        });
+            if (snap.empty) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد مستندات مؤرشفة لهذا الزبون</td></tr>';
+        } catch(err) { tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
+    }
+    function closeClientInvoicesModal() { document.getElementById('clientInvoicesModal').classList.add('hidden'); }
+
+    async function loadQuoteFromArchiveAndPrint(id) {
+        const doc = await db.collection('client_invoices').doc(id).get();
+        if(doc.exists) {
+            const item = doc.data();
+            document.getElementById('pdfDocTypeBadge').innerText = item.docType || 'عرض سعر';
+            document.getElementById('pdfCustName').innerText = item.clientName || '';
+            document.getElementById('pdfCustPhone').innerText = item.phone || '';
+            document.getElementById('pdfCustLocation').innerText = item.location || '';
+            document.getElementById('pdfServiceName').innerText = item.serviceName || '';
+            document.getElementById('pdfDate').innerText = item.date || new Date().toLocaleDateString('ar-JO');
+            document.getElementById('pdfDuration').innerText = item.workDuration || '';
+            document.getElementById('pdfAmount').innerText = (item.amount || '0') + " دينار أردني";
+
+            const descList = item.descItems || [];
+            document.getElementById('pdfDescList').innerHTML = descList.map(t => `<li style="margin-bottom: 4px;">${t}</li>`).join('');
+            const termsList = item.terms || [];
+            document.getElementById('pdfTermsList').innerHTML = termsList.map(t => `<li style="margin-bottom: 4px;">${t}</li>`).join('');
+
+            window.print();
+        }
     }
 
-    function completeVisit(docId, currentDate) {
-        const d = currentDate ? new Date(currentDate) : new Date();
-        d.setDate(d.getDate() + 7);
-        db.collection('subscriptions').doc(docId).update({
-            nextVisit: d.toISOString().split('T')[0]
-        }).then(() => loadSubscriptions());
+    async function deleteInvoiceDoc(id, clientName) {
+        if(confirm('هل أنت متأكد من حذف هذا المستند من الأرشيف؟')) {
+            await db.collection('client_invoices').doc(id).delete();
+            viewClientInvoices(clientName);
+        }
     }
 
-    // المحاسبة
-    function addTransaction() {
-        const type = document.getElementById('accType').value;
-        const amount = parseFloat(document.getElementById('accAmount').value) || 0;
-        const desc = document.getElementById('accDesc').value;
-
-        if (!amount) return alert('يرجى إدخال قيمة المبلغ');
-
-        db.collection('accounting').add({
-            department: currentMainDepartment,
-            type: type,
-            amount: amount,
-            desc: desc,
-            date: new Date().toISOString().split('T')[0],
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            document.getElementById('accAmount').value = '';
-            document.getElementById('accDesc').value = '';
-            loadAccounting();
-        });
-    }
-
-    function loadAccounting() {
-        db.collection('accounting').where('department', '==', currentMainDepartment).get().then(snapshot => {
-            let html = '';
-            let totalIn = 0;
-            let totalOut = 0;
-
-            snapshot.forEach(doc => {
-                const item = doc.data();
-                if (item.type === 'income') totalIn += item.amount;
-                if (item.type === 'expense') totalOut += item.amount;
-
-                html += `
-                    <tr>
-                        <td>${item.date}</td>
-                        <td><span class="badge ${item.type === 'income' ? 'badge-done' : 'badge-pending'}">${item.type === 'income' ? 'إيراد' : 'مصروف'}</span></td>
-                        <td>${item.desc || '-'}</td>
-                        <td style="color: ${item.type === 'income' ? '#10b981' : '#ef4444'}; font-weight:bold;">${item.type === 'income' ? '+' : '-'}${item.amount} JOD</td>
-                        <td><button class="btn btn-danger" onclick="deleteDoc('accounting', '${doc.id}')">حذف</button></td>
-                    </tr>
-                `;
-            });
-
-            document.getElementById('statIncomes').textContent = `${totalIn} JOD`;
-            document.getElementById('statExpenses').textContent = `${totalOut} JOD`;
-            document.getElementById('statNet').textContent = `${totalIn - totalOut} JOD`;
-            document.getElementById('statNet').style.color = (totalIn - totalOut) >= 0 ? '#10b981' : '#ef4444';
-
-            document.getElementById('accountingTableBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">لا توجد حركة مالية مسجلة.</td></tr>';
-        });
-    }
-
-    // معلومات البروفايل العام
+    /* 6. إدارة الهوية والبروفايل العام */
     window.onload = function() {
         loadGeneralInfo();
         loadServices();
@@ -872,15 +1410,13 @@
     }
 
     async function saveGeneralInfo() {
-        const logoFileInput = document.getElementById('editLogoFileInput');
+        const fileInput = document.getElementById('editLogoFileInput');
         let logoDataUrl = document.getElementById('editLogoUrl').value;
 
-        if (logoFileInput.files && logoFileInput.files[0]) {
+        if (fileInput.files && fileInput.files[0]) {
             try {
-                logoDataUrl = await fileToBase64(logoFileInput.files[0]);
-            } catch(e) {
-                return alert('حدث خطأ أثناء قراءة ملف اللوجو');
-            }
+                logoDataUrl = await fileToBase64(fileInput.files[0]);
+            } catch(e) { return alert('فشل قراءة صورة اللوجو'); }
         }
 
         db.collection('settings').doc('profile_info').set({
@@ -889,20 +1425,18 @@
             estYear: document.getElementById('editEstYear').value,
             phone: document.getElementById('editPhone').value
         }, { merge: true }).then(() => {
-            alert('تم حفظ البيانات واللوجو بنجاح!');
+            alert('تم حفظ بيانات الهوية واللوجو بنجاح!');
             loadGeneralInfo();
         });
     }
 
     function addService() {
-        const title = document.getElementById('serviceTitle').value;
-        const desc = document.getElementById('serviceDesc').value;
-        if (!title) return alert('يرجى إدخال عنوان الخدمة');
+        const title = document.getElementById('serviceTitle').value.trim();
+        const desc = document.getElementById('serviceDesc').value.trim();
+        if (!title) return alert('يرجى كتابة عنوان الخدمة');
 
         db.collection('services').add({
-            title: title,
-            desc: desc,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            title, desc, createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             document.getElementById('serviceTitle').value = '';
             document.getElementById('serviceDesc').value = '';
@@ -914,39 +1448,31 @@
         db.collection('services').orderBy('createdAt', 'desc').get().then(snapshot => {
             let publicHtml = '';
             let adminHtml = '';
-
             snapshot.forEach(doc => {
                 const item = doc.data();
                 publicHtml += `<div class="service-card"><i class="bi bi-check-circle-fill"></i><h3>${item.title}</h3><p>${item.desc || ''}</p></div>`;
                 adminHtml += `<div class="service-card"><h3>${item.title}</h3><p>${item.desc || ''}</p><button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('services', '${doc.id}')">حذف</button></div>`;
             });
-
             if (publicHtml) document.getElementById('publicServicesContainer').innerHTML = publicHtml;
             document.getElementById('adminServicesList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد خدمات مضافة.</p>';
         });
     }
 
     async function addProject() {
-        const title = document.getElementById('projectTitle').value;
-        const desc = document.getElementById('projectDesc').value;
+        const title = document.getElementById('projectTitle').value.trim();
+        const desc = document.getElementById('projectDesc').value.trim();
         const fileInput = document.getElementById('projectImgFileInput');
-
         if (!title) return alert('يرجى إدخال عنوان المشروع');
 
         let imgDataUrl = '';
         if (fileInput.files && fileInput.files[0]) {
             try {
                 imgDataUrl = await fileToBase64(fileInput.files[0]);
-            } catch (e) {
-                return alert('حدث خطأ أثناء تحميل صورة المشروع');
-            }
+            } catch(e) { return alert('فشل تحميل صورة المشروع'); }
         }
 
         db.collection('projects').add({
-            title: title,
-            imgUrl: imgDataUrl,
-            desc: desc,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            title, desc, imgUrl: imgDataUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             document.getElementById('projectTitle').value = '';
             document.getElementById('projectImgFileInput').value = '';
@@ -959,178 +1485,134 @@
         db.collection('projects').orderBy('createdAt', 'desc').get().then(snapshot => {
             let publicHtml = '';
             let adminHtml = '';
-
             snapshot.forEach(doc => {
                 const item = doc.data();
-                const processedImg = item.imgUrl || 'https://via.placeholder.com/400x250?text=صورة+المشروع';
-
+                const imgSrc = item.imgUrl || 'https://via.placeholder.com/400x250?text=مشروع';
                 publicHtml += `
                     <div class="project-card">
-                        <img src="${processedImg}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <img src="${imgSrc}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=مشروع'">
                         <h3>${item.title}</h3>
                         <p>${item.desc || ''}</p>
                     </div>
                 `;
                 adminHtml += `
                     <div class="project-card">
-                        <img src="${processedImg}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <img src="${imgSrc}" alt="${item.title}">
                         <h3>${item.title}</h3>
                         <p>${item.desc || ''}</p>
-                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف</button>
+                        <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف المشروع</button>
                     </div>
                 `;
             });
-
             document.getElementById('publicProjectsContainer').innerHTML = publicHtml || '<p style="text-align:center; grid-column: 1/-1; color: var(--text-gray);">لا توجد مشاريع مضافة.</p>';
             document.getElementById('adminProjectsList').innerHTML = adminHtml || '<p style="color:var(--text-gray);">لا توجد مشاريع مضافة.</p>';
         });
     }
 
-    function saveUserPermissions() {
-        const email = document.getElementById('empEmail').value.trim();
-        const name = document.getElementById('empName').value;
-        if (!email) return alert('يرجى إدخال البريد الإلكتروني');
-
-        const perms = {
-            polishing: document.getElementById('permPolishing').checked,
-            cleaning: document.getElementById('permCleaning').checked,
-            dryclean: document.getElementById('permDryclean').checked
-        };
-
-        db.collection('users').doc(email).set({
-            name: name,
-            email: email,
-            permissions: perms
-        }).then(() => {
-            alert('تم حفظ صلاحيات الموظف بنجاح!');
-            loadEmployeesList();
-        });
-    }
-
-    function loadEmployeesList() {
-        db.collection('users').get().then(snapshot => {
-            let html = '';
-            snapshot.forEach(doc => {
-                const item = doc.data();
-                const permsStr = Object.keys(item.permissions || {}).filter(k => item.permissions[k]).join(', ');
-                html += `<tr><td>${item.name || '-'}</td><td>${item.email}</td><td>${permsStr}</td></tr>`;
-            });
-            document.getElementById('employeesTableBody').innerHTML = html || '<tr><td colspan="3">لا يوجد موظفين مسجلين.</td></tr>';
-        });
-    }
-
-    function loadUserPermissions(email) {
-        db.collection('users').doc(email).get().then(doc => {
-            if (doc.exists) {
-                currentUserPermissions = doc.data().permissions || {};
-                document.getElementById('tab-polishing').style.display = currentUserPermissions.polishing ? 'inline-flex' : 'none';
-                document.getElementById('tab-cleaning').style.display = currentUserPermissions.cleaning ? 'inline-flex' : 'none';
-                document.getElementById('tab-dryclean').style.display = currentUserPermissions.dryclean ? 'inline-flex' : 'none';
-            }
-        });
-    }
-
-    // فواتير الزبائن
-    function openPrintModal(clientName, amount) {
-        currentActiveJob = { clientName, amount };
-        document.getElementById('printClientName').textContent = clientName;
-        document.getElementById('printAmount').textContent = `${amount} JOD`;
-        document.getElementById('printDate').textContent = new Date().toISOString().split('T')[0];
-        document.getElementById('invoiceDocType').value = 'فاتورة مالية';
-        updatePrintTitle();
-        document.getElementById('printableArea').classList.remove('hidden');
-    }
-
-    function updatePrintTitle() {
-        const type = document.getElementById('invoiceDocType').value;
-        document.getElementById('printDocTitle').textContent = type;
-    }
-
-    function triggerPrint() {
-        document.getElementById('printServiceDescText').textContent = document.getElementById('printServiceDescInput').value;
-        window.print();
-    }
-
-    function saveInvoiceToClient() {
-        if (!currentActiveJob || !currentActiveJob.clientName) return alert('خطأ في التعرف على اسم العميل');
-
-        const docType = document.getElementById('invoiceDocType').value;
-        const desc = document.getElementById('printServiceDescInput').value;
-        const dateStr = document.getElementById('printDate').textContent;
-
-        db.collection('client_invoices').add({
-            clientName: currentActiveJob.clientName,
-            docType: docType,
-            amount: currentActiveJob.amount,
-            description: desc,
-            date: dateStr,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            alert(`تم حفظ (${docType}) في سجل العميل: ${currentActiveJob.clientName} بنجاح!`);
-        }).catch(err => {
-            alert('حدث خطأ أثناء الحفظ: ' + err.message);
-        });
-    }
-
-    function viewClientInvoices(clientName) {
-        document.getElementById('modalClientName').textContent = clientName;
-        document.getElementById('clientInvoicesModal').classList.remove('hidden');
-
-        db.collection('client_invoices')
-            .where('clientName', '==', clientName)
-            .get()
-            .then(snapshot => {
-                let html = '';
-                snapshot.forEach(doc => {
-                    const item = doc.data();
-                    const safeDesc = (item.description || '').replace(/'/g, "\\'");
-                    html += `
-                        <tr>
-                            <td><span class="badge badge-done">${item.docType}</span></td>
-                            <td>${item.date || '-'}</td>
-                            <td>${item.amount} JOD</td>
-                            <td>
-                                <button class="btn btn-outline" onclick="reprintSavedInvoice('${item.clientName}', '${item.amount}', '${item.docType}', '${safeDesc}', '${item.date}')">👁️ عرض وطباعة</button>
-                                <button class="btn btn-danger" onclick="deleteDoc('client_invoices', '${doc.id}')">حذف</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                document.getElementById('clientInvoicesTableBody').innerHTML = html || '<tr><td colspan="4" style="text-align:center;">لا توجد فواتير أوعروض أسعار محفوظة لهذا العميل.</td></tr>';
-            });
-    }
-
-    function reprintSavedInvoice(clientName, amount, docType, desc, date) {
-        closeClientInvoicesModal();
-        currentActiveJob = { clientName, amount };
-        document.getElementById('printClientName').textContent = clientName;
-        document.getElementById('printAmount').textContent = `${amount} JOD`;
-        document.getElementById('printDate').textContent = date;
-        document.getElementById('invoiceDocType').value = docType;
-        document.getElementById('printServiceDescInput').value = desc;
-        updatePrintTitle();
-        document.getElementById('printableArea').classList.remove('hidden');
-    }
-
-    function closeClientInvoicesModal() {
-        document.getElementById('clientInvoicesModal').classList.add('hidden');
-    }
-
-    function closePrintView() {
-        document.getElementById('printableArea').classList.add('hidden');
-    }
-
     function deleteDoc(col, id) {
-        if (confirm('هل أنت تأكد من الحذف؟')) {
+        if(confirm('تأكيد حذف العنصر؟')) {
             db.collection(col).doc(id).delete().then(() => {
-                if(col === 'client_invoices') {
-                    const clientName = document.getElementById('modalClientName').textContent;
-                    if(clientName) viewClientInvoices(clientName);
-                } else {
-                    loadDepartmentData();
-                }
+                if (col === 'services') loadServices();
+                if (col === 'projects') loadProjects();
             });
         }
+    }
+
+    /* 7. لوحة الأدمن (إدارة الموظفين والصلاحيات) */
+    async function loadAdminUsersList() {
+        const tbody = document.getElementById('adminUsersTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">جاري تحميل القائمة...</td></tr>';
+        try {
+            const snap = await db.collection('users').get();
+            tbody.innerHTML = '';
+            snap.forEach(doc => {
+                const u = doc.data();
+                const uid = doc.id;
+                const depts = u.departments || [];
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${u.name || 'بدون اسم'}</strong></td>
+                        <td>${u.email}</td>
+                        <td>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <label><input type="checkbox" id="adm_p_${uid}" ${depts.includes('polishing') ? 'checked' : ''}> ✨ جلي البلاط</label>
+                                <label><input type="checkbox" id="adm_c_${uid}" ${depts.includes('cleaning') ? 'checked' : ''}> 🧹 النظافة العامة</label>
+                                <label><input type="checkbox" id="adm_d_${uid}" ${depts.includes('dryclean') ? 'checked' : ''}> 🛋️ الدراي كلين</label>
+                            </div>
+                        </td>
+                        <td><button class="btn btn-success" style="padding:4px 8px;" onclick="saveUserDeptPermissions('${uid}')">حفظ</button></td>
+                    </tr>
+                `;
+            });
+        } catch (err) { tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
+    }
+
+    async function saveUserDeptPermissions(uid) {
+        const depts = [];
+        if (document.getElementById(`adm_p_${uid}`).checked) depts.push('polishing');
+        if (document.getElementById(`adm_c_${uid}`).checked) depts.push('cleaning');
+        if (document.getElementById(`adm_d_${uid}`).checked) depts.push('dryclean');
+        try {
+            await db.collection('users').doc(uid).update({ departments: depts });
+            alert('تم إسناد الصلاحيات للموظف بنجاح!');
+        } catch (err) { alert('خطأ: ' + err.message); }
+    }
+
+    /* 8. المصادقة والحسابات */
+    function switchAuthTab(tab) {
+        showAlert('');
+        if (tab === 'login') {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginTabBtn').classList.add('active');
+            document.getElementById('registerTabBtn').classList.remove('active');
+        } else {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginTabBtn').classList.remove('active');
+            document.getElementById('registerTabBtn').classList.add('active');
+        }
+    }
+
+    async function handleLogin() {
+        showAlert('جاري الدخول...', false);
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+        if (!email || !pass) return showAlert('يرجى إدخال البريد وكلمة المرور');
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+        } catch (err) { showAlert('خطأ في بيانات الدخول: ' + err.message); }
+    }
+
+    async function handleRegister() {
+        showAlert('جاري إنشاء الحساب...', false);
+        const name = document.getElementById('registerName').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const pass = document.getElementById('registerPassword').value;
+        if (!email || !pass) return showAlert('يرجى إدخال البريد وكلمة المرور');
+        try {
+            const cred = await auth.createUserWithEmailAndPassword(email, pass);
+            const isAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+            await db.collection('users').doc(cred.user.uid).set({
+                name: name || email.split('@')[0],
+                email: email,
+                role: isAdmin ? 'admin' : 'employee',
+                departments: isAdmin ? ['polishing', 'cleaning', 'dryclean'] : []
+            });
+            showAlert('تم إنشاء الحساب بنجاح!', false);
+        } catch (err) { showAlert('خطأ: ' + err.message); }
+    }
+
+    function handleLogout() {
+        auth.signOut().then(() => showPublicProfile());
+    }
+
+    function showAlert(msg, isError = true) {
+        const box = document.getElementById('alertBox');
+        if (!msg) { box.classList.add('hidden'); return; }
+        box.textContent = msg;
+        box.classList.remove('hidden');
+        box.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
     }
 </script>
 

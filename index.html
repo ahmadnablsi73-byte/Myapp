@@ -102,7 +102,7 @@
 
         .hidden { display: none !important; }
         .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 500px; border: 1px solid var(--border-dark); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; border: 1px solid var(--border-dark); max-height: 90vh; overflow-y: auto; }
 
         /* -------------------------------------------------- */
         /*  3. تنسيقات الطباعة (A4 Invoice & Quotes)           */
@@ -212,9 +212,9 @@
         </div>
     </div>
 
-    <!-- التنقل بين الأقسام التشغيلية الثلاثة + الهوية والصلاحيات -->
+    <!-- التنقل بين الأقسام الرئيسية والفرعية -->
     <div class="nav-tabs">
-        <button class="nav-btn active" id="tab-polishing" onclick="switchMainTab('polishing')">✨ جلي وتلميع الرخام</button>
+        <button class="nav-btn active" id="tab-polishing" onclick="switchMainTab('polishing')">✨ جلي وتلميع الرخام الإيبوكسي</button>
         <button class="nav-btn" id="tab-cleaning" onclick="switchMainTab('cleaning')">🧹 النظافة العامة</button>
         <button class="nav-btn" id="tab-dryclean" onclick="switchMainTab('dryclean')">🛋️ الدراي كلين</button>
         <button class="nav-btn" id="tab-identity" onclick="switchMainTab('identity')">🖼️ إدارة البروفايل والهوية</button>
@@ -363,13 +363,16 @@
     <!-- قسم إدارة الهوية والبروفايل العام -->
     <div id="sec-identity" class="card hidden">
         <h3>🎨 إدارة الهوية ومحتوى البروفايل العام</h3>
-        <div class="form-grid" style="margin-top: 15px;">
+        <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">
+            تنويه: لدعم أداء ورابط الصور من Facebook / Drive / Dropbox يفضل تحويل الرابط إلى مباشر أو استبدال نهايته بـ raw=1 للدروب بوكس.
+        </p>
+        <div class="form-grid">
             <div class="form-group" style="grid-column: 1 / -1;">
                 <label>رابط صورة اللوجو (Logo URL)</label>
-                <input type="text" id="editLogoUrl" class="form-control">
+                <input type="text" id="editLogoUrl" class="form-control" placeholder="مثال: https://.../logo.png">
             </div>
             <div class="form-group"><label>سنة التأسيس</label><input type="text" id="editEstYear" class="form-control"></div>
-            <div class="form-group"><label>رقم الهاتف</label><input type="text" id="editPhone" class="form-control"></div>
+            <div class="form-group"><label>رقم الهاتف المباشر</label><input type="text" id="editPhone" class="form-control"></div>
         </div>
         <div class="form-group"><label>نص (من نحن)</label><textarea id="editAboutUs" class="form-control" rows="3"></textarea></div>
         <button class="btn btn-navy" onclick="saveGeneralInfo()">💾 حفظ البيانات الأساسية</button>
@@ -377,7 +380,7 @@
         <hr style="border-color: var(--border-dark); margin: 20px 0;">
 
         <!-- إضافة خدمات جديدة للبروفايل -->
-        <h4>🛠️ إضافة خدمة جديدة للواجهة العامة</h4>
+        <h4>🛠 إضافة خدمة جديدة للواجهة العامة</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان الخدمة</label><input type="text" id="serviceTitle" class="form-control"></div>
             <div class="form-group"><label>وصف الخدمة</label><input type="text" id="serviceDesc" class="form-control"></div>
@@ -391,7 +394,7 @@
         <h4>🏗️ إضافة مشروع لمعرض الأعمال</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان المشروع</label><input type="text" id="projectTitle" class="form-control"></div>
-            <div class="form-group"><label>رابط صورة المشروع</label><input type="text" id="projectImgUrl" class="form-control"></div>
+            <div class="form-group"><label>رابط صورة المشروع Direct URL</label><input type="text" id="projectImgUrl" class="form-control" placeholder="رابط الصورة المباشر من Drive/Dropbox/FB"></div>
             <div class="form-group" style="grid-column: 1 / -1;"><label>تفاصيل المشروع</label><input type="text" id="projectDesc" class="form-control"></div>
         </div>
         <button class="btn btn-navy" onclick="addProject()">+ إضافة المشروع</button>
@@ -408,10 +411,10 @@
             <div class="form-group"><label>اسم الموظف</label><input type="text" id="empName" class="form-control"></div>
         </div>
         <div style="margin-bottom: 15px;">
-            <label style="margin-bottom: 8px;">الصلاحيات الأقسام:</label>
+            <label style="margin-bottom: 8px;">صلاحيات الأقسام:</label>
             <label><input type="checkbox" id="permPolishing" checked> ✨ جلي وتلميع الرخام</label> &nbsp;&nbsp;
             <label><input type="checkbox" id="permCleaning" checked> 🧹 النظافة العامة</label> &nbsp;&nbsp;
-            <label><input type="checkbox" id="permDryclean" checked> 🛋️️ الدراي كلين</label>
+            <label><input type="checkbox" id="permDryclean" checked> 🛋 الدراي كلين</label>
         </div>
         <button class="btn btn-navy" onclick="saveUserPermissions()">💾 حفظ صلاحيات الموظف</button>
 
@@ -429,7 +432,30 @@
 </div>
 
 <!-- ================================================== -->
-<!-- 4. قالب العرض والتوليد للطباعة (A4 Printable Area) -->
+<!-- 4. نافذة أرشيف فواتير العميل السابقة                -->
+<!-- ================================================== -->
+<div id="clientInvoicesModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h3 style="color: #60a5fa; margin-bottom: 12px;">📂 فواتير وعروض أسعار العميل: <span id="modalClientName" style="color: #fff;"></span></h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>نوع المستند</th>
+                        <th>التاريخ</th>
+                        <th>المبلغ</th>
+                        <th>معاينة/طباعة</th>
+                    </tr>
+                </thead>
+                <tbody id="clientInvoicesTableBody"></tbody>
+            </table>
+        </div>
+        <button class="btn btn-outline" style="margin-top: 15px; width: 100%;" onclick="closeClientInvoicesModal()">إغلاق الأرشيف</button>
+    </div>
+</div>
+
+<!-- ================================================== -->
+<!-- 5. قالب العرض والتوليد للطباعة (A4 Printable Area) -->
 <!-- ================================================== -->
 <div id="printableArea" class="hidden">
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
@@ -437,6 +463,15 @@
         <p style="font-size: 14px; color: #333;">عمان - الأردن | هاتف: 0782066652</p>
         <h2 id="printDocTitle" style="margin-top: 15px; text-decoration: underline;">عرض سعر / فاتورة</h2>
     </div>
+    
+    <div class="no-print" style="background: #f0f4f8; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #cbd5e1;">
+        <label style="color: #000; font-weight: bold;">نوع المستند:</label>
+        <select id="invoiceDocType" class="form-control" style="width: auto; display: inline-block; margin-right: 10px; background: #fff; color: #000; border: 1px solid #ccc;" onchange="updatePrintTitle()">
+            <option value="فاتورة مالية">فاتورة مالية</option>
+            <option value="عرض سعر رسمى">عرض سعر رسمى</option>
+        </select>
+    </div>
+
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px;">
         <div><strong>اسم العميل:</strong> <span id="printClientName">-</span></div>
         <div><strong>التاريخ:</strong> <span id="printDate">-</span></div>
@@ -450,7 +485,10 @@
         </thead>
         <tbody>
             <tr>
-                <td style="border: 1px solid #000; padding: 10px;" id="printServiceDesc">خدمات جلي وتلميع رخام</td>
+                <td style="border: 1px solid #000; padding: 10px;">
+                    <input type="text" id="printServiceDescInput" class="no-print form-control" value="خدمات جلي وتلميع رخام وإيبوكسي وصيانة أرضيات" style="background: #fff; color: #000; border: 1px solid #ccc; width: 100%;">
+                    <span id="printServiceDescText" class="only-print">خدمات جلي وتلميع رخام وإيبوكسي وصيانة أرضيات</span>
+                </td>
                 <td style="border: 1px solid #000; padding: 10px;" id="printAmount">0 JOD</td>
             </tr>
         </tbody>
@@ -459,8 +497,12 @@
         <div>توقيع وتختم المؤسسة: ____________</div>
         <div>توقيع العميل: ____________</div>
     </div>
-    <button class="no-print btn btn-navy" style="margin-top: 30px;" onclick="window.print()">🖨️ طباعة المستند الآن</button>
-    <button class="no-print btn btn-outline" style="margin-top: 30px;" onclick="closePrintView()">إغلاق</button>
+    
+    <div style="margin-top: 30px; display: flex; gap: 10px;" class="no-print">
+        <button class="btn btn-success" onclick="saveInvoiceToClient()"><i class="bi bi-floppy"></i> حفظ في سجل الزبون</button>
+        <button class="btn btn-navy" onclick="triggerPrint()"><i class="bi bi-printer"></i> طباعة المستند الآن</button>
+        <button class="btn btn-outline" onclick="closePrintView()">إغلاق</button>
+    </div>
 </div>
 
 <!-- Scripts & Application Logic -->
@@ -483,6 +525,23 @@
     let currentMainDepartment = 'polishing'; // default: polishing
     let currentSubTab = 'inspections';
     let currentUserPermissions = { polishing: true, cleaning: true, dryclean: true };
+    let currentActiveJob = null; // تخزين بيانات الزبون المفتوح حالياً للطباعة
+
+    // Helper Function to Format External Image Links
+    function processImageUrl(url) {
+        if (!url) return 'https://via.placeholder.com/400x250?text=صورة+المشروع';
+        let formatted = url.trim();
+        if (formatted.includes('dropbox.com')) {
+            formatted = formatted.replace('dl=0', 'raw=1');
+        }
+        if (formatted.includes('drive.google.com') && formatted.includes('/view')) {
+            const fileIdMatch = formatted.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (fileIdMatch && fileIdMatch[1]) {
+                formatted = `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+            }
+        }
+        return formatted;
+    }
 
     // Secret Login Trigger (Click 3 times on logo/title)
     let clickCount = 0;
@@ -572,7 +631,6 @@
         document.getElementById('sec-identity').classList.add('hidden');
         document.getElementById('sec-admin').classList.add('hidden');
 
-        // Toggle Subscriptions tab only for cleaning department
         if (dept === 'cleaning') {
             document.getElementById('sub-subscriptions').classList.remove('hidden');
         } else {
@@ -596,7 +654,6 @@
         loadDepartmentData();
     }
 
-    // CRUD Operations for Department Data
     function loadDepartmentData() {
         if (currentSubTab === 'inspections') loadInspections();
         if (currentSubTab === 'jobs') loadJobs();
@@ -685,6 +742,7 @@
             let html = '';
             snapshot.forEach(doc => {
                 const item = doc.data();
+                const safeName = item.clientName.replace(/'/g, "\\'");
                 html += `
                     <tr>
                         <td>${item.clientName}</td>
@@ -694,7 +752,8 @@
                         <td>${item.paidAmount || 0} JOD</td>
                         <td><span class="badge ${item.status === 'done' ? 'badge-done' : 'badge-pending'}">${item.status === 'done' ? 'منتهية' : 'قيد التنفيذ'}</span></td>
                         <td>
-                            <button class="btn btn-outline" onclick="openPrintModal('${item.clientName}', '${item.totalCost}')">🖨️ طباعة عرض/فاتورة</button>
+                            <button class="btn btn-outline" onclick="openPrintModal('${safeName}', '${item.totalCost}')">🖨️ إصدار مستند</button>
+                            <button class="btn btn-navy" onclick="viewClientInvoices('${safeName}')">📂 فواتير الزبون</button>
                             <button class="btn btn-warning" onclick="toggleJobStatus('${doc.id}', '${item.status}')">تغيير الحالة</button>
                             <button class="btn btn-danger" onclick="deleteDoc('jobs', '${doc.id}')">حذف</button>
                         </td>
@@ -710,7 +769,7 @@
         db.collection('jobs').doc(docId).update({ status: nextStatus }).then(() => loadJobs());
     }
 
-    // 3. الاشتراكات (للنظافة)
+    // 3. الاشتراكات
     function addSubscription() {
         const name = document.getElementById('subClientName').value;
         const amount = parseFloat(document.getElementById('subAmount').value) || 0;
@@ -761,7 +820,7 @@
         }).then(() => loadSubscriptions());
     }
 
-    // 4. المحاسبة ودفتر الأستاذ
+    // 4. المحاسبة
     function addTransaction() {
         const type = document.getElementById('accType').value;
         const amount = parseFloat(document.getElementById('accAmount').value) || 0;
@@ -826,7 +885,8 @@
             if (doc.exists) {
                 const data = doc.data();
                 if(data.logoUrl) {
-                    document.getElementById('mainCompanyLogo').src = data.logoUrl;
+                    const finalLogo = processImageUrl(data.logoUrl);
+                    document.getElementById('mainCompanyLogo').src = finalLogo;
                     document.getElementById('editLogoUrl').value = data.logoUrl;
                 }
                 if(data.aboutUs) {
@@ -898,7 +958,7 @@
 
         db.collection('projects').add({
             title: title,
-            imgUrl: img || 'https://via.placeholder.com/400x250?text=صورة+المشروع',
+            imgUrl: img || '',
             desc: desc,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
@@ -916,16 +976,18 @@
 
             snapshot.forEach(doc => {
                 const item = doc.data();
+                const processedImg = processImageUrl(item.imgUrl);
+
                 publicHtml += `
                     <div class="project-card">
-                        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <img src="${processedImg}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
                         <h3>${item.title}</h3>
                         <p>${item.desc || ''}</p>
                     </div>
                 `;
                 adminHtml += `
                     <div class="project-card">
-                        <img src="${item.imgUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
+                        <img src="${processedImg}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=صورة+المشروع'">
                         <h3>${item.title}</h3>
                         <p>${item.desc || ''}</p>
                         <button class="btn btn-danger" style="margin-top:10px;" onclick="deleteDoc('projects', '${doc.id}')">حذف</button>
@@ -938,7 +1000,7 @@
         });
     }
 
-    // إدارة المستخدمين والصلاحيات (الأدمن)
+    // إدارة الصلاحيات
     function saveUserPermissions() {
         const email = document.getElementById('empEmail').value.trim();
         const name = document.getElementById('empName').value;
@@ -983,12 +1045,92 @@
         });
     }
 
-    // طباعة العروض والفواتير
+    // --------------------------------------------------
+    //  نظام حفظ الفواتير وعروض الأسعار باسم الزبون واستعراضها
+    // --------------------------------------------------
     function openPrintModal(clientName, amount) {
+        currentActiveJob = { clientName, amount };
         document.getElementById('printClientName').textContent = clientName;
         document.getElementById('printAmount').textContent = `${amount} JOD`;
         document.getElementById('printDate').textContent = new Date().toISOString().split('T')[0];
+        document.getElementById('invoiceDocType').value = 'فاتورة مالية';
+        updatePrintTitle();
         document.getElementById('printableArea').classList.remove('hidden');
+    }
+
+    function updatePrintTitle() {
+        const type = document.getElementById('invoiceDocType').value;
+        document.getElementById('printDocTitle').textContent = type;
+    }
+
+    function triggerPrint() {
+        document.getElementById('printServiceDescText').textContent = document.getElementById('printServiceDescInput').value;
+        window.print();
+    }
+
+    function saveInvoiceToClient() {
+        if (!currentActiveJob || !currentActiveJob.clientName) return alert('خطأ في التعرف على اسم العميل');
+
+        const docType = document.getElementById('invoiceDocType').value;
+        const desc = document.getElementById('printServiceDescInput').value;
+        const dateStr = document.getElementById('printDate').textContent;
+
+        db.collection('client_invoices').add({
+            clientName: currentActiveJob.clientName,
+            docType: docType,
+            amount: currentActiveJob.amount,
+            description: desc,
+            date: dateStr,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert(`تم حفظ (${docType}) في سجل العميل: ${currentActiveJob.clientName} بنجاح!`);
+        }).catch(err => {
+            alert('حدث خطأ أثناء الحفظ: ' + err.message);
+        });
+    }
+
+    function viewClientInvoices(clientName) {
+        document.getElementById('modalClientName').textContent = clientName;
+        document.getElementById('clientInvoicesModal').classList.remove('hidden');
+
+        db.collection('client_invoices')
+            .where('clientName', '==', clientName)
+            .get()
+            .then(snapshot => {
+                let html = '';
+                snapshot.forEach(doc => {
+                    const item = doc.data();
+                    const safeDesc = (item.description || '').replace(/'/g, "\\'");
+                    html += `
+                        <tr>
+                            <td><span class="badge badge-done">${item.docType}</span></td>
+                            <td>${item.date || '-'}</td>
+                            <td>${item.amount} JOD</td>
+                            <td>
+                                <button class="btn btn-outline" onclick="reprintSavedInvoice('${item.clientName}', '${item.amount}', '${item.docType}', '${safeDesc}', '${item.date}')">👁️ عرض وطباعة</button>
+                                <button class="btn btn-danger" onclick="deleteDoc('client_invoices', '${doc.id}')">حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                document.getElementById('clientInvoicesTableBody').innerHTML = html || '<tr><td colspan="4" style="text-align:center;">لا توجد فواتير أوعروض أسعار محفوظة لهذا العميل.</td></tr>';
+            });
+    }
+
+    function reprintSavedInvoice(clientName, amount, docType, desc, date) {
+        closeClientInvoicesModal();
+        currentActiveJob = { clientName, amount };
+        document.getElementById('printClientName').textContent = clientName;
+        document.getElementById('printAmount').textContent = `${amount} JOD`;
+        document.getElementById('printDate').textContent = date;
+        document.getElementById('invoiceDocType').value = docType;
+        document.getElementById('printServiceDescInput').value = desc;
+        updatePrintTitle();
+        document.getElementById('printableArea').classList.remove('hidden');
+    }
+
+    function closeClientInvoicesModal() {
+        document.getElementById('clientInvoicesModal').classList.add('hidden');
     }
 
     function closePrintView() {
@@ -997,7 +1139,14 @@
 
     function deleteDoc(col, id) {
         if (confirm('هل أنت تأكد من الحذف؟')) {
-            db.collection(col).doc(id).delete().then(() => loadDepartmentData());
+            db.collection(col).doc(id).delete().then(() => {
+                if(col === 'client_invoices') {
+                    const clientName = document.getElementById('modalClientName').textContent;
+                    if(clientName) viewClientInvoices(clientName);
+                } else {
+                    loadDepartmentData();
+                }
+            });
         }
     }
 </script>

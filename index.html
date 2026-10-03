@@ -364,12 +364,13 @@
     <div id="sec-identity" class="card hidden">
         <h3>🎨 إدارة الهوية ومحتوى البروفايل العام</h3>
         <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">
-            تنويه: لدعم أداء ورابط الصور من Facebook / Drive / Dropbox يفضل تحويل الرابط إلى مباشر أو استبدال نهايته بـ raw=1 للدروب بوكس.
+            يمكنك الآن اختيار وتغيير صورة اللوجو وصور المشاريع مباشرة من هاتفك أو جهازك دون الحاجة لروابط خارجية.
         </p>
         <div class="form-grid">
             <div class="form-group" style="grid-column: 1 / -1;">
-                <label>رابط صورة اللوجو (Logo URL)</label>
-                <input type="text" id="editLogoUrl" class="form-control" placeholder="مثال: https://.../logo.png">
+                <label>رفع صورة اللوجو مباشرة من الجهاز (Logo Image File)</label>
+                <input type="file" id="editLogoFileInput" accept="image/*" class="form-control">
+                <input type="hidden" id="editLogoUrl">
             </div>
             <div class="form-group"><label>سنة التأسيس</label><input type="text" id="editEstYear" class="form-control"></div>
             <div class="form-group"><label>رقم الهاتف المباشر</label><input type="text" id="editPhone" class="form-control"></div>
@@ -391,10 +392,10 @@
         <hr style="border-color: var(--border-dark); margin: 20px 0;">
 
         <!-- إضافة مشاريع جديدة -->
-        <h4>🏗️ إضافة مشروع لمعرض الأعمال</h4>
+        <h4>🏗️ إضافة مشروع لمعرض الأعمال (رفع صورة مباشرة)</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان المشروع</label><input type="text" id="projectTitle" class="form-control"></div>
-            <div class="form-group"><label>رابط صورة المشروع Direct URL</label><input type="text" id="projectImgUrl" class="form-control" placeholder="رابط الصورة المباشر من Drive/Dropbox/FB"></div>
+            <div class="form-group"><label>رفع صورة المشروع مباشرة</label><input type="file" id="projectImgFileInput" accept="image/*" class="form-control"></div>
             <div class="form-group" style="grid-column: 1 / -1;"><label>تفاصيل المشروع</label><input type="text" id="projectDesc" class="form-control"></div>
         </div>
         <button class="btn btn-navy" onclick="addProject()">+ إضافة المشروع</button>
@@ -527,20 +528,14 @@
     let currentUserPermissions = { polishing: true, cleaning: true, dryclean: true };
     let currentActiveJob = null; // تخزين بيانات الزبون المفتوح حالياً للطباعة
 
-    // Helper Function to Format External Image Links
-    function processImageUrl(url) {
-        if (!url) return 'https://via.placeholder.com/400x250?text=صورة+المشروع';
-        let formatted = url.trim();
-        if (formatted.includes('dropbox.com')) {
-            formatted = formatted.replace('dl=0', 'raw=1');
-        }
-        if (formatted.includes('drive.google.com') && formatted.includes('/view')) {
-            const fileIdMatch = formatted.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (fileIdMatch && fileIdMatch[1]) {
-                formatted = `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
-            }
-        }
-        return formatted;
+    // دالة مساعدة لتحويل الملف المرفوع إلى قاعدة بيانات Base64 لتخزينها مباشرة
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
     }
 
     // Secret Login Trigger (Click 3 times on logo/title)
@@ -885,8 +880,7 @@
             if (doc.exists) {
                 const data = doc.data();
                 if(data.logoUrl) {
-                    const finalLogo = processImageUrl(data.logoUrl);
-                    document.getElementById('mainCompanyLogo').src = finalLogo;
+                    document.getElementById('mainCompanyLogo').src = data.logoUrl;
                     document.getElementById('editLogoUrl').value = data.logoUrl;
                 }
                 if(data.aboutUs) {
@@ -906,14 +900,25 @@
         });
     }
 
-    function saveGeneralInfo() {
+    async function saveGeneralInfo() {
+        const logoFileInput = document.getElementById('editLogoFileInput');
+        let logoDataUrl = document.getElementById('editLogoUrl').value;
+
+        if (logoFileInput.files && logoFileInput.files[0]) {
+            try {
+                logoDataUrl = await fileToBase64(logoFileInput.files[0]);
+            } catch(e) {
+                return alert('حدث خطأ أثناء قراءة ملف اللوجو');
+            }
+        }
+
         db.collection('settings').doc('profile_info').set({
-            logoUrl: document.getElementById('editLogoUrl').value.trim(),
+            logoUrl: logoDataUrl,
             aboutUs: document.getElementById('editAboutUs').value,
             estYear: document.getElementById('editEstYear').value,
             phone: document.getElementById('editPhone').value
         }, { merge: true }).then(() => {
-            alert('تم حفظ البيانات بنجاح!');
+            alert('تم حفظ البيانات واللوجو بنجاح!');
             loadGeneralInfo();
         });
     }
@@ -950,20 +955,30 @@
         });
     }
 
-    function addProject() {
+    async function addProject() {
         const title = document.getElementById('projectTitle').value;
-        const img = document.getElementById('projectImgUrl').value;
         const desc = document.getElementById('projectDesc').value;
+        const fileInput = document.getElementById('projectImgFileInput');
+
         if (!title) return alert('يرجى إدخال عنوان المشروع');
+
+        let imgDataUrl = '';
+        if (fileInput.files && fileInput.files[0]) {
+            try {
+                imgDataUrl = await fileToBase64(fileInput.files[0]);
+            } catch (e) {
+                return alert('حدث خطأ أثناء تحميل صورة المشروع');
+            }
+        }
 
         db.collection('projects').add({
             title: title,
-            imgUrl: img || '',
+            imgUrl: imgDataUrl,
             desc: desc,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             document.getElementById('projectTitle').value = '';
-            document.getElementById('projectImgUrl').value = '';
+            document.getElementById('projectImgFileInput').value = '';
             document.getElementById('projectDesc').value = '';
             loadProjects();
         });
@@ -976,7 +991,7 @@
 
             snapshot.forEach(doc => {
                 const item = doc.data();
-                const processedImg = processImageUrl(item.imgUrl);
+                const processedImg = item.imgUrl || 'https://via.placeholder.com/400x250?text=صورة+المشروع';
 
                 publicHtml += `
                     <div class="project-card">

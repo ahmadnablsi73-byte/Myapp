@@ -27,9 +27,7 @@
         body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; }
         .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
 
-        /* -------------------------------------------------- */
-        /*  1. البروفايل العام للشركة (Public Profile)       */
-        /* -------------------------------------------------- */
+        /* 1. البروفايل العام للشركة (Public Profile) */
         .public-header { 
             background: linear-gradient(180deg, #141720 0%, #0b0d10 100%); 
             padding: 40px 20px 30px; 
@@ -61,18 +59,14 @@
         .project-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border-dark); }
         .public-footer { background: #07080a; padding: 25px 20px; text-align: center; border-top: 1px solid var(--border-dark); font-size: 13px; color: var(--text-gray); margin-top: 40px; }
 
-        /* -------------------------------------------------- */
-        /*  2. لوحة التحكم والنظام الداخلي                    */
-        /* -------------------------------------------------- */
+        /* 2. لوحة التحكم والنظام الداخلي */
         .card { background-color: var(--card-dark); border-radius: 16px; padding: 20px; border: 1px solid var(--border-dark); margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .user-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-lighter); padding: 12px 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border-dark); flex-wrap: wrap; gap: 10px; }
         
-        /* التنقل بين الأقسام الرئيسية والفرعية */
         .nav-tabs, .sub-nav { display: flex; gap: 8px; background-color: var(--bg-dark); padding: 6px; border-radius: 12px; margin-bottom: 15px; overflow-x: auto; border: 1px solid var(--border-dark); }
         .nav-btn, .sub-nav-btn { flex: 1; min-width: 120px; padding: 10px 8px; background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; font-size: 13px; text-align: center; }
         .nav-btn.active, .sub-nav-btn.active { background-color: var(--primary-navy); color: #ffffff; border: 1px solid var(--primary-blue); }
 
-        /* النماذج والجداول */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .form-group { margin-bottom: 12px; text-align: right; }
         label { display: block; font-size: 12px; color: var(--text-light); margin-bottom: 5px; font-weight: 500; }
@@ -104,9 +98,7 @@
         .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
         .modal-content { background: var(--card-dark); border-radius: 14px; padding: 20px; width: 100%; max-width: 600px; border: 1px solid var(--border-dark); max-height: 90vh; overflow-y: auto; }
 
-        /* -------------------------------------------------- */
-        /*  3. تنسيقات الطباعة (A4 Invoice & Quotes)           */
-        /* -------------------------------------------------- */
+        /* 3. تنسيقات الطباعة */
         @media print {
             body * { visibility: hidden; }
             #printableArea, #printableArea * { visibility: visible; }
@@ -125,9 +117,7 @@
 </head>
 <body>
 
-<!-- ================================================== -->
-<!-- 1. البروفايل العام للشركة (الواجهة الرئيسية)       -->
-<!-- ================================================== -->
+<!-- 1. البروفايل العام للشركة -->
 <div id="publicProfileView">
     <header class="public-header">
         <img id="mainCompanyLogo" src="https://via.placeholder.com/160x160/141720/3b82f6?text=ADVANTAGE+VISION" alt="مؤسسة الرؤيا المتقدمة" class="company-logo" title="انقر 3 مرات للدخول الخفي">
@@ -164,7 +154,6 @@
         </div>
     </div>
 
-    <!-- التذييل السفلي -->
     <footer class="public-footer">
         <p>جميع الحقوق محفوظة © مؤسسة الرؤيا المتقدمة</p>
         <p style="margin-top: 8px; font-size: 11px; opacity: 0.5;">
@@ -174,9 +163,7 @@
     </footer>
 </div>
 
-<!-- ================================================== -->
-<!-- 2. نافذة تسجيل الدخول الخفية                       -->
-<!-- ================================================== -->
+<!-- 2. نافذة تسجيل الدخول الخفية -->
 <div id="authSection" class="modal-overlay hidden">
     <div class="modal-content">
         <h2 style="text-align: center; margin-bottom: 10px; color: #60a5fa;">🔒 الدخول إلى النظام الداخلي</h2>
@@ -195,12 +182,9 @@
     </div>
 </div>
 
-<!-- ================================================== -->
-<!-- 3. لوحة التحكم والنظام الداخلي الكامل               -->
-<!-- ================================================== -->
+<!-- 3. لوحة التحكم والنظام الداخلي الكامل -->
 <div id="mainDashboard" class="container hidden" style="padding-top: 20px;">
     
-    <!-- شريط معلومات المستخدم -->
     <div class="user-bar">
         <div>
             مرحباً: <strong id="userName" style="color: #60a5fa;">المدير العام</strong>
@@ -212,7 +196,6 @@
         </div>
     </div>
 
-    <!-- التنقل بين الأقسام الرئيسية والفرعية -->
     <div class="nav-tabs">
         <button class="nav-btn active" id="tab-polishing" onclick="switchMainTab('polishing')">✨ جلي وتلميع الرخام الإيبوكسي</button>
         <button class="nav-btn" id="tab-cleaning" onclick="switchMainTab('cleaning')">🧹 النظافة العامة</button>
@@ -221,7 +204,6 @@
         <button class="nav-btn hidden" id="tab-admin" onclick="switchMainTab('admin')">👑 إدارة الموظفين</button>
     </div>
 
-    <!-- التنقل بين الأقسام الوظيفية الداخليّة -->
     <div class="sub-nav" id="functionalNav">
         <button class="sub-nav-btn active" id="sub-inspections" onclick="switchSubTab('inspections')">📝 المعاينات (عميل جديد)</button>
         <button class="sub-nav-btn" id="sub-jobs" onclick="switchSubTab('jobs')">📅 الورش والمواعيد</button>
@@ -229,10 +211,9 @@
         <button class="sub-nav-btn" id="sub-accounting" onclick="switchSubTab('accounting')">💰 المحاسبة والمالية</button>
     </div>
 
-    <!-- محتوى الأقسام الوظيفية -->
     <div id="functionalContent">
 
-        <!-- 1. قسم المعاينات (عميل جديد) -->
+        <!-- المعاينات -->
         <div id="sec-inspections" class="card">
             <h3>📝 إدخال معاينة جديد</h3>
             <div class="form-grid" style="margin-top: 15px;">
@@ -262,7 +243,7 @@
             </div>
         </div>
 
-        <!-- 2. قسم الورش والمواعيد -->
+        <!-- الورش -->
         <div id="sec-jobs" class="card hidden">
             <h3>📅 الورش والمواعيد المؤكدة</h3>
             <div class="table-responsive">
@@ -283,12 +264,12 @@
             </div>
         </div>
 
-        <!-- 3. قسم الاشتراكات الشهرية (خاص بالنظافة العامة) -->
+        <!-- الاشتراكات -->
         <div id="sec-subscriptions" class="card hidden">
             <h3>🔄 عقود والاشتراكات الشهرية (خاص بقطاع النظافة)</h3>
             <div class="form-grid" style="margin-top: 15px;">
                 <div class="form-group"><label>اسم الشفرة / العميل</label><input type="text" id="subClientName" class="form-control"></div>
-                <div class="form-group"><label>القيمة الشهرية ($/JOD)</label><input type="number" id="subAmount" class="form-control"></div>
+                <div class="form-group"><label>القيمة الشهرية (JOD)</label><input type="number" id="subAmount" class="form-control"></div>
                 <div class="form-group"><label>يوم الزيارة الأسبوعي</label>
                     <select id="subDay" class="form-control">
                         <option value="السبت">السبت</option>
@@ -319,7 +300,7 @@
             </div>
         </div>
 
-        <!-- 4. قسم المحاسبة ودفتر الأستاذ -->
+        <!-- المحاسبة -->
         <div id="sec-accounting" class="card hidden">
             <h3>💰 دفتر الأستاذ والمحاسبة المالية</h3>
             <div class="grid-3" style="margin-bottom: 20px;">
@@ -360,15 +341,15 @@
 
     </div>
 
-    <!-- قسم إدارة الهوية والبروفايل العام -->
+    <!-- إدارة الهوية والبروفايل العام -->
     <div id="sec-identity" class="card hidden">
         <h3>🎨 إدارة الهوية ومحتوى البروفايل العام</h3>
         <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">
-            يمكنك الآن اختيار وتغيير صورة اللوجو وصور المشاريع مباشرة من هاتفك أو جهازك دون الحاجة لروابط خارجية.
+            رفع الصور المباشر (Base64) يتيح لك حفظ اللوجو وصور المشاريع فوراً في قاعدة البيانات وسحبها آلياً دون الحاجة لروابط.
         </p>
         <div class="form-grid">
             <div class="form-group" style="grid-column: 1 / -1;">
-                <label>رفع صورة اللوجو مباشرة من الجهاز (Logo Image File)</label>
+                <label>رفع صورة اللوجو مباشرة من الجهاز (Logo File)</label>
                 <input type="file" id="editLogoFileInput" accept="image/*" class="form-control">
                 <input type="hidden" id="editLogoUrl">
             </div>
@@ -380,7 +361,6 @@
 
         <hr style="border-color: var(--border-dark); margin: 20px 0;">
 
-        <!-- إضافة خدمات جديدة للبروفايل -->
         <h4>🛠 إضافة خدمة جديدة للواجهة العامة</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان الخدمة</label><input type="text" id="serviceTitle" class="form-control"></div>
@@ -391,7 +371,6 @@
 
         <hr style="border-color: var(--border-dark); margin: 20px 0;">
 
-        <!-- إضافة مشاريع جديدة -->
         <h4>🏗️ إضافة مشروع لمعرض الأعمال (رفع صورة مباشرة)</h4>
         <div class="form-grid" style="margin-top: 10px;">
             <div class="form-group"><label>عنوان المشروع</label><input type="text" id="projectTitle" class="form-control"></div>
@@ -402,7 +381,7 @@
         <div id="adminProjectsList" class="grid-3" style="margin-top: 15px;"></div>
     </div>
 
-    <!-- قسم لوحة الأدمن (إدارة صلاحيات الموظفين) -->
+    <!-- لوحة الأدمن -->
     <div id="sec-admin" class="card hidden">
         <h3>👑 لوحة الأدمن وإدارة صلاحيات الموظفين</h3>
         <p style="color: var(--text-gray); margin-bottom: 15px; font-size: 13px;">تخصيص صلاحيات الأقسام للبريد الإلكتروني المسجل.</p>
@@ -432,9 +411,7 @@
 
 </div>
 
-<!-- ================================================== -->
-<!-- 4. نافذة أرشيف فواتير العميل السابقة                -->
-<!-- ================================================== -->
+<!-- 4. نافذة أرشيف فواتير العميل -->
 <div id="clientInvoicesModal" class="modal-overlay hidden">
     <div class="modal-content">
         <h3 style="color: #60a5fa; margin-bottom: 12px;">📂 فواتير وعروض أسعار العميل: <span id="modalClientName" style="color: #fff;"></span></h3>
@@ -455,9 +432,7 @@
     </div>
 </div>
 
-<!-- ================================================== -->
-<!-- 5. قالب العرض والتوليد للطباعة (A4 Printable Area) -->
-<!-- ================================================== -->
+<!-- 5. قالب الطباعة A4 -->
 <div id="printableArea" class="hidden">
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
         <h1 style="font-size: 24px; color: #000;">مؤسسة الرؤيا المتقدمة لأعمال الأرضيات والجلي</h1>
@@ -506,9 +481,9 @@
     </div>
 </div>
 
-<!-- Scripts & Application Logic -->
+<!-- Scripts Logic -->
 <script>
-    // 1. Firebase Config Setup
+    // Firebase Config (ثابت ومطابق دائماً لضمان عدم ضياع البيانات)
     const firebaseConfig = {
         apiKey: "AIzaSyBe6l5QOUONAU_lankplHs2YAHh1xUpKuQ",
         authDomain: "roya-app-29932.firebaseapp.com",
@@ -523,12 +498,11 @@
     const db = firebase.firestore();
 
     const ADMIN_EMAIL = "ahmadnablsi73@gmail.com";
-    let currentMainDepartment = 'polishing'; // default: polishing
+    let currentMainDepartment = 'polishing';
     let currentSubTab = 'inspections';
     let currentUserPermissions = { polishing: true, cleaning: true, dryclean: true };
-    let currentActiveJob = null; // تخزين بيانات الزبون المفتوح حالياً للطباعة
+    let currentActiveJob = null;
 
-    // دالة مساعدة لتحويل الملف المرفوع إلى قاعدة بيانات Base64 لتخزينها مباشرة
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -538,7 +512,6 @@
         });
     }
 
-    // Secret Login Trigger (Click 3 times on logo/title)
     let clickCount = 0;
     const triggerElements = [document.getElementById('logoClickTarget'), document.getElementById('mainCompanyLogo')];
     triggerElements.forEach(el => {
@@ -568,7 +541,6 @@
         document.getElementById('publicProfileView').classList.remove('hidden');
     }
 
-    // Auth Listeners & Login
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('userName').textContent = user.email;
@@ -599,7 +571,6 @@
         auth.signOut().then(() => showPublicProfile());
     }
 
-    // Switch Navigation Tabs
     function switchMainTab(dept) {
         currentMainDepartment = dept;
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -656,7 +627,7 @@
         if (currentSubTab === 'accounting') loadAccounting();
     }
 
-    // 1. المعاينات
+    // المعاينات
     function addInspection() {
         const name = document.getElementById('inspName').value;
         const phone = document.getElementById('inspPhone').value;
@@ -731,7 +702,7 @@
         });
     }
 
-    // 2. الورش
+    // الورش
     function loadJobs() {
         db.collection('jobs').where('department', '==', currentMainDepartment).get().then(snapshot => {
             let html = '';
@@ -764,7 +735,7 @@
         db.collection('jobs').doc(docId).update({ status: nextStatus }).then(() => loadJobs());
     }
 
-    // 3. الاشتراكات
+    // الاشتراكات
     function addSubscription() {
         const name = document.getElementById('subClientName').value;
         const amount = parseFloat(document.getElementById('subAmount').value) || 0;
@@ -815,7 +786,7 @@
         }).then(() => loadSubscriptions());
     }
 
-    // 4. المحاسبة
+    // المحاسبة
     function addTransaction() {
         const type = document.getElementById('accType').value;
         const amount = parseFloat(document.getElementById('accAmount').value) || 0;
@@ -868,7 +839,7 @@
         });
     }
 
-    // إدارة الهوية والبروفايل العام
+    // معلومات البروفايل العام
     window.onload = function() {
         loadGeneralInfo();
         loadServices();
@@ -1015,7 +986,6 @@
         });
     }
 
-    // إدارة الصلاحيات
     function saveUserPermissions() {
         const email = document.getElementById('empEmail').value.trim();
         const name = document.getElementById('empName').value;
@@ -1060,9 +1030,7 @@
         });
     }
 
-    // --------------------------------------------------
-    //  نظام حفظ الفواتير وعروض الأسعار باسم الزبون واستعراضها
-    // --------------------------------------------------
+    // فواتير الزبائن
     function openPrintModal(clientName, amount) {
         currentActiveJob = { clientName, amount };
         document.getElementById('printClientName').textContent = clientName;

@@ -779,10 +779,12 @@
         document.getElementById('publicProfileView').classList.remove('hidden');
     }
 
-    auth.onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async (user) => {
         if (user) {
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('publicProfileView').classList.add('hidden'); /* هذا السطر لإخفاء البروفايل العام فوراً */
+
 
             try {
                 const userDocRef = db.collection('users').doc(user.uid);

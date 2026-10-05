@@ -269,7 +269,7 @@
     <div class="main-nav" id="mainDeptTabs">
         <button class="main-nav-btn active" id="mTab-polishing" onclick="switchMainDept('polishing')">✨ جلي البلاط والرخام</button>
         <button class="main-nav-btn" id="mTab-cleaning" onclick="switchMainDept('cleaning')">🧹 النظافة العامة</button>
-        <button class="main-nav-btn" id="mTab-dryclean" onclick="switchMainDept('dryclean')">🛋️️ الدراي كلين</button>
+        <button class="main-nav-btn" id="mTab-dryclean" onclick="switchMainDept('dryclean')">🛋 الدراي كلين</button>
         <button class="main-nav-btn" id="mTab-identity" onclick="switchMainDept('identity')">🖼️ إدارة البروفايل والهوية</button>
         <button class="main-nav-btn hidden" id="mTab-admin" onclick="switchMainDept('admin')">👑 لوحة الأدمن</button>
     </div>
@@ -312,7 +312,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>العميل</th>
+                            <th>العميل والمستندات</th>
                             <th>الهاتف</th>
                             <th>الموقع</th>
                             <th>اللوكيشن</th>
@@ -342,7 +342,7 @@
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr><th>العميل</th><th>الهاتف</th><th>الموقع</th><th>الخريطة</th><th>الملاحظات</th><th>إجراء</th></tr>
+                        <tr><th>العميل والمستندات</th><th>الهاتف</th><th>الموقع</th><th>الخريطة</th><th>الملاحظات</th><th>إجراء</th></tr>
                     </thead>
                     <tbody id="dayInspectionsTableBody"></tbody>
                 </table>
@@ -358,8 +358,7 @@
                             <th>الموقع</th>
                             <th>المبلغ / المساحة</th>
                             <th>ملاحظات الورشة</th>
-                            <th>عرض السعر (PDF)</th>
-                            <th>أرشيف المستندات</th>
+                            <th>إعداد المستندات</th>
                             <th>الحالة</th>
                             <th>إجراءات</th>
                         </tr>
@@ -525,6 +524,16 @@
     <div class="modal-content" style="max-width: 500px;">
         <h3 style="color: var(--success-green); margin-bottom: 15px;">✅ تأكيد المعاينة وتحويلها إلى ورشة</h3>
         <input type="hidden" id="confModalDocId">
+        
+        <!-- حقول تعديل بيانات العميل أثناء التحويل -->
+        <div class="form-grid">
+            <div class="form-group"><label>اسم العميل</label><input type="text" id="confName" class="form-control"></div>
+            <div class="form-group"><label>رقم الهاتف</label><input type="text" id="confPhone" class="form-control"></div>
+            <div class="form-group"><label>الموقع النصي</label><input type="text" id="confLocText" class="form-control"></div>
+            <div class="form-group"><label>رابط اللوكيشن</label><input type="url" id="confLocUrl" class="form-control"></div>
+        </div>
+        
+        <hr style="border-color: var(--border-dark); margin: 15px 0;">
         <div class="form-group"><label>موعد التنفيذ (تاريخ الورشة)</label><input type="date" id="confDate" class="form-control"></div>
         <div class="form-grid">
             <div class="form-group"><label>المبلغ الإجمالي (د.أ)</label><input type="number" step="0.1" id="confAmount" class="form-control" placeholder="0"></div>
@@ -955,9 +964,11 @@
                 const safeLoc = (c.locText || '').replace(/'/g, "\\'");
                 const safeNotes = (c.notes || '').replace(/'/g, "\\'");
 
+                const archiveBtn = `<button class="btn btn-outline" style="padding:2px 6px; font-size:10px; margin-top:4px;" onclick="viewClientInvoices('${safeName}')">📂 الفواتير والعروض</button>`;
+
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                        <td><strong>${c.name || 'بدون اسم'}</strong><br>${archiveBtn}</td>
                         <td>${c.phone || '-'}</td>
                         <td>${c.locText || '-'}</td>
                         <td>${locBtn}</td>
@@ -976,12 +987,24 @@
         } catch (err) { tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
     }
 
-    function confirmToWorkshop(id) {
+    async function confirmToWorkshop(id) {
         document.getElementById('confModalDocId').value = id;
         document.getElementById('confDate').value = todayStr;
         document.getElementById('confAmount').value = '';
         document.getElementById('confArea').value = '';
         document.getElementById('confWorkshopNotes').value = '';
+        
+        try {
+            const doc = await db.collection(getClientsCollection()).doc(id).get();
+            if(doc.exists) {
+                const c = doc.data();
+                document.getElementById('confName').value = c.name || '';
+                document.getElementById('confPhone').value = c.phone || '';
+                document.getElementById('confLocText').value = c.locText || '';
+                document.getElementById('confLocUrl').value = c.locUrl || '';
+            }
+        } catch(e) {}
+
         document.getElementById('confirmWorkshopModal').classList.remove('hidden');
     }
 
@@ -991,6 +1014,10 @@
 
     async function submitWorkshopConfirmation() {
         const id = document.getElementById('confModalDocId').value;
+        const confName = document.getElementById('confName').value.trim();
+        const confPhone = document.getElementById('confPhone').value.trim();
+        const confLocText = document.getElementById('confLocText').value.trim();
+        const confLocUrl = document.getElementById('confLocUrl').value.trim();
         const confDate = document.getElementById('confDate').value || todayStr;
         const confAmount = parseFloat(document.getElementById('confAmount').value) || 0;
         const confArea = parseFloat(document.getElementById('confArea').value) || 0;
@@ -998,6 +1025,10 @@
 
         try {
             await db.collection(getClientsCollection()).doc(id).update({ 
+                name: confName,
+                phone: confPhone,
+                locText: confLocText,
+                locUrl: confLocUrl,
                 type: 'workshop', 
                 status: 'قيد التنفيذ',
                 date: confDate,
@@ -1032,7 +1063,7 @@
         const workTbody = document.getElementById('dayWorkshopsTableBody');
         
         inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري التحميل...</td></tr>';
-        workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">جاري التحميل...</td></tr>';
+        workTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">جاري التحميل...</td></tr>';
 
         try {
             const snap = await db.collection(getClientsCollection()).where('date', '==', selectedDate).get();
@@ -1048,12 +1079,14 @@
                 const safeName = (c.name || '').replace(/'/g, "\\'");
                 const safeLoc = (c.locText || '').replace(/'/g, "\\'");
                 const safeWNotes = (c.workshopNotes || 'جلي وتلميع رخام').replace(/'/g, "\\'");
+                
+                const archiveBtn = `<button class="btn btn-outline" style="padding:2px 6px; font-size:10px; margin-top:4px;" onclick="viewClientInvoices('${safeName}')">📂 الفواتير والعروض</button>`;
 
                 if (c.type === 'inspection') {
                     inspCount++;
                     inspTbody.innerHTML += `
                         <tr>
-                            <td><strong>${c.name || 'بدون اسم'}</strong></td>
+                            <td><strong>${c.name || 'بدون اسم'}</strong><br>${archiveBtn}</td>
                             <td>${c.phone || '-'}</td>
                             <td>${c.locText || '-'}</td>
                             <td>${locBtn}</td>
@@ -1069,15 +1102,12 @@
                     const isDone = c.status === 'منتهية';
                     workTbody.innerHTML += `
                         <tr>
-                            <td><strong>${c.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${c.phone || ''}</small></td>
+                            <td><strong>${c.name || 'بدون اسم'}</strong><br><small style="color:#9ca3af">${c.phone || ''}</small><br>${archiveBtn}</td>
                             <td>${c.locText || '-'} <br>${locBtn}</td>
                             <td><strong>${c.amount || 0} د.أ</strong> <br><small>${c.area || 0} م²</small></td>
                             <td>${c.workshopNotes || '-'}</td>
                             <td>
                                 <button class="btn btn-navy" style="padding:2px 6px;" onclick="openQuoteModal('${safeName}', '${c.phone || ''}', '${safeLoc}', '${safeWNotes}', '${c.amount || 0}')">📄 إعداد/طباعة</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline" style="padding:2px 6px;" onclick="viewClientInvoices('${safeName}')">📂 أرشيف العميل</button>
                             </td>
                             <td><span class="badge ${isDone ? 'badge-done' : 'badge-workshop'}">${c.status || 'قيد التنفيذ'}</span></td>
                             <td>
@@ -1092,7 +1122,7 @@
 
             document.getElementById('daySummaryPill').textContent = `[ عدد الورش: ${workCount} | عدد المعاينات: ${inspCount} ]`;
             if (inspCount === 0) inspTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد معاينات مجدولة لهذا اليوم</td></tr>';
-            if (workCount === 0) workTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">لا توجد ورش مؤكدة لهذا اليوم</td></tr>';
+            if (workCount === 0) workTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد ورش مؤكدة لهذا اليوم</td></tr>';
         } catch (err) {
             inspTbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`;
         }
@@ -1260,37 +1290,46 @@
         const monthFilter = document.getElementById('accMonthFilter').value || currentMonthStr;
         const tbody = document.getElementById('accountingTableBody');
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">جاري تحميل دفتر الأستاذ...</td></tr>';
+        
         try {
             const snap = await db.collection(getAccountingCollection()).get();
+            let records = [];
+            
+            snap.forEach(doc => {
+                const acc = doc.data();
+                if (acc.date && acc.date.startsWith(monthFilter)) {
+                    records.push({ id: doc.id, ...acc });
+                }
+            });
+
+            // ترتيب تنازلي (من الأحدث إلى الأقدم) حسب التاريخ
+            records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
             let totalCredit = 0;
             let totalDebit = 0;
             tbody.innerHTML = '';
 
-            snap.forEach(doc => {
-                const acc = doc.data();
-                const id = doc.id;
-                if (acc.date && acc.date.startsWith(monthFilter)) {
-                    if (acc.type === 'credit') totalCredit += (acc.amount || 0);
-                    if (acc.type === 'debit') totalDebit += (acc.amount || 0);
+            records.forEach(acc => {
+                if (acc.type === 'credit') totalCredit += (acc.amount || 0);
+                if (acc.type === 'debit') totalDebit += (acc.amount || 0);
 
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${acc.date || '-'}</td>
-                            <td><strong>${acc.desc || '-'}</strong></td>
-                            <td><span class="badge ${acc.type === 'credit' ? 'badge-credit' : 'badge-debit'}">${acc.type === 'credit' ? 'له (إيراد)' : 'عليه (مصروف)'}</span></td>
-                            <td><strong>${acc.amount || 0} د.أ</strong></td>
-                            <td>${acc.notes || '-'}</td>
-                            <td><button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteAccDoc('${id}')">🗑️</button></td>
-                        </tr>
-                    `;
-                }
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${acc.date || '-'}</td>
+                        <td><strong>${acc.desc || '-'}</strong></td>
+                        <td><span class="badge ${acc.type === 'credit' ? 'badge-credit' : 'badge-debit'}">${acc.type === 'credit' ? 'له (إيراد)' : 'عليه (مصروف)'}</span></td>
+                        <td><strong>${acc.amount || 0} د.أ</strong></td>
+                        <td>${acc.notes || '-'}</td>
+                        <td><button class="btn btn-danger" style="padding:2px 6px;" onclick="deleteAccDoc('${acc.id}')">🗑️</button></td>
+                    </tr>
+                `;
             });
 
             document.getElementById('accTotalCredit').textContent = totalCredit.toFixed(2) + ' د.أ';
             document.getElementById('accTotalDebit').textContent = totalDebit.toFixed(2) + ' د.أ';
             const net = totalCredit - totalDebit;
             document.getElementById('accNetBalance').textContent = net.toFixed(2) + ' د.أ';
-            if (tbody.innerHTML === '') tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد حركات مالية مسجلة لشهر ${monthFilter}</td></tr>`;
+            if (records.length === 0) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">لا توجد حركات مالية مسجلة لشهر ${monthFilter}</td></tr>`;
         } catch (err) { tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">خطأ: ${err.message}</td></tr>`; }
     }
 
